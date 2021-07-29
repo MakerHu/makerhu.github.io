@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>hexo使用手册</title>
+    <url>/posts/6600e9a1/</url>
+    <content><![CDATA[<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><ul>
+<li><p>清理数据<br><code>hexo clean</code></p>
+</li>
+<li><p>新建博客<br><code>hexo new &quot;My New Post&quot;</code></p>
+</li>
+<li><p>启动服务<br><code>hexo server</code> 或 <code>hexo s</code></p>
+</li>
+<li><p>生成静态文件<br><code>hexo generate</code> 或  <code>hexo g</code></p>
+</li>
+<li><p>部署到远端<br><code>hexo deploy</code> 或 <code>hexo d</code></p>
+</li>
+<li><p>创建新的页面<br><code>hexo new page &quot;pagename&quot;</code></p>
+</li>
+<li><p>日常备份及部署过程</p>
+<p>写完博客后首先是在本地检查博客效果</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>访问 <a href="http://localhost:4000/">http://localhost:4000</a> 查看效果<br>确认无误后，再次清空、备份再编译部署</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Backup&quot;</span></span><br><span class="line">git push -u origin main</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h1><h2 id="文章配置"><a href="#文章配置" class="headerlink" title="文章配置"></a>文章配置</h2><p>在markdown文章的头部可配置以下属性</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: 首页文章显示的标题</span><br><span class="line">date: 创建时间</span><br><span class="line">updated: 更新时间</span><br><span class="line">comments: true/false (是否开启评论)</span><br><span class="line">tags: 标签（不适用于分页）无层级关系，各标签并列</span><br><span class="line"><span class="bullet">-</span> 标签一</span><br><span class="line"><span class="bullet">-</span> 标签二</span><br><span class="line">categories: 分类（不适用于分页）有层级关系，下述例子表示本文章归类于学习大类下的微积分下的第二章</span><br><span class="line"><span class="bullet">-</span> 学习</span><br><span class="line"><span class="bullet">-</span> 微积分</span><br><span class="line"><span class="bullet">-</span> 第二章</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="首页显示文章摘要"><a href="#首页显示文章摘要" class="headerlink" title="首页显示文章摘要"></a>首页显示文章摘要</h2><ul>
+<li>方法1：使用<code>&lt;!-- more --&gt;</code>对文章进行截断，在这之前的内容会放到摘要里</li>
+<li>方法2：在markdown文章的顶部加上<code>description</code>关键字<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: </span><br><span class="line">categories: </span><br><span class="line">tags: </span><br><span class="line">description: 你对文章的整体介绍等</span><br><span class="line">---</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="界面修改"><a href="#界面修改" class="headerlink" title="界面修改"></a>界面修改</h1><h2 id="配置博文阅读目录"><a href="#配置博文阅读目录" class="headerlink" title="配置博文阅读目录"></a>配置博文阅读目录</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">toc:</span><br><span class="line">  enable: true</span><br><span class="line">  # 如果为true则自动添加序号到目录中</span><br><span class="line">  number: true</span><br><span class="line">  # 如果为true目录过长部分会换行显示</span><br><span class="line">  wrap: true</span><br><span class="line">  # 如果为true目录会保持全展开，而不是只展开激活部分</span><br><span class="line">  expand_all: true</span><br><span class="line">  # 目录的最大层级数</span><br><span class="line">  max_depth: 6</span><br></pre></td></tr></table></figure>
+
+<h1 id="hexo备份与恢复"><a href="#hexo备份与恢复" class="headerlink" title="hexo备份与恢复"></a>hexo备份与恢复</h1><p>由于hexo在将博客部署到远程仓库时是将编译后的文件部署上去的，而源文件还是保留在本地（最核心的是文章的.md文件），因而可能存在源文件丢失的风险，如：电脑丢失，文件丢失等。因此做好源文件的备份是个良好的习惯，如果将源文件备份到github，还有利于我们在其他电脑中恢复对博客的管理。</p>
+<h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2><h3 id="在GitHub中创建仓库"><a href="#在GitHub中创建仓库" class="headerlink" title="在GitHub中创建仓库"></a>在GitHub中创建仓库</h3><p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111530.png"></p>
+<img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111923.png" style="zoom: 67%;" />
+
+<h3 id="将本地的博客源文件上传到GitHub"><a href="#将本地的博客源文件上传到GitHub" class="headerlink" title="将本地的博客源文件上传到GitHub"></a>将本地的博客源文件上传到GitHub</h3><p><strong>注意：在执行下列命令前先将你博客根目录下themes/&lt;主题名&gt;/下的.gitignore文件删了！</strong><br>原因是git文件不能嵌套，否则会报错（忘删导致报错解决方案：<a href="#%E4%B8%BB%E9%A2%98%E4%B8%AD%E7%9A%84.git%E6%96%87%E4%BB%B6%E6%9C%AA%E5%88%A0%E5%B0%B1%E4%B8%8A%E4%BC%A0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">主题中的.git文件未删就上传远程仓库</a>）</p>
+<p>在你的博客源文件根目录下git bash</p>
+<img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507113349.png" style="zoom:80%;" />
+
+<p>分别执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;# MyHexoBlogBackup&quot;</span> &gt;&gt; README.md</span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">&quot;first commit&quot;</span></span><br><span class="line">git branch -M main</span><br><span class="line">git remote add origin https://github.com/yourname/MyBlogBackup.git</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+
+<p>若出现报错</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure>
+<p>请见解决方案：<a href="#git%E6%8A%A5%E9%94%99Failed-to-connect-to-github">git报错Failed to connect to github</a></p>
+<h2 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h2><p>默认前提：电脑中已安装git 、nodejs、hexo</p>
+<h3 id="克隆博客源文件"><a href="#克隆博客源文件" class="headerlink" title="克隆博客源文件"></a>克隆博客源文件</h3><p>克隆项目到本地<br><code>git clone https://github.com/yourname/MyBlogBackup.git</code></p>
+<p>若还是出现报错：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure>
+<p>请见解决方案<a href="#git%E6%8A%A5%E9%94%99Failed-to-connect-to-github">git报错Failed to connect to github</a></p>
+<h3 id="恢复博客"><a href="#恢复博客" class="headerlink" title="恢复博客"></a>恢复博客</h3><p>进入到博客源文件的根目录下git bash或cmd</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli</span><br><span class="line">npm install <span class="comment"># 安装依赖</span></span><br><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
+<p>接下来就是熟悉的命令了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+<h3 id="日常的备份过程"><a href="#日常的备份过程" class="headerlink" title="日常的备份过程"></a>日常的备份过程</h3><p>写完博客后首先是在本地检查博客效果</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+<p>访问 <a href="http://localhost:4000/">http://localhost:4000</a> 查看效果<br>确认无误后，再次清空、备份再编译部署</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Backup&quot;</span></span><br><span class="line">git push -u origin main</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<h1 id="博客链接永久化"><a href="#博客链接永久化" class="headerlink" title="博客链接永久化"></a>博客链接永久化</h1><p>hexo的默认永久链接是在 _config.yml 里配置的，其生成规则是<br><code>permalink: :year/:month/:day/:title/</code><br>效果是<code>https://makerhu.github.io/2021/05/05/hexo使用手册/</code></p>
+<p>这种方式有两个很大的<strong>缺点</strong>：</p>
+<ul>
+<li><p>一是路径中带中文名，复制分享链接时会转换成很长的字符串，不利于分享，以前面展示的效果链接为例，复制链接后的效果是<br><code>https://makerhu.github.io/2021/05/05/hexo%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</code><br>vs<br><code>https://makerhu.github.io/2021/05/05/hexo使用手册/</code></p>
+</li>
+<li><p>二是修改博客的文件名时文章的url也会发生变化，这样如果有人收藏了你的文章地址，你改了文章名称后他/她就访问不了了</p>
+</li>
+</ul>
+<p>因此，博客链接永久化有着重要的意义<br><strong>解决方案</strong>：使用hexo-abbrlink 插件</p>
+<ul>
+<li>安装<br><code>npm install hexo-abbrlink --save</code></li>
+<li>配置<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 可选 permalink: abbrlink 短链接模式</span></span><br><span class="line"><span class="comment"># permalink: posts/:abbrlink.html</span></span><br><span class="line"><span class="comment"># permalink: posts/:abbrlink/</span></span><br><span class="line">permalink: :abbrlink/ <span class="comment">#文章的永久链接</span></span><br><span class="line"><span class="comment"># abbrlink config</span></span><br><span class="line">abbrlink:</span><br><span class="line">  alg: crc32  <span class="comment">#算法: crc16(default) and crc32</span></span><br><span class="line">  rep: hex    <span class="comment">#进制: dec(default) and hex</span></span><br></pre></td></tr></table></figure></li>
+<li>hexo命令一条龙<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s	<span class="comment"># 检查效果正常后即可部署</span></span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>配置完成后博客的markdown文件顶部的Front-matter中会添加一个属性<code>abbrlink:</code>后面跟着的就是固定的链接地址</p>
+<h1 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h1><h2 id="无法将项目部署到远端"><a href="#无法将项目部署到远端" class="headerlink" title="无法将项目部署到远端"></a>无法将项目部署到远端</h2><ol>
+<li>问题描述<br><code>hexo d</code> 时经常报错，要试好几次才能成功<br>报错：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend dirs...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;MakerHu&#x2F;makerhu.github.io.git&#x2F;&#39;: Failed to connect to github.com port 443: Timed out</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (E:\study\self_study\myblog\node_modules\_hexo-util@2.4.0@hexo-util\lib\spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (events.js:315:20)</span><br><span class="line">      at ChildProcess.cp.emit (E:\study\self_study\myblog\node_modules\_cross-spawn@7.0.3@cross-spawn\lib\enoent.js:34:29)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (internal&#x2F;child_process.js:277:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#39;s wrong. Maybe you can find the solution here: %s https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;troubleshooting.html</span><br></pre></td></tr></table></figure></li>
+<li>解决方案<ul>
+<li>取消git代理<br><code>git config --global --unset http.proxy</code></li>
+<li>host文件添加最新的github的IP列表<br>ip列表可到这个博文获取 <a href="http://blog.yoqi.me/lyq/16489.html">github被墙最新hosts-每日更新 | 天问博客 (yoqi.me)</a></li>
+</ul>
+</li>
+</ol>
+<h2 id="git报错Failed-to-connect-to-github"><a href="#git报错Failed-to-connect-to-github" class="headerlink" title="git报错Failed to connect to github"></a>git报错Failed to connect to github</h2><ol>
+<li><p>报错：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure></li>
+<li><p>解决方案<br>方法1：</p>
+<ul>
+<li>查看git配置<br><code>git config --global -l</code></li>
+<li>检查环境变量<br><code>env|grep -i proxy</code></li>
+</ul>
+<p>方法2：</p>
+<ul>
+<li>分别执行以下命令：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.proxy http://127.0.0.1:1080</span><br><span class="line">git config --global https.proxy http://127.0.0.1:1080</span><br><span class="line">git config --global --<span class="built_in">unset</span> http.proxy</span><br><span class="line">git config --global --<span class="built_in">unset</span> https.proxy</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h2 id="主题中的-git文件未删就上传远程仓库"><a href="#主题中的-git文件未删就上传远程仓库" class="headerlink" title="主题中的.git文件未删就上传远程仓库"></a>主题中的.git文件未删就上传远程仓库</h2><p>由于.git文件不能嵌套，因此需要删除themes/&lt;主题名&gt;/下的.git文件才能上传</p>
+<ul>
+<li>删除themes/&lt;主题名&gt;/下的.git文件</li>
+<li>从暂存区删除该文件夹<br><code>git rm --cache themes/next</code></li>
+<li>重新添加到git中<br><code>git add .</code></li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://hexo.io/zh-cn/docs/">文档 | Hexo</a></li>
+<li><a href="http://blog.yoqi.me/lyq/16489.html">github被墙最新hosts-每日更新 | 天问博客 (yoqi.me)</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>野生教程</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>博客</tag>
+        <tag>hexo备份</tag>
+        <tag>hexo恢复</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Linux服务器上简易部署django项目</title>
+    <url>/posts/58379ca9/</url>
+    <content><![CDATA[<ol>
+<li>安装好python3</li>
+<li>创建虚拟环境<br> <code>python -m venv /虚拟环境名称/</code></li>
+<li>进入虚拟环境<br> <code>cd /虚拟环境名/</code></li>
+<li>进入bin目录<br> <code>cd bin</code></li>
+<li>运行虚拟环境<br> <code>source activate</code></li>
+<li>更新pip<br> <code>pip install --upgrade pip</code></li>
+<li>查看当前安装的模块<br> <code>pip freeze</code></li>
+<li>安装项目的django对应版本<br> <code>pip install django==3.1.3</code><br> 也可用清华镜像网安装（速度较快）<br> <code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple django==3.1.3</code></li>
+<li>再次查看安装模块<br> <code>pip freeze</code></li>
+<li>接着把项目在本地安装的模块都装到虚拟环境中(根据自身项目具体情况安装）<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple cryptography</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple apscheduler</code></li>
+<li>安装http需要的模块<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple gunicorn</code></li>
+<li>安装bleach<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple bleach</code></li>
+<li>在服务器中配置项目的数据库，这里以mysql为例（mysql需先在linux系统中安装好）</li>
+</ol>
+<ul>
+<li>登录root<br><code>mysql -u root -p</code></li>
+<li>创建项目数据库<br><code>create database cms;</code></li>
+<li>mysql创建新用户cmsmanager , 密码123456 (cmamanager为用户名, 123456为密码，可根据自己需要修改)<br><code>CREATE USER &#39;cmsmanager&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;;</code></li>
+<li>授予数据库cms的所有权限给cmsmanager<br><code>GRANT ALL PRIVILEGES ON cms.* TO &#39;cmsmanager&#39;@&#39;%&#39;;</code></li>
+</ul>
+<p><strong>如果登录cmsmanager账户时遇到错误</strong><br><code>ERROR 1045 (28000): Access denied for user &#39;cmsmanager&#39;@&#39;localhost&#39; (using password: YES)</code><br>可能是因为你有一个用户名为空的账户，mysql会先匹配它，然后就一直提示你密码错误，需要删掉这个匿名用户，然后执行 <code>FLUSH PRIVILEGES；</code>如下：<br><code>Delete FROM user Where User=&#39;&#39; and Host=&#39;localhost&#39;;</code><br><code>flush privileges;</code><br>14. 在django项目settings.py中配置好数据库</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">  <span class="string">&#x27;default&#x27;</span>: &#123; </span><br><span class="line">    <span class="comment"># &#x27;ENGINE&#x27;: &#x27;django.db.backends.sqlite3&#x27;,</span></span><br><span class="line">    <span class="comment"># &#x27;NAME&#x27;: BASE_DIR / &#x27;db.sqlite3&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>,   <span class="comment"># 设置数据库为mysql</span></span><br><span class="line">    <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;cms&#x27;</span>,         <span class="comment"># 数据库名 </span></span><br><span class="line">    <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;cmsmanager&#x27;</span>,       <span class="comment"># 账户 </span></span><br><span class="line">    <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;123456&#x27;</span>,    <span class="comment"># 密码</span></span><br><span class="line">    <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,     <span class="comment"># 数据库的ip</span></span><br><span class="line">    <span class="string">&#x27;PORT&#x27;</span>: <span class="number">3306</span>,     <span class="comment"># 数据库的端口 </span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在django项目<strong>settings.py</strong>中允许所有主机访问</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ALLOWED_HOSTS = [<span class="string">&quot;*&quot;</span>]</span><br></pre></td></tr></table></figure>
+<ol start="15">
+<li><p>将项目打包压缩（删掉虚拟环境）</p>
+</li>
+<li><p>将项目压缩包上传至服务器中刚创建的虚拟环境（见第2步）的根目录下（与bin目录同级）并解压，我用的远程连接服务器的工具是mobaxterm</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233104.png" alt="项目上传位置"></p>
+<p>在阿里云安全组中开放端口<br><strong>如果不能访问端口</strong><br>则</p>
+</li>
+</ol>
+<ul>
+<li>查看防火墙状态：<br><code>systemctl status firewalld</code></li>
+<li>实例中已经安装Firewalld并且已经启用firewalld.service，若需要放行 TCP 5050端口，执行命令<br><code>firewall-cmd --add-port=5050/tcp --permanent</code><br>返回结果为success即表示已经放行TCP 5050端口（端口号根据自己需要修改）。</li>
+<li>最后重新加载防火墙即可：<br><code>firewall-cmd --reload</code></li>
+</ul>
+<ol start="17">
+<li>最后，启动项目(这种方式如果关掉远程连接服务器的工具就停了，若要一直后台运行则跳过此步)<br><code>python manage.py runserver 0.0.0.0:5050</code></li>
+<li>将项目后台运行（记得先启动虚拟环境：在虚拟环境的bin目录下 <code>source activate</code>）<br>参考教程：<a href="https://www.cnblogs.com/yoyoketang/p/10593731.html">https://www.cnblogs.com/yoyoketang/p/10593731.html</a></li>
+</ol>
+<ul>
+<li><p>首先写一个启动文件：start.sh<br>在manage.py同级目录下<br><code>vim start.sh</code><br>输入：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ps</span> -aux | <span class="keyword">grep</span> <span class="keyword">python</span>|xargs kill -<span class="number">9</span></span><br><span class="line">nohup <span class="keyword">python</span> manage.<span class="keyword">py</span> runserver <span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">5050</span> &gt;cms_website.out <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233154.png" alt="编辑start.sh"></p>
+<p>编辑完成后按Esc建退出，输入<code>:wq</code>后按回车保存退出</p>
+</li>
+<li><p>同理编辑停止文件stop.sh<br>在manage.py同级目录下<br><code>vim stop.sh</code><br>输入：<br><code>ps -aux | grep python|xargs kill -9</code><br>编辑完成后Esc退出，输入<code>:wq</code>保存退出</p>
+</li>
+<li><p>都编辑完成后授权这两个文件<br><code>chmod +777 start.sh</code><br><code>chmod +777 stop.sh</code></p>
+</li>
+<li><p>启动时输入：<br><code>./start.sh</code></p>
+</li>
+<li><p>关闭服务输入：<br><code>./stop.sh</code></p>
+</li>
+<li><p>查看实时日志<br><code>tail -f cms_website.out</code></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>野生教程</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>django</tag>
+        <tag>服务器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>快速上手SpringBoot项目（登录注册保姆级教程）</title>
+    <url>/posts/5b2ca0db/</url>
+    <content><![CDATA[<p><strong>未经允许请勿转载！</strong></p>
+<h1 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h1><p>使用本教程的前置条件是开发环境中已安装了以下几个东西，若无可以先找相关教程安装配置好。</p>
+<p><strong>管理工具：</strong>maven</p>
+<p><strong>IDE：</strong> IDEA</p>
+<p><strong>数据库：</strong> MySQL</p>
+<p><strong>测试工具：</strong>Postman（非必须，但方便测试且安装和使用都挺简单的）</p>
+<h1 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h1><p><strong>注意：创建项目时保持网络通畅</strong></p>
+<ol>
+<li><p>打开IDEA</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629210809.png" alt="IDEA图标"></p>
+</li>
+<li><p>新建项目</p>
+<p>情况一：</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629211408.png" alt="新建项目第一步"></p>
+<p>情况二：</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629211755.png" alt="新建项目第一步"></p>
+<p>设置项目的基本信息，其中注意jdk版本要与Java版本匹配，这里使用jdk1.8和java8</p>
+</li>
+</ol>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629223940.png" alt="新建项目第二步"></p>
+<p>选择SpringBoot版本，选择项目依赖（依赖可以创建完项目后在pom文件中修改）</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629225008.png" alt="新建项目第三步"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629225618.png" alt="新建项目第三步"></p>
+<p>至此项目就创建完成啦！</p>
+<h1 id="目录结构（初始状态）"><a href="#目录结构（初始状态）" class="headerlink" title="目录结构（初始状态）"></a>目录结构（初始状态）</h1><p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629230552.png" alt="项目目录结构"></p>
+<h1 id="配置数据库"><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h1><p>创建完项目后，如果直接运行项目，我们会发现项目报错了</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629230907.png" alt="报错图"></p>
+<p>报错的原因是我们在创建项目时导入了数据库相关的依赖，但是项目却还没有进行数据库相关配置</p>
+<p>所以接下来我们先进行数据库的配置</p>
+<h2 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h2><p>要配置数据库，首先咱们得有个数据库，因此我们先用MySQL创建一个。由于本项目要演示登录注册功能的实现，所以在此我将创建一个用户表，保存用户的账号信息。</p>
+<ol>
+<li>按Win+R打开“运行”，输入cmd</li>
+</ol>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629231452.png" alt="cmd"></p>
+<ol start="2">
+<li><p>输入<code>mysql -u root -p</code>后输入密码，登录MySQL</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629231749.png" alt="登录MySQL"></p>
+</li>
+<li><p>创建数据库<code>create database logindemo</code><strong>logindemo</strong>为数据库名，根据你的情况修改</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629232246.png" alt="创建数据库"></p>
+</li>
+<li><p>进入数据库<code>use logindemo</code></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629232535.png" alt="进入数据库"></p>
+</li>
+<li><p>创建user表</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">user</span></span><br><span class="line">(</span><br><span class="line">    uid <span class="type">int</span>(<span class="number">10</span>) <span class="keyword">primary</span> key <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">    uname <span class="type">varchar</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    password <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span> (uname)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629234318.png"></p>
+<p>uid: 用户编号，主键，自增</p>
+<p>uname: 用户名，作为登录的账号（业务主键），不可重复</p>
+<p>password: 密码，因为可能要加密，所以长度设了较长的255</p>
+</li>
+<li><p>查看表是否创建成功</p>
+<p><code>desc user;</code></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629234515.png" alt="查看user表信息"></p>
+<p>到这数据库就创建完成啦，接下来就是在项目中配置数据库相关信息了。</p>
+</li>
+</ol>
+<h2 id="配置数据库-1"><a href="#配置数据库-1" class="headerlink" title="配置数据库"></a>配置数据库</h2><ol>
+<li><p>找到配置文件application.properties</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629235403.png"></p>
+</li>
+<li><p>输入数据库相关配置信息（此处配置了项目端口号为8081，可不配置，默认端口号为8080）</p>
+<p><strong>注意：配置url处logindemo改为你的数据库名称</strong></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 配置端口号为8081</span></span><br><span class="line"><span class="string">server.port=8081</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置数据库</span></span><br><span class="line"><span class="comment"># 配置驱动</span></span><br><span class="line"><span class="string">spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver</span></span><br><span class="line"><span class="comment"># 若连接的是云数据库则将localhost改为云端ip</span></span><br><span class="line"><span class="string">spring.datasource.url=jdbc:mysql://localhost:3306/logindemo?serverTimezone=UTC</span></span><br><span class="line"><span class="comment"># Mysql用户</span></span><br><span class="line"><span class="string">spring.datasource.username=root</span></span><br><span class="line"><span class="comment"># Mysql对应用户密码</span></span><br><span class="line"><span class="string">spring.datasource.password=123456</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210629235703.png" alt="application.properties"></p>
+<p>现在再次运行项目就能成功运行啦！</p>
+</li>
+<li><p>在IDEA中连接数据库（此步非必须，只是为了开发方便）</p>
+<p>在IDEA中连接数据库可以让我们在开发时直接可视化查看数据库的详细信息，建议配置一下。</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630000910.png"></p>
+<p>配置数据库基本信息</p>
+<p><strong>注意：这一步有可能出现时区错误或者缺少依赖文件！！！</strong></p>
+<p><strong>解决方案</strong></p>
+<p><strong>时区错误：</strong>见图中配置时区</p>
+<p><strong>缺少文件：</strong>根据提示点击下载，但由于服务器在外网，有可能需要科学上网</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630001501.png"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630002003.png"></p>
+<p>完成以上配置后就能在IDEA中管理数据库啦！</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630002452.png"></p>
+</li>
+</ol>
+<h1 id="项目架构图"><a href="#项目架构图" class="headerlink" title="项目架构图"></a>项目架构图</h1><p>在说项目的目录结构之前，我们先来聊一聊后端的架构大概是什么样的，方便我们对目录结构的理解。</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630010734.png" alt="项目架构图"></p>
+<ul>
+<li><strong>数据持久层</strong>是的目的是在java对象与数据库之间建立映射，也就是说它的作用是将某一个Java类对应到数据库中的一张表。在我们的项目中，就将创建一个实体类User映射到数据库的user表，表中的每个字段对应于实体类的每个属性。而之前配置的JPA的作用就是帮助我们完成类到数据表的映射。<ul>
+<li>repository: 存放一些数据访问类（也就是一些能操纵数据库的类）的包，比如存放能对user表进行增删改查的类</li>
+<li>domain：存放实体类的包，比如User类，其作为对应数据库user表的一个实体类</li>
+</ul>
+</li>
+<li><strong>业务逻辑层</strong>的作用是处理业务逻辑。比如在本项目中，我们就在业务逻辑层实现登录注册的逻辑，像是判断是否有用户名重复，密码是否正确等逻辑<ul>
+<li>service: 存放业务逻辑接口的包</li>
+<li>serviceImpl: 存放业务逻辑实现类的包，其中的类实现service中的接口</li>
+</ul>
+</li>
+<li><strong>控制层</strong>的作用是接收视图层的请求并调用业务逻辑层的方法。比如视图层请求登录并发来了用户的账号和密码，那么控制层就调用业务逻辑层的登录方法，并将账号密码作为参数传入，在将结果返回给视图层。<ul>
+<li>controller: 存放控制器的包。比如UserController</li>
+</ul>
+</li>
+<li><strong>视图层</strong>的作用是展现数据，由于本项目写的是纯后端，就不展开解释视图层了。</li>
+</ul>
+<p><strong>注意：根据架构我们可以发现，最佳的开发方式是自底向上开发，因为包之间的调用是上层调用下层，所以下层现实现能保证实现多少测试多少</strong></p>
+<h1 id="完善项目的基本目录结构"><a href="#完善项目的基本目录结构" class="headerlink" title="完善项目的基本目录结构"></a>完善项目的基本目录结构</h1><p>根据上述架构图的设计，我们就能创建对应的包让我们的项目框架更加清晰了。</p>
+<ol>
+<li><p>创建各种包（以domain包为例）</p>
+<p>注意本项目中service与serviceImpl包为父子关系，也可以并列，这取决于你的喜好</p>
+<p>最终效果见下一步</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630013358.png" alt="创建包"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630013719.png"></p>
+</li>
+<li><p>最终目录结构</p>
+<p>包含<code>domain</code> <code>repository</code> <code>service</code> <code>serviceImpl</code> <code>controller</code> <code>utils</code> <code>config</code> </p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630014607.png" alt="最终目录结构"></p>
+<p>这时候眼尖的同学就发现了，怎么还多了俩： <code>utils</code> <code>config</code> </p>
+<p>这两个包的作用：</p>
+<ul>
+<li>**utils: **存放工具类，一些自己封装的工具</li>
+<li>**config: **存放配置类，一些配置如登录拦截器，安全配置等</li>
+</ul>
+<p>这里先建好了再说，具体怎么用之后会说。</p>
+</li>
+</ol>
+<h1 id="登录注册功能实现"><a href="#登录注册功能实现" class="headerlink" title="登录注册功能实现"></a>登录注册功能实现</h1><p>根据框架特点，我们将自底向上开发，所以将按照 实体类-dao-service-serviceImpl-controller 的顺序逐步开发。</p>
+<h2 id="所有类或接口的目录位置"><a href="#所有类或接口的目录位置" class="headerlink" title="所有类或接口的目录位置"></a>所有类或接口的目录位置</h2><p>为了方便你在下面的教程中明确的知道文件应该创建在什么位置，在此我就先把所有文件的目录位置展示出来了，你可以在需要的时候随时回来查看，现在可以先跳过这一步。</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630190513.png" alt="所有类或接口的目录位置"></p>
+<h2 id="实现User实体类"><a href="#实现User实体类" class="headerlink" title="实现User实体类"></a>实现User实体类</h2><ol>
+<li><p>在domain中创建User.java</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630021309.png" alt="创建User类"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630021356.png" alt="创建User类"></p>
+</li>
+<li><p>创建对应user表中字段的属性</p>
+<p>其中注意要添加<code>@Table(name = &quot;user&quot;)</code>和<code>@Entity</code>注解</p>
+<ul>
+<li><strong>@Table(name = “user”)</strong> 说明此实体类对应于数据库的user表</li>
+<li><strong>@Entity</strong> 说明此类是个实体类</li>
+</ul>
+<p>主键uid上要加上<code>@Id</code>与<code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>注解</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//domain中的User.java</span></span><br><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.domain;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Table(name = &quot;user&quot;)</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 注意属性名要与数据表中的字段名一致</span></span><br><span class="line">    <span class="comment">// 主键自增int(10)对应long</span></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> uid;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用户名属性varchar对应String</span></span><br><span class="line">    <span class="keyword">private</span> String uname;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 密码属性varchar对应String</span></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630021652.png"></p>
+</li>
+<li><p>为属性生成get,set方法</p>
+<ul>
+<li><p>将光标移至要插入get, set方法的位置</p>
+</li>
+<li><p>右键-generate-getter and setter</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630022152.png"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630022249.png"></p>
+</li>
+<li><p>选中所有属性-OK</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630022502.png"></p>
+</li>
+<li><p>最后得到User.java（也可以纯手敲）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.domain;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Table(name = &quot;user&quot;)</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 注意属性名要与数据表中的字段名一致</span></span><br><span class="line">    <span class="comment">// 主键自增int(10)对应long</span></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> uid;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用户名属性varchar对应String</span></span><br><span class="line">    <span class="keyword">private</span> String uname;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 密码属性varchar对应String</span></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getUid</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUid</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.uid = uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUname</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> uname;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUname</span><span class="params">(String uname)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.uname = uname;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.password = password;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此User实体类就创建好啦，如果要实现其他表的实体类也类似。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="实现UserDao"><a href="#实现UserDao" class="headerlink" title="实现UserDao"></a>实现UserDao</h2><ol>
+<li><p>在repository包中创建UserDao接口</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630115952.png"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630120140.png" alt="创建UserDao"></p>
+</li>
+<li><p>添加一些访问数据库的方法(这里添加的是根据用户名查询用户方法)</p>
+<ul>
+<li>首先要添加注解<code>@Repository</code></li>
+<li>接口要继承<code>JpaRepository</code>，这样JPA就能帮助我们完成对数据库的映射，也就是说接口里写的方法只要符合格式可以不需要实现SQL语句就能直接用了。</li>
+<li>如果JPA没有提供你想要的方法，可以自定义SQL语句</li>
+</ul>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630185108.png" alt="UserDao"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.repository;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.jpa.repository.JpaRepository;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Repository;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span> <span class="keyword">extends</span> <span class="title">JpaRepository</span>&lt;<span class="title">User</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">User <span class="title">findByUname</span><span class="params">(String uname)</span></span>; <span class="comment">//通过用户名uname查找用户，注意要按照JPA的格式使用驼峰命名法</span></span><br><span class="line">    <span class="function">User <span class="title">findByUnameAndPassword</span><span class="params">(String uname, String password)</span></span>;<span class="comment">//通过用户名uname和密码查找用户</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于我们只实现登录注册功能，所以只要有根据账号密码查询用户和插入用户信息的方法就行了，这里我们已经实现了根据用户名密码查找用户的方法，而插入用户信息的方法save(object o)JPA已经帮我们实现了，可以直接调用，这里就不需要写了。</p>
+<p>**注意:**这里接口方法的命名要按照JPA提供的命名格式,比如findBy, deleteBy等等,且要求驼峰命名法。如果自定义查询方法可以不遵守这个规则</p>
+<p>自定义查询方法例子(本项目不需要用到):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Query(value = &quot;select * from user where uname LIKE ?1 OR email LIKE ?2 OR lastdid LIKE ?3 OR uid LIKE ?4&quot;,nativeQuery = true)</span></span><br><span class="line"><span class="function">Page&lt;User&gt; <span class="title">findUserswithoutgender</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        String uname,</span></span></span><br><span class="line"><span class="function"><span class="params">        String email,</span></span></span><br><span class="line"><span class="function"><span class="params">        String lastdid,</span></span></span><br><span class="line"><span class="function"><span class="params">        String uid,</span></span></span><br><span class="line"><span class="function"><span class="params">        Pageable request</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="实现UserService"><a href="#实现UserService" class="headerlink" title="实现UserService"></a>实现UserService</h2><ol>
+<li><p>在service包中创建UserService接口</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630153407.png" alt="创建UserService接口"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630153737.png" alt="创建UserService接口"></p>
+</li>
+<li><p>添加登录注册需要用到的业务逻辑方法</p>
+<ul>
+<li>最终UserService的完整代码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 登录业务逻辑</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> uname 账户名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> password 密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">User <span class="title">loginService</span><span class="params">(String uname, String password)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册业务逻辑</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> user 要注册的User对象，属性中主键uid要为空，若uid不为空可能会覆盖已存在的user</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">User <span class="title">registService</span><span class="params">(User user)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>完成了接口方法的定义，接下来是在UserServiceImpl中实现这些方法啦</p>
+</li>
+</ol>
+<h2 id="实现UserServiceImpl"><a href="#实现UserServiceImpl" class="headerlink" title="实现UserServiceImpl"></a>实现UserServiceImpl</h2><p>我们将在UserServiceImpl中实现UserService中的方法，完整的UserServiceImpl代码在此步骤的最后一小步里</p>
+<ol>
+<li><p>在serviceImpl包中创建UserServiceImpl类</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630162053.png" alt="创建UserServiceImpl类"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630162331.png" alt="创建UserServiceImpl类"></p>
+</li>
+<li><p>添加需要实现的方法</p>
+<ul>
+<li><p>添加<code>implements UserService</code></p>
+<p>此时会报错，但没关系，只是因为方法还没实现。</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630162651.png"></p>
+</li>
+<li><p>鼠标悬停在红色波浪线自动生成需要实现的方法（也可以手动一个个写）</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630163207.png" alt="生成方法"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630163356.png" alt="生成方法"></p>
+</li>
+<li><p>生成方法后的样子</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630164253.png" alt="生成方法后的样子"></p>
+</li>
+</ul>
+</li>
+<li><p>实现登录业务逻辑</p>
+<ul>
+<li><p>因为要用到UserDao中的方法，所以先通过<code>@Resource</code>注解帮助我们实例化UserDao对象</p>
+</li>
+<li><p>登录业务逻辑代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> UserDao userDao;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">loginService</span><span class="params">(String uname, String password)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果账号密码都对则返回登录的用户对象，若有一个错误则返回null</span></span><br><span class="line">    User user = userDao.findByUnameAndPassword(uname, password);</span><br><span class="line">    <span class="comment">// 重要信息置空</span></span><br><span class="line">    <span class="keyword">if</span>(user != <span class="keyword">null</span>)&#123;</span><br><span class="line">        user.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>实现注册业务逻辑</p>
+<ul>
+<li><p>注册业务逻辑代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">registService</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//当新用户的用户名已存在时</span></span><br><span class="line">    <span class="keyword">if</span>(userDao.findByUname(user.getUname())!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="comment">// 无法注册</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//返回创建好的用户对象(带uid)</span></span><br><span class="line">        User newUser = userDao.save(user);</span><br><span class="line">        <span class="keyword">if</span>(newUser != <span class="keyword">null</span>)&#123;</span><br><span class="line">            newUser.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newUser;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>添加<code>@Service</code>注解</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630182301.png" alt="添加@Service注解"></p>
+</li>
+<li><p>最终UserServiceImpl完整代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.service.serviceImpl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.repository.UserDao;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.service.UserService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.Resource;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> UserDao userDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">loginService</span><span class="params">(String uname, String password)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 如果账号密码都对则返回登录的用户对象，若有一个错误则返回null</span></span><br><span class="line">        User user = userDao.findByUnameAndPassword(uname, password);</span><br><span class="line">        <span class="comment">// 重要信息置空</span></span><br><span class="line">        <span class="keyword">if</span>(user != <span class="keyword">null</span>)&#123;</span><br><span class="line">            user.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">registService</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//当新用户的用户名已存在时</span></span><br><span class="line">        <span class="keyword">if</span>(userDao.findByUname(user.getUname())!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="comment">// 无法注册</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//返回创建好的用户对象(带uid)</span></span><br><span class="line">            User newUser = userDao.save(user);</span><br><span class="line">            <span class="keyword">if</span>(newUser != <span class="keyword">null</span>)&#123;</span><br><span class="line">                newUser.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> newUser;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>至此UserServiceImpl就写完啦！</p>
+</li>
+</ol>
+<h2 id="实现工具类Result"><a href="#实现工具类Result" class="headerlink" title="实现工具类Result"></a>实现工具类Result</h2><p>工具类Result的作用是作为返回给前端的统一后的对象。也就是说返回给前端的都是Result对象，只是对象中的属性不太一样，这样方便前端固定接收格式。</p>
+<ol>
+<li><p>在utils包中创建Result类</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630175732.png" alt="创建Result类"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630180002.png" alt="创建Result类"></p>
+</li>
+<li><p>最终Result代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Result</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String code;</span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line">    <span class="keyword">private</span> T data;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCode</span><span class="params">(String code)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.code = code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMsg</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.msg = msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(T data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.data = data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Result</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Result</span><span class="params">(T data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.data = data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Result <span class="title">success</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Result result = <span class="keyword">new</span> Result&lt;&gt;();</span><br><span class="line">        result.setCode(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        result.setMsg(<span class="string">&quot;成功&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Result&lt;T&gt; <span class="title">success</span><span class="params">(T data)</span> </span>&#123;</span><br><span class="line">        Result&lt;T&gt; result = <span class="keyword">new</span> Result&lt;&gt;(data);</span><br><span class="line">        result.setCode(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        result.setMsg(<span class="string">&quot;成功&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Result&lt;T&gt; <span class="title">success</span><span class="params">(T data,String msg)</span> </span>&#123;</span><br><span class="line">        Result&lt;T&gt; result = <span class="keyword">new</span> Result&lt;&gt;(data);</span><br><span class="line">        result.setCode(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        result.setMsg(msg);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Result <span class="title">error</span><span class="params">(String code, String msg)</span> </span>&#123;</span><br><span class="line">        Result result = <span class="keyword">new</span> Result();</span><br><span class="line">        result.setCode(code);</span><br><span class="line">        result.setMsg(msg);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出Result是个模板类，因此想要返回什么数据类型给前端都行，如<code>Result&lt;User&gt;</code>，要是没看懂没关系，看到下面就知道怎么用了。因为里面有很多静态方法，可以直接用<code>类名.方法名</code>调用。</p>
+</li>
+</ol>
+<h2 id="实现UserController"><a href="#实现UserController" class="headerlink" title="实现UserController"></a>实现UserController</h2><ol>
+<li><p>在controller包中创建UserController类</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630174130.png" alt="创建UserController类"></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630174215.png" alt="创建UserController类"></p>
+</li>
+<li><p>添加<code>@RestController</code>与<code>@RequestMapping(&quot;/user&quot;)</code>注解，注入UserService</p>
+<ul>
+<li>注解@RequestMapping中的”/user”是这个控制器类的基路由</li>
+</ul>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630175120.png"></p>
+</li>
+<li><p>实现登录的控制</p>
+<p>这里的<code>@PostMapping(&quot;/login&quot;)</code>表示处理post请求，路由为/user/login</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">loginController</span><span class="params">(<span class="meta">@RequestParam</span> String uname, <span class="meta">@RequestParam</span> String password)</span></span>&#123;</span><br><span class="line">    User user = userService.loginService(uname, password);</span><br><span class="line">    <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.success(user,<span class="string">&quot;登录成功！&quot;</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.error(<span class="string">&quot;123&quot;</span>,<span class="string">&quot;账号或密码错误！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>实现注册的控制</p>
+<p>这里的<code>@PostMapping(&quot;/register&quot;)</code>表示处理post请求，路由为/user/register</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">registController</span><span class="params">(<span class="meta">@RequestBody</span> User newUser)</span></span>&#123;</span><br><span class="line">    User user = userService.registService(newUser);</span><br><span class="line">    <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.success(user,<span class="string">&quot;注册成功！&quot;</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.error(<span class="string">&quot;456&quot;</span>,<span class="string">&quot;用户名已存在！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>完整的UserController代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.service.UserService;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.utils.Result;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.Resource;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">loginController</span><span class="params">(<span class="meta">@RequestParam</span> String uname, <span class="meta">@RequestParam</span> String password)</span></span>&#123;</span><br><span class="line">        User user = userService.loginService(uname, password);</span><br><span class="line">        <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.success(user,<span class="string">&quot;登录成功！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.error(<span class="string">&quot;123&quot;</span>,<span class="string">&quot;账号或密码错误！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">registController</span><span class="params">(<span class="meta">@RequestBody</span> User newUser)</span></span>&#123;</span><br><span class="line">        User user = userService.registService(newUser);</span><br><span class="line">        <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.success(user,<span class="string">&quot;注册成功！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.error(<span class="string">&quot;456&quot;</span>,<span class="string">&quot;用户名已存在！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此所有的代码就都写完啦！！！</p>
+<p>接下来就是运行测试一下是否成功就行了。</p>
+</li>
+</ol>
+<h1 id="Postman测试"><a href="#Postman测试" class="headerlink" title="Postman测试"></a>Postman测试</h1><ol>
+<li><p>打开postman</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630182908.png" alt="postman"></p>
+</li>
+<li><p>测试注册用户</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630183243.png" alt="测试注册"></p>
+<p>输入选则请求方式Post，输入路由<code>http://localhost:8081/user/register</code>，输入用户json对象后点击<strong>Send</strong></p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;uname&quot;</span>: <span class="string">&quot;hhh&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;123&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>成功收到后端返回消息</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630183612.png" alt="注册成功消息"></p>
+</li>
+<li><p>登录测试</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630183907.png" alt="登录测试"></p>
+<p>类似于注册测试</p>
+<ul>
+<li>请求方式：POST</li>
+<li>url：<code>http://localhost:8081/user/login</code></li>
+<li>参数：见图中4，5步</li>
+</ul>
+<p>至此整个项目都写完并测试完啦！感谢你能耐心看到这，希望本教程对你有所帮助。</p>
+</li>
+</ol>
+<h1 id="项目完整代码"><a href="#项目完整代码" class="headerlink" title="项目完整代码"></a>项目完整代码</h1><p><a href="https://github.com/MakerHu/springboot-login-demo">MakerHu/springboot-login-demo: Springboot后端登录注册项目演示demo (github.com)</a></p>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>野生教程</category>
+        <category>StringBoot</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot</tag>
+        <tag>MySQL</tag>
+        <tag>SpringBoot+MySQL</tag>
+      </tags>
+  </entry>
+</search>
