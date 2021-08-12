@@ -67,27 +67,6 @@
 
   
   <url>
-    <loc>https://makerhu.github.io/tags/linux/</loc>
-    <lastmod>2021-08-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://makerhu.github.io/tags/django/</loc>
-    <lastmod>2021-08-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://makerhu.github.io/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
-    <lastmod>2021-08-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://makerhu.github.io/tags/hexo/</loc>
     <lastmod>2021-08-12</lastmod>
     <changefreq>daily</changefreq>
@@ -116,28 +95,21 @@
   </url>
   
   <url>
-    <loc>https://makerhu.github.io/tags/%E6%B3%A8%E8%A7%A3/</loc>
+    <loc>https://makerhu.github.io/tags/linux/</loc>
     <lastmod>2021-08-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://makerhu.github.io/tags/annotation/</loc>
+    <loc>https://makerhu.github.io/tags/django/</loc>
     <lastmod>2021-08-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://makerhu.github.io/tags/%E5%8F%8D%E5%B0%84/</loc>
-    <lastmod>2021-08-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://makerhu.github.io/tags/reflection/</loc>
+    <loc>https://makerhu.github.io/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
     <lastmod>2021-08-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -166,6 +138,34 @@
   
   <url>
     <loc>https://makerhu.github.io/tags/%E7%88%AC%E8%99%AB/</loc>
+    <lastmod>2021-08-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://makerhu.github.io/tags/%E6%B3%A8%E8%A7%A3/</loc>
+    <lastmod>2021-08-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://makerhu.github.io/tags/annotation/</loc>
+    <lastmod>2021-08-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://makerhu.github.io/tags/%E5%8F%8D%E5%B0%84/</loc>
+    <lastmod>2021-08-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://makerhu.github.io/tags/reflection/</loc>
     <lastmod>2021-08-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -202,7 +202,7 @@
   </url>
   
   <url>
-    <loc>https://makerhu.github.io/categories/%E5%AD%A6%E4%B9%A0/%E9%A1%B9%E7%9B%AE/</loc>
+    <loc>https://makerhu.github.io/categories/%E5%AD%A6%E4%B9%A0/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2021-08-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -216,7 +216,7 @@
   </url>
   
   <url>
-    <loc>https://makerhu.github.io/categories/%E5%AD%A6%E4%B9%A0/%E7%AC%94%E8%AE%B0/</loc>
+    <loc>https://makerhu.github.io/categories/%E5%AD%A6%E4%B9%A0/%E9%A1%B9%E7%9B%AE/</loc>
     <lastmod>2021-08-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
