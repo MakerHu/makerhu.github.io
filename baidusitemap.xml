@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.makerhu.com/posts/58379ca9/</loc>
+    <lastmod>2021-08-17</lastmod>
+  </url>
+  <url>
     <loc>https://blog.makerhu.com/posts/fe73207c/</loc>
-    <lastmod>2021-08-16</lastmod>
+    <lastmod>2021-08-17</lastmod>
   </url>
   <url>
     <loc>https://blog.makerhu.com/posts/41268e44/</loc>
@@ -14,10 +18,6 @@
   </url>
   <url>
     <loc>https://blog.makerhu.com/posts/5b2ca0db/</loc>
-    <lastmod>2021-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://blog.makerhu.com/posts/58379ca9/</loc>
     <lastmod>2021-07-29</lastmod>
   </url>
 </urlset> 
