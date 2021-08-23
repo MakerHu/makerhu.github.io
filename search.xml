@@ -122,6 +122,69 @@
       </tags>
   </entry>
   <entry>
+    <title>代理模式之静态代理</title>
+    <url>/posts/3c271a1b/</url>
+    <content><![CDATA[<blockquote>
+<p>代理模式我们可以从字面上去理解它的涵义，代理就是<strong>代替</strong>某个事物去<strong>处理</strong>事情，代理在代替处理事情的时候可能还会添加一些它的补充行为。以生活中申请留学的代理机构为例，代理机构代替你去申请国外高校，除了“申请高校”这件事外，它还在申请之前帮你“查询高校信息”，并在申请成功之后想你“要代理费”。接下来我就以申请留学为例简单实现一个静态代理的例子。</p>
+</blockquote>
+<h1 id="三个对象"><a href="#三个对象" class="headerlink" title="三个对象"></a>三个对象</h1><ul>
+<li><p><strong>要代理的事情</strong>（一般是一个接口）：申请留学这件事（StudyAbroad）</p>
+</li>
+<li><p><strong>被代理的人</strong>：学生（Student）</p>
+</li>
+<li><p><strong>代理人</strong>：留学申请机构（StudyAbroadAgent）</p>
+</li>
+</ul>
+<p>他们的<strong>关系</strong>：留学申请机构代理学生去申请留学</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="StudyAbroad-java"><a href="#StudyAbroad-java" class="headerlink" title="StudyAbroad.java"></a>StudyAbroad.java</h2><p>要代理的事：申请留学，就是一个接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 要代理的事情：申请留学这件事</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudyAbroad</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Student-java"><a href="#Student-java" class="headerlink" title="Student.java"></a>Student.java</h2><p>学生要出国留学，也是真正要做代理的事的对象，他实现申请留学这件事的接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 学生</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="keyword">this</span>.name + <span class="string">&quot;申请留学成功！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="StudyAbroadAgent-java"><a href="#StudyAbroadAgent-java" class="headerlink" title="StudyAbroadAgent.java"></a>StudyAbroadAgent.java</h2><p>代理机构同样也实现申请留学这件事的接口，但他在实现时调用了被代理人的申请留学方法，也就是<strong>替</strong>被代理人申请留学。并且在代理申请留学之前还帮助学生查询了高校信息，替学生省事了，但是代理完后要交钱😂</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 代理人：留学申请机构</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudyAbroadAgent</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 被代理的人</span></span><br><span class="line">    <span class="keyword">private</span> StudyAbroad studyAbroad;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StudyAbroadAgent</span><span class="params">(StudyAbroad studyAbroad)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.studyAbroad = studyAbroad;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        before();</span><br><span class="line">        studyAbroad.applyForStudyAbroad();  <span class="comment">// 替被代理的人完成要代理的事</span></span><br><span class="line">        after();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之前帮你查询国外高校信息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;查询国外高校信息。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之后向你要代理费</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;收取代理费。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Main-java"><a href="#Main-java" class="headerlink" title="Main.java"></a>Main.java</h2><p>主函数，请代理机构帮某个学生(MakerHu)申请留学。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student(<span class="string">&quot;MakerHu&quot;</span>);</span><br><span class="line">        StudyAbroadAgent studyAbroadAgent = <span class="keyword">new</span> StudyAbroadAgent(student);</span><br><span class="line">        studyAbroadAgent.applyForStudyAbroad();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>运行结果</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">查询国外高校信息。</span><br><span class="line">MakerHu申请留学成功！</span><br><span class="line">收取代理费。</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="静态代理模式有啥用呢"><a href="#静态代理模式有啥用呢" class="headerlink" title="静态代理模式有啥用呢?"></a>静态代理模式有啥用呢?</h1><p>在java的多线程中就用到了静态代理模式。</p>
+<p>我们在实现多线程时，首先写一个自己的类MyRunnabale实现Runnable，接着通过<code>new Thread(new MyRunnable).start();</code>开启线程。</p>
+<p>在Java中Thread实现了Runnable接口，因此在代理模式中，他们的扮演的身份分别是：</p>
+<ul>
+<li><p><strong>要代理的事情：</strong>Runnable中的run()方法</p>
+</li>
+<li><p><strong>被代理的类：</strong>你实现的类MyRunnable</p>
+</li>
+<li><p><strong>代理类：</strong>Thread</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>笔记</category>
+        <category>Java笔记</category>
+      </categories>
+      <tags>
+        <tag>代理模式</tag>
+        <tag>proxy pattern</tag>
+        <tag>静态代理</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>在Linux服务器上简易部署django项目</title>
     <url>/posts/58379ca9/</url>
     <content><![CDATA[<ol>
@@ -325,7 +388,7 @@
   <entry>
     <title>爬虫实现力扣(LeetCode)本地刷题的快捷工具</title>
     <url>/posts/fe73207c/</url>
-    <content><![CDATA[<p><strong>未经允许请勿转载！</strong> 文章首发于<a href="https://blog.makerhu.com/posts/fe73207c/">爬虫实现力扣(LeetCode)本地刷题的快捷工具 | MakerHu的博客</a></p>
+    <content><![CDATA[<p><strong>未经允许请勿转载！</strong> 文章首发于<a href="https://www.makerhu.com/posts/fe73207c/">爬虫实现力扣(LeetCode)本地刷题的快捷工具 | MakerHu的博客</a></p>
 <blockquote>
 <p>相信大家都在力扣上刷过题，力扣上虽然能在线写题，但在线编译运行的速度先对于本地运行还是比较慢，且一些自动补全的功能也不如自己的IDE优秀，因此，我们一般会在本地建个小项目解题，解完后再复制到力扣上提交。为了方便我们在本地快速搭建起力扣的解题环境，我写了一个小工具帮助我们把力扣的题目描述爬取到本地，并生成基础的代码，这样我们就能快速地专注于解题本身了。接下来我将展示一下工具的使用效果，并向大家提供源代码及部署方式。</p>
 </blockquote>
