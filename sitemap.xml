@@ -74,27 +74,6 @@
 
   
   <url>
-    <loc>https://www.makerhu.com/tags/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</loc>
-    <lastmod>2021-08-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.makerhu.com/tags/proxy-pattern/</loc>
-    <lastmod>2021-08-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.makerhu.com/tags/%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86/</loc>
-    <lastmod>2021-08-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.makerhu.com/tags/hexo/</loc>
     <lastmod>2021-08-26</lastmod>
     <changefreq>daily</changefreq>
@@ -123,21 +102,21 @@
   </url>
   
   <url>
-    <loc>https://www.makerhu.com/tags/linux/</loc>
+    <loc>https://www.makerhu.com/tags/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</loc>
     <lastmod>2021-08-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.makerhu.com/tags/django/</loc>
+    <loc>https://www.makerhu.com/tags/proxy-pattern/</loc>
     <lastmod>2021-08-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.makerhu.com/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <loc>https://www.makerhu.com/tags/%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86/</loc>
     <lastmod>2021-08-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -166,6 +145,27 @@
   
   <url>
     <loc>https://www.makerhu.com/tags/reflection/</loc>
+    <lastmod>2021-08-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.makerhu.com/tags/linux/</loc>
+    <lastmod>2021-08-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.makerhu.com/tags/django/</loc>
+    <lastmod>2021-08-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.makerhu.com/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
     <lastmod>2021-08-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -230,7 +230,7 @@
   </url>
   
   <url>
-    <loc>https://www.makerhu.com/categories/%E5%AD%A6%E4%B9%A0/%E7%AC%94%E8%AE%B0/</loc>
+    <loc>https://www.makerhu.com/categories/%E5%AD%A6%E4%B9%A0/%E9%87%8E%E7%94%9F%E6%95%99%E7%A8%8B/</loc>
     <lastmod>2021-08-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -244,7 +244,7 @@
   </url>
   
   <url>
-    <loc>https://www.makerhu.com/categories/%E5%AD%A6%E4%B9%A0/%E9%87%8E%E7%94%9F%E6%95%99%E7%A8%8B/</loc>
+    <loc>https://www.makerhu.com/categories/%E5%AD%A6%E4%B9%A0/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2021-08-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

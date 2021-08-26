@@ -1,69 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>代理模式之静态代理</title>
-    <url>/posts/3c271a1b/</url>
-    <content><![CDATA[<blockquote>
-<p>代理模式我们可以从字面上去理解它的涵义，代理就是<strong>代替</strong>某个事物去<strong>处理</strong>事情，代理在代替处理事情的时候可能还会添加一些它的补充行为。以生活中申请留学的代理机构为例，代理机构代替你去申请国外高校，除了“申请高校”这件事外，它还在申请之前帮你“查询高校信息”，并在申请成功之后想你“要代理费”。接下来我就以申请留学为例简单实现一个静态代理的例子。</p>
-</blockquote>
-<h1 id="三个对象"><a href="#三个对象" class="headerlink" title="三个对象"></a>三个对象</h1><ul>
-<li><p><strong>要代理的事情</strong>（一般是一个接口）：申请留学这件事（StudyAbroad）</p>
-</li>
-<li><p><strong>被代理的人</strong>：学生（Student）</p>
-</li>
-<li><p><strong>代理人</strong>：留学申请机构（StudyAbroadAgent）</p>
-</li>
-</ul>
-<p>他们的<strong>关系</strong>：留学申请机构代理学生去申请留学</p>
-<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="StudyAbroad-java"><a href="#StudyAbroad-java" class="headerlink" title="StudyAbroad.java"></a>StudyAbroad.java</h2><p>要代理的事：申请留学，就是一个接口</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 要代理的事情：申请留学这件事</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudyAbroad</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Student-java"><a href="#Student-java" class="headerlink" title="Student.java"></a>Student.java</h2><p>学生要出国留学，也是真正要做代理的事的对象，他实现申请留学这件事的接口</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 学生</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="keyword">this</span>.name + <span class="string">&quot;申请留学成功！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="StudyAbroadAgent-java"><a href="#StudyAbroadAgent-java" class="headerlink" title="StudyAbroadAgent.java"></a>StudyAbroadAgent.java</h2><p>代理机构同样也实现申请留学这件事的接口，但他在实现时调用了被代理人的申请留学方法，也就是<strong>替</strong>被代理人申请留学。并且在代理申请留学之前还帮助学生查询了高校信息，替学生省事了，但是代理完后要交钱😂</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 代理人：留学申请机构</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudyAbroadAgent</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 被代理的人</span></span><br><span class="line">    <span class="keyword">private</span> StudyAbroad studyAbroad;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StudyAbroadAgent</span><span class="params">(StudyAbroad studyAbroad)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.studyAbroad = studyAbroad;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        before();</span><br><span class="line">        studyAbroad.applyForStudyAbroad();  <span class="comment">// 替被代理的人完成要代理的事</span></span><br><span class="line">        after();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之前帮你查询国外高校信息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;查询国外高校信息。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之后向你要代理费</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;收取代理费。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Main-java"><a href="#Main-java" class="headerlink" title="Main.java"></a>Main.java</h2><p>主函数，请代理机构帮某个学生(MakerHu)申请留学。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student(<span class="string">&quot;MakerHu&quot;</span>);</span><br><span class="line">        StudyAbroadAgent studyAbroadAgent = <span class="keyword">new</span> StudyAbroadAgent(student);</span><br><span class="line">        studyAbroadAgent.applyForStudyAbroad();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>运行结果</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">查询国外高校信息。</span><br><span class="line">MakerHu申请留学成功！</span><br><span class="line">收取代理费。</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="静态代理模式有啥用呢"><a href="#静态代理模式有啥用呢" class="headerlink" title="静态代理模式有啥用呢?"></a>静态代理模式有啥用呢?</h1><p>在java的多线程中就用到了静态代理模式。</p>
-<p>我们在实现多线程时，首先写一个自己的类MyRunnabale实现Runnable，接着通过<code>new Thread(new MyRunnable).start();</code>开启线程。</p>
-<p>在Java中Thread实现了Runnable接口，因此在代理模式中，他们的扮演的身份分别是：</p>
-<ul>
-<li><p><strong>要代理的事情：</strong>Runnable中的run()方法</p>
-</li>
-<li><p><strong>被代理的类：</strong>你实现的类MyRunnable</p>
-</li>
-<li><p><strong>代理类：</strong>Thread</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>笔记</category>
-        <category>Java笔记</category>
-      </categories>
-      <tags>
-        <tag>代理模式</tag>
-        <tag>proxy pattern</tag>
-        <tag>静态代理</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>hexo使用手册</title>
     <url>/posts/6600e9a1/</url>
     <content><![CDATA[<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><ul>
@@ -185,76 +122,66 @@
       </tags>
   </entry>
   <entry>
-    <title>在Linux服务器上简易部署django项目</title>
-    <url>/posts/58379ca9/</url>
-    <content><![CDATA[<ol>
-<li>安装好python3</li>
-<li>创建虚拟环境<br> <code>python -m venv /虚拟环境名称/</code></li>
-<li>进入虚拟环境<br> <code>cd /虚拟环境名/</code></li>
-<li>进入bin目录<br> <code>cd bin</code></li>
-<li>运行虚拟环境<br> <code>source activate</code></li>
-<li>更新pip<br> <code>pip install --upgrade pip</code></li>
-<li>查看当前安装的模块<br> <code>pip freeze</code></li>
-<li>安装项目的django对应版本<br> <code>pip install django==3.1.3</code><br> 也可用清华镜像网安装（速度较快）<br> <code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple django==3.1.3</code></li>
-<li>再次查看安装模块<br> <code>pip freeze</code></li>
-<li>接着把项目在本地安装的模块都装到虚拟环境中(根据自身项目具体情况安装）<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple cryptography</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple apscheduler</code></li>
-<li>安装http需要的模块<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple gunicorn</code></li>
-<li>安装bleach<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple bleach</code></li>
-<li>在服务器中配置项目的数据库，这里以mysql为例（mysql需先在linux系统中安装好）</li>
-</ol>
-<ul>
-<li>登录root<br><code>mysql -u root -p</code></li>
-<li>创建项目数据库<br><code>create database cms;</code></li>
-<li>mysql创建新用户cmsmanager , 密码123456 (cmamanager为用户名, 123456为密码，可根据自己需要修改)<br><code>CREATE USER &#39;cmsmanager&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;;</code></li>
-<li>授予数据库cms的所有权限给cmsmanager<br><code>GRANT ALL PRIVILEGES ON cms.* TO &#39;cmsmanager&#39;@&#39;%&#39;;</code></li>
+    <title>代理模式之静态代理</title>
+    <url>/posts/3c271a1b/</url>
+    <content><![CDATA[<blockquote>
+<p>代理模式我们可以从字面上去理解它的涵义，代理就是<strong>代替</strong>某个事物去<strong>处理</strong>事情，代理在代替处理事情的时候可能还会添加一些它的补充行为。以生活中申请留学的代理机构为例，代理机构代替你去申请国外高校，除了“申请高校”这件事外，它还在申请之前帮你“查询高校信息”，并在申请成功之后想你“要代理费”。接下来我就以申请留学为例简单实现一个静态代理的例子。</p>
+</blockquote>
+<h1 id="三个对象"><a href="#三个对象" class="headerlink" title="三个对象"></a>三个对象</h1><ul>
+<li><p><strong>要代理的事情</strong>（一般是一个接口）：申请留学这件事（StudyAbroad）</p>
+</li>
+<li><p><strong>被代理的人</strong>：学生（Student）</p>
+</li>
+<li><p><strong>代理人</strong>：留学申请机构（StudyAbroadAgent）</p>
+</li>
 </ul>
-<p><strong>如果登录cmsmanager账户时遇到错误</strong><br><code>ERROR 1045 (28000): Access denied for user &#39;cmsmanager&#39;@&#39;localhost&#39; (using password: YES)</code><br>可能是因为你有一个用户名为空的账户，mysql会先匹配它，然后就一直提示你密码错误，需要删掉这个匿名用户，然后执行 <code>FLUSH PRIVILEGES;</code>如下：<br><code>Delete FROM user Where User=&#39;&#39; and Host=&#39;localhost&#39;;</code><br><code>flush privileges;</code><br>14. 在django项目settings.py中配置好数据库</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">  <span class="string">&#x27;default&#x27;</span>: &#123; </span><br><span class="line">    <span class="comment"># &#x27;ENGINE&#x27;: &#x27;django.db.backends.sqlite3&#x27;,</span></span><br><span class="line">    <span class="comment"># &#x27;NAME&#x27;: BASE_DIR / &#x27;db.sqlite3&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>,   <span class="comment"># 设置数据库为mysql</span></span><br><span class="line">    <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;cms&#x27;</span>,         <span class="comment"># 数据库名 </span></span><br><span class="line">    <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;cmsmanager&#x27;</span>,       <span class="comment"># 账户 </span></span><br><span class="line">    <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;123456&#x27;</span>,    <span class="comment"># 密码</span></span><br><span class="line">    <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,     <span class="comment"># 数据库的ip</span></span><br><span class="line">    <span class="string">&#x27;PORT&#x27;</span>: <span class="number">3306</span>,     <span class="comment"># 数据库的端口 </span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在django项目<strong>settings.py</strong>中允许所有主机访问</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ALLOWED_HOSTS = [<span class="string">&quot;*&quot;</span>]</span><br></pre></td></tr></table></figure>
-<ol start="15">
-<li><p>将项目打包压缩（删掉虚拟环境）</p>
-</li>
-<li><p>将项目压缩包上传至服务器中刚创建的虚拟环境（见第2步）的根目录下（与bin目录同级）并解压，我用的远程连接服务器的工具是mobaxterm</p>
-<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233104.png" alt="项目上传位置"></p>
-<p>在阿里云安全组中开放端口<br><strong>如果不能访问端口</strong><br>则</p>
-</li>
-</ol>
+<p>他们的<strong>关系</strong>：留学申请机构代理学生去申请留学</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="StudyAbroad-java"><a href="#StudyAbroad-java" class="headerlink" title="StudyAbroad.java"></a>StudyAbroad.java</h2><p>要代理的事：申请留学，就是一个接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 要代理的事情：申请留学这件事</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudyAbroad</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Student-java"><a href="#Student-java" class="headerlink" title="Student.java"></a>Student.java</h2><p>学生要出国留学，也是真正要做代理的事的对象，他实现申请留学这件事的接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 学生</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="keyword">this</span>.name + <span class="string">&quot;申请留学成功！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="StudyAbroadAgent-java"><a href="#StudyAbroadAgent-java" class="headerlink" title="StudyAbroadAgent.java"></a>StudyAbroadAgent.java</h2><p>代理机构同样也实现申请留学这件事的接口，但他在实现时调用了被代理人的申请留学方法，也就是<strong>替</strong>被代理人申请留学。并且在代理申请留学之前还帮助学生查询了高校信息，替学生省事了，但是代理完后要交钱😂</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 代理人：留学申请机构</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudyAbroadAgent</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 被代理的人</span></span><br><span class="line">    <span class="keyword">private</span> StudyAbroad studyAbroad;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StudyAbroadAgent</span><span class="params">(StudyAbroad studyAbroad)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.studyAbroad = studyAbroad;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        before();</span><br><span class="line">        studyAbroad.applyForStudyAbroad();  <span class="comment">// 替被代理的人完成要代理的事</span></span><br><span class="line">        after();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之前帮你查询国外高校信息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;查询国外高校信息。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之后向你要代理费</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;收取代理费。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Main-java"><a href="#Main-java" class="headerlink" title="Main.java"></a>Main.java</h2><p>主函数，请代理机构帮某个学生(MakerHu)申请留学。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student(<span class="string">&quot;MakerHu&quot;</span>);</span><br><span class="line">        StudyAbroadAgent studyAbroadAgent = <span class="keyword">new</span> StudyAbroadAgent(student);</span><br><span class="line">        studyAbroadAgent.applyForStudyAbroad();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>运行结果</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">查询国外高校信息。</span><br><span class="line">MakerHu申请留学成功！</span><br><span class="line">收取代理费。</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="静态代理模式有啥用呢"><a href="#静态代理模式有啥用呢" class="headerlink" title="静态代理模式有啥用呢?"></a>静态代理模式有啥用呢?</h1><p>在java的多线程中就用到了静态代理模式。</p>
+<p>我们在实现多线程时，首先写一个自己的类MyRunnabale实现Runnable，接着通过<code>new Thread(new MyRunnable).start();</code>开启线程。</p>
+<p>在Java中Thread实现了Runnable接口，因此在代理模式中，他们的扮演的身份分别是：</p>
 <ul>
-<li>查看防火墙状态：<br><code>systemctl status firewalld</code></li>
-<li>实例中已经安装Firewalld并且已经启用firewalld.service，若需要放行 TCP 5050端口，执行命令<br><code>firewall-cmd --add-port=5050/tcp --permanent</code><br>返回结果为success即表示已经放行TCP 5050端口（端口号根据自己需要修改）。</li>
-<li>最后重新加载防火墙即可：<br><code>firewall-cmd --reload</code></li>
-</ul>
-<ol start="17">
-<li>最后，启动项目(这种方式如果关掉远程连接服务器的工具就停了，若要一直后台运行则跳过此步)<br><code>python manage.py runserver 0.0.0.0:5050</code></li>
-<li>将项目后台运行（记得先启动虚拟环境：在虚拟环境的bin目录下 <code>source activate</code>）<br>参考教程：<a href="https://www.cnblogs.com/yoyoketang/p/10593731.html">https://www.cnblogs.com/yoyoketang/p/10593731.html</a></li>
-</ol>
-<ul>
-<li><p>首先写一个启动文件：start.sh<br>在manage.py同级目录下<br><code>vim start.sh</code><br>输入：</p>
-<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ps</span> -aux | <span class="keyword">grep</span> <span class="keyword">python</span>|xargs kill -<span class="number">9</span></span><br><span class="line">nohup <span class="keyword">python</span> manage.<span class="keyword">py</span> runserver <span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">5050</span> &gt;cms_website.out <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233154.png" alt="编辑start.sh"></p>
-<p>编辑完成后按Esc建退出，输入<code>:wq</code>后按回车保存退出</p>
+<li><p><strong>要代理的事情：</strong>Runnable中的run()方法</p>
 </li>
-<li><p>同理编辑停止文件stop.sh<br>在manage.py同级目录下<br><code>vim stop.sh</code><br>输入：<br><code>ps -aux | grep python|xargs kill -9</code><br>编辑完成后Esc退出，输入<code>:wq</code>保存退出</p>
+<li><p><strong>被代理的类：</strong>你实现的类MyRunnable</p>
 </li>
-<li><p>都编辑完成后授权这两个文件<br><code>chmod +777 start.sh</code><br><code>chmod +777 stop.sh</code></p>
-</li>
-<li><p>启动时输入：<br><code>./start.sh</code></p>
-</li>
-<li><p>关闭服务输入：<br><code>./stop.sh</code></p>
-</li>
-<li><p>查看实时日志<br><code>tail -f cms_website.out</code></p>
+<li><p><strong>代理类：</strong>Thread</p>
 </li>
 </ul>
 ]]></content>
       <categories>
         <category>学习</category>
-        <category>野生教程</category>
+        <category>笔记</category>
+        <category>Java笔记</category>
       </categories>
       <tags>
-        <tag>linux</tag>
-        <tag>django</tag>
-        <tag>服务器</tag>
+        <tag>代理模式</tag>
+        <tag>proxy pattern</tag>
+        <tag>静态代理</tag>
       </tags>
   </entry>
   <entry>
@@ -383,6 +310,79 @@
         <tag>annotation</tag>
         <tag>反射</tag>
         <tag>reflection</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Linux服务器上简易部署django项目</title>
+    <url>/posts/58379ca9/</url>
+    <content><![CDATA[<ol>
+<li>安装好python3</li>
+<li>创建虚拟环境<br> <code>python -m venv /虚拟环境名称/</code></li>
+<li>进入虚拟环境<br> <code>cd /虚拟环境名/</code></li>
+<li>进入bin目录<br> <code>cd bin</code></li>
+<li>运行虚拟环境<br> <code>source activate</code></li>
+<li>更新pip<br> <code>pip install --upgrade pip</code></li>
+<li>查看当前安装的模块<br> <code>pip freeze</code></li>
+<li>安装项目的django对应版本<br> <code>pip install django==3.1.3</code><br> 也可用清华镜像网安装（速度较快）<br> <code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple django==3.1.3</code></li>
+<li>再次查看安装模块<br> <code>pip freeze</code></li>
+<li>接着把项目在本地安装的模块都装到虚拟环境中(根据自身项目具体情况安装）<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple cryptography</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple apscheduler</code></li>
+<li>安装http需要的模块<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple gunicorn</code></li>
+<li>安装bleach<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple bleach</code></li>
+<li>在服务器中配置项目的数据库，这里以mysql为例（mysql需先在linux系统中安装好）</li>
+</ol>
+<ul>
+<li>登录root<br><code>mysql -u root -p</code></li>
+<li>创建项目数据库<br><code>create database cms;</code></li>
+<li>mysql创建新用户cmsmanager , 密码123456 (cmamanager为用户名, 123456为密码，可根据自己需要修改)<br><code>CREATE USER &#39;cmsmanager&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;;</code></li>
+<li>授予数据库cms的所有权限给cmsmanager<br><code>GRANT ALL PRIVILEGES ON cms.* TO &#39;cmsmanager&#39;@&#39;%&#39;;</code></li>
+</ul>
+<p><strong>如果登录cmsmanager账户时遇到错误</strong><br><code>ERROR 1045 (28000): Access denied for user &#39;cmsmanager&#39;@&#39;localhost&#39; (using password: YES)</code><br>可能是因为你有一个用户名为空的账户，mysql会先匹配它，然后就一直提示你密码错误，需要删掉这个匿名用户，然后执行 <code>FLUSH PRIVILEGES;</code>如下：<br><code>Delete FROM user Where User=&#39;&#39; and Host=&#39;localhost&#39;;</code><br><code>flush privileges;</code><br>14. 在django项目settings.py中配置好数据库</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">  <span class="string">&#x27;default&#x27;</span>: &#123; </span><br><span class="line">    <span class="comment"># &#x27;ENGINE&#x27;: &#x27;django.db.backends.sqlite3&#x27;,</span></span><br><span class="line">    <span class="comment"># &#x27;NAME&#x27;: BASE_DIR / &#x27;db.sqlite3&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>,   <span class="comment"># 设置数据库为mysql</span></span><br><span class="line">    <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;cms&#x27;</span>,         <span class="comment"># 数据库名 </span></span><br><span class="line">    <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;cmsmanager&#x27;</span>,       <span class="comment"># 账户 </span></span><br><span class="line">    <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;123456&#x27;</span>,    <span class="comment"># 密码</span></span><br><span class="line">    <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,     <span class="comment"># 数据库的ip</span></span><br><span class="line">    <span class="string">&#x27;PORT&#x27;</span>: <span class="number">3306</span>,     <span class="comment"># 数据库的端口 </span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在django项目<strong>settings.py</strong>中允许所有主机访问</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ALLOWED_HOSTS = [<span class="string">&quot;*&quot;</span>]</span><br></pre></td></tr></table></figure>
+<ol start="15">
+<li><p>将项目打包压缩（删掉虚拟环境）</p>
+</li>
+<li><p>将项目压缩包上传至服务器中刚创建的虚拟环境（见第2步）的根目录下（与bin目录同级）并解压，我用的远程连接服务器的工具是mobaxterm</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233104.png" alt="项目上传位置"></p>
+<p>在阿里云安全组中开放端口<br><strong>如果不能访问端口</strong><br>则</p>
+</li>
+</ol>
+<ul>
+<li>查看防火墙状态：<br><code>systemctl status firewalld</code></li>
+<li>实例中已经安装Firewalld并且已经启用firewalld.service，若需要放行 TCP 5050端口，执行命令<br><code>firewall-cmd --add-port=5050/tcp --permanent</code><br>返回结果为success即表示已经放行TCP 5050端口（端口号根据自己需要修改）。</li>
+<li>最后重新加载防火墙即可：<br><code>firewall-cmd --reload</code></li>
+</ul>
+<ol start="17">
+<li>最后，启动项目(这种方式如果关掉远程连接服务器的工具就停了，若要一直后台运行则跳过此步)<br><code>python manage.py runserver 0.0.0.0:5050</code></li>
+<li>将项目后台运行（记得先启动虚拟环境：在虚拟环境的bin目录下 <code>source activate</code>）<br>参考教程：<a href="https://www.cnblogs.com/yoyoketang/p/10593731.html">https://www.cnblogs.com/yoyoketang/p/10593731.html</a></li>
+</ol>
+<ul>
+<li><p>首先写一个启动文件：start.sh<br>在manage.py同级目录下<br><code>vim start.sh</code><br>输入：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ps</span> -aux | <span class="keyword">grep</span> <span class="keyword">python</span>|xargs kill -<span class="number">9</span></span><br><span class="line">nohup <span class="keyword">python</span> manage.<span class="keyword">py</span> runserver <span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">5050</span> &gt;cms_website.out <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233154.png" alt="编辑start.sh"></p>
+<p>编辑完成后按Esc建退出，输入<code>:wq</code>后按回车保存退出</p>
+</li>
+<li><p>同理编辑停止文件stop.sh<br>在manage.py同级目录下<br><code>vim stop.sh</code><br>输入：<br><code>ps -aux | grep python|xargs kill -9</code><br>编辑完成后Esc退出，输入<code>:wq</code>保存退出</p>
+</li>
+<li><p>都编辑完成后授权这两个文件<br><code>chmod +777 start.sh</code><br><code>chmod +777 stop.sh</code></p>
+</li>
+<li><p>启动时输入：<br><code>./start.sh</code></p>
+</li>
+<li><p>关闭服务输入：<br><code>./stop.sh</code></p>
+</li>
+<li><p>查看实时日志<br><code>tail -f cms_website.out</code></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>野生教程</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>django</tag>
+        <tag>服务器</tag>
       </tags>
   </entry>
   <entry>
