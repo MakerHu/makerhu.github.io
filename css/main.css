@@ -1194,7 +1194,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #4288b4;
+  background: #f2b4cb;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2697,4 +2697,7 @@ body {
 }
 .busuanzi-count {
   color: #f8f6f6;
+}
+.back-to-top {
+  border-radius: 6px;
 }
