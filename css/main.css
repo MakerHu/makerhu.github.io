@@ -1213,7 +1213,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #9301b8;
+  background: #b69803;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2791,8 +2791,9 @@ body {
 .back-to-top {
   border-radius: 6px;
 }
+/************************ Other ***************************/
 /* 修改选中字符的颜色 */
 ::selection {
-  background: rgba(0,149,255,0.2);
-  color: #333;
+  background: rgba(0,149,255,0.6);
+  color: #fff;
 }
