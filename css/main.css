@@ -1213,7 +1213,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ff4eff;
+  background: #7f2157;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1300,15 +1300,14 @@ pre .javascript .function {
   margin-left: 10px;
 }
 .sidebar-nav li:hover {
-  color: #555;
+  color: #fc6423;
 }
 .sidebar-nav .sidebar-nav-active {
-  font-weight: bold;
-  border-bottom-color: #555;
-  color: #555;
+  border-bottom-color: #fc6423;
+  color: #fc6423;
 }
 .sidebar-nav .sidebar-nav-active:hover {
-  color: #555;
+  color: #fc6423;
 }
 .sidebar-panel {
   display: none;
@@ -1375,15 +1374,14 @@ pre .javascript .function {
   display: block;
 }
 .post-toc .nav .active > a {
-  border-bottom-color: #555;
-  color: #555;
+  border-bottom-color: #fc6423;
+  color: #fc6423;
 }
 .post-toc .nav .active-current > a {
-  font-weight: bold;
-  color: #555;
+  color: #fc6423;
 }
 .post-toc .nav .active-current > a:hover {
-  color: #555;
+  color: #fc6423;
 }
 .site-state {
   display: flex;
@@ -1818,7 +1816,7 @@ pre .javascript .function {
   font-size: 1.5em;
   font-weight: bold;
   margin: initial;
-  text-align: left;
+  text-align: center;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
@@ -1855,8 +1853,8 @@ pre .javascript .function {
   color: #999;
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 0.75em;
-  margin: 3px 0 20px 0;
-  text-align: left;
+  margin: 3px 0 30px 0;
+  text-align: center;
 }
 .posts-expand .post-meta .post-description {
   font-size: 0.875em;
@@ -2694,39 +2692,107 @@ ul.breadcrumb li + li:last-child {
     margin: 8px 0 0;
   }
 }
+/**************************** header ******************************/
+/* header-隐藏顶部线条 */
+.headband {
+  display: none;
+}
+/* header-顶部空白 */
+.header,
+.main-inner {
+  margin-top: 20px;
+}
+@media (max-width: 767px) {
+  .header,
+  .main-inner {
+    margin-top: 0;
+  }
+}
+/* header-页面背景 */
 body {
   background-image: url("/images/background.png");
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
 }
+/************************ Sidebar **************************/
+/* sidebar-标题背景 */
 .site-brand-container {
-  background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
+  background-image: linear-gradient(60deg, #243949 0%, #3b5c77 100%);
 }
+/* Sidebar-侧边状态栏（显示头像那个栏下面显示 日志|分类|标签 数量的栏） */
 .site-state {
   display: none;
 }
+/* Sidebar-头像样式 */
 .site-author-image {
   border: 3px solid #eee;
 }
-.content-wrap {
-  opacity: 0.98;
-}
-​,
+/* sidebar-透明度设置 */
 .sidebar {
   background-color: transparent;
 }
 ​,
-.headband {
-  background-color: transparent;
-  margin-bottom: 15px;
+.sidebar-nav .sidebar-nav-active {
+  font-weight: bold;
+  border-bottom: 2px solid #555;
+  color: #555;
 }
+​:hover,
+.sidebar-nav .sidebar-nav-active:hover {
+  color: #555;
+}
+.sidebar-nav li:hover {
+  color: #000;
+}
+/* 目录中的连接标签样式 */
+.post-toc ol a:link {
+  border-bottom: 0px solid #999;
+}
+.post-toc ol a:link:hover {
+  color: #000;
+}
+/* 目录当先查看项的a标签样式 */
+.post-toc .nav .active-current > a {
+  font-weight: bold;
+}
+.post-toc .nav .active-current > a:hover {
+  color: #000;
+}
+/* 目录当先查看项(包括父级目录)的a标签样式 */
+.post-toc .nav .active > a {
+  font-weight: bold;
+  color: #555;
+}
+/**************************** post ******************************/
+/* post-首页文章标题 */
+.index .post-title {
+  text-align: left;
+}
+/* post-首页文章信息 */
+.index .post-meta {
+  text-align: left;
+}
+/* 文章内容的透明度设置 */
+.content-wrap {
+  opacity: 0.98;
+}
+/**************************** footer ******************************/
+/* footer中的copyright */
 .copyright {
   color: #f8f6f6;
 }
+/* footer中的访问量 */
 .busuanzi-count {
   color: #f8f6f6;
 }
+/************************ Button ***************************/
+/* back-to-top返回顶部样式 */
 .back-to-top {
   border-radius: 6px;
+}
+/* 修改选中字符的颜色 */
+::selection {
+  background: rgba(0,149,255,0.2);
+  color: #333;
 }

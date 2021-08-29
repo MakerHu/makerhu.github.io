@@ -192,85 +192,6 @@
       </tags>
   </entry>
   <entry>
-    <title>在Linux服务器上简易部署django项目</title>
-    <url>/posts/58379ca9/</url>
-    <content><![CDATA[<blockquote>
-<p>本教程详细描述了如何简单实现在Linux服务器中部署django项目</p>
-</blockquote>
-<span id="more"></span>
-
-<p><strong>未经允许请勿转载！</strong> 文章首发于<a href="https://www.makerhu.com/posts/58379ca9/">在Linux服务器上简易部署django项目 | MakerHu的博客</a></p>
-<ol>
-<li>安装好python3</li>
-<li>创建虚拟环境<br> <code>python -m venv /虚拟环境名称/</code></li>
-<li>进入虚拟环境<br> <code>cd /虚拟环境名/</code></li>
-<li>进入bin目录<br> <code>cd bin</code></li>
-<li>运行虚拟环境<br> <code>source activate</code></li>
-<li>更新pip<br> <code>pip install --upgrade pip</code></li>
-<li>查看当前安装的模块<br> <code>pip freeze</code></li>
-<li>安装项目的django对应版本<br> <code>pip install django==3.1.3</code><br> 也可用清华镜像网安装（速度较快）<br> <code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple django==3.1.3</code></li>
-<li>再次查看安装模块<br> <code>pip freeze</code></li>
-<li>接着把项目在本地安装的模块都装到虚拟环境中(根据自身项目具体情况安装）<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple cryptography</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple apscheduler</code></li>
-<li>安装http需要的模块<br> <code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple gunicorn</code></li>
-<li>安装bleach<br> <code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple bleach</code></li>
-<li>在服务器中配置项目的数据库，这里以mysql为例（mysql需先在linux系统中安装好）</li>
-</ol>
-<ul>
-<li>登录root<br><code>mysql -u root -p</code></li>
-<li>创建项目数据库<br><code>create database cms;</code></li>
-<li>mysql创建新用户cmsmanager , 密码123456 (cmamanager为用户名, 123456为密码，可根据自己需要修改)<br><code>CREATE USER &#39;cmsmanager&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;;</code></li>
-<li>授予数据库cms的所有权限给cmsmanager<br><code>GRANT ALL PRIVILEGES ON cms.* TO &#39;cmsmanager&#39;@&#39;%&#39;;</code></li>
-</ul>
-<p><strong>如果登录cmsmanager账户时遇到错误</strong><br><code>ERROR 1045 (28000): Access denied for user &#39;cmsmanager&#39;@&#39;localhost&#39; (using password: YES)</code><br>可能是因为你有一个用户名为空的账户，mysql会先匹配它，然后就一直提示你密码错误，需要删掉这个匿名用户，然后执行 <code>FLUSH PRIVILEGES;</code>如下：<br><code>Delete FROM user Where User=&#39;&#39; and Host=&#39;localhost&#39;;</code><br><code>flush privileges;</code><br>14. 在django项目settings.py中配置好数据库</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">  <span class="string">&#x27;default&#x27;</span>: &#123; </span><br><span class="line">    <span class="comment"># &#x27;ENGINE&#x27;: &#x27;django.db.backends.sqlite3&#x27;,</span></span><br><span class="line">    <span class="comment"># &#x27;NAME&#x27;: BASE_DIR / &#x27;db.sqlite3&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>,   <span class="comment"># 设置数据库为mysql</span></span><br><span class="line">    <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;cms&#x27;</span>,         <span class="comment"># 数据库名 </span></span><br><span class="line">    <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;cmsmanager&#x27;</span>,       <span class="comment"># 账户 </span></span><br><span class="line">    <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;123456&#x27;</span>,    <span class="comment"># 密码</span></span><br><span class="line">    <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,     <span class="comment"># 数据库的ip</span></span><br><span class="line">    <span class="string">&#x27;PORT&#x27;</span>: <span class="number">3306</span>,     <span class="comment"># 数据库的端口 </span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在django项目<strong>settings.py</strong>中允许所有主机访问</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ALLOWED_HOSTS = [<span class="string">&quot;*&quot;</span>]</span><br></pre></td></tr></table></figure>
-<ol start="15">
-<li><p>将项目打包压缩（删掉虚拟环境）</p>
-</li>
-<li><p>将项目压缩包上传至服务器中刚创建的虚拟环境（见第2步）的根目录下（与bin目录同级）并解压，我用的远程连接服务器的工具是mobaxterm</p>
-<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233104.png" alt="项目上传位置"></p>
-<p>在阿里云安全组中开放端口<br><strong>如果不能访问端口</strong><br>则</p>
-</li>
-</ol>
-<ul>
-<li>查看防火墙状态：<br><code>systemctl status firewalld</code></li>
-<li>实例中已经安装Firewalld并且已经启用firewalld.service，若需要放行 TCP 5050端口，执行命令<br><code>firewall-cmd --add-port=5050/tcp --permanent</code><br>返回结果为success即表示已经放行TCP 5050端口（端口号根据自己需要修改）。</li>
-<li>最后重新加载防火墙即可：<br><code>firewall-cmd --reload</code></li>
-</ul>
-<ol start="17">
-<li>最后，启动项目(这种方式如果关掉远程连接服务器的工具就停了，若要一直后台运行则跳过此步)<br><code>python manage.py runserver 0.0.0.0:5050</code></li>
-<li>将项目后台运行（记得先启动虚拟环境：在虚拟环境的bin目录下 <code>source activate</code>）<br>参考教程：<a href="https://www.cnblogs.com/yoyoketang/p/10593731.html">https://www.cnblogs.com/yoyoketang/p/10593731.html</a></li>
-</ol>
-<ul>
-<li><p>首先写一个启动文件：start.sh<br>在manage.py同级目录下<br><code>vim start.sh</code><br>输入：</p>
-<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ps</span> -aux | <span class="keyword">grep</span> <span class="keyword">python</span>|xargs kill -<span class="number">9</span></span><br><span class="line">nohup <span class="keyword">python</span> manage.<span class="keyword">py</span> runserver <span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">5050</span> &gt;cms_website.out <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233154.png" alt="编辑start.sh"></p>
-<p>编辑完成后按Esc建退出，输入<code>:wq</code>后按回车保存退出</p>
-</li>
-<li><p>同理编辑停止文件stop.sh<br>在manage.py同级目录下<br><code>vim stop.sh</code><br>输入：<br><code>ps -aux | grep python|xargs kill -9</code><br>编辑完成后Esc退出，输入<code>:wq</code>保存退出</p>
-</li>
-<li><p>都编辑完成后授权这两个文件<br><code>chmod +777 start.sh</code><br><code>chmod +777 stop.sh</code></p>
-</li>
-<li><p>启动时输入：<br><code>./start.sh</code></p>
-</li>
-<li><p>关闭服务输入：<br><code>./stop.sh</code></p>
-</li>
-<li><p>查看实时日志<br><code>tail -f cms_website.out</code></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>野生教程</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>django</tag>
-        <tag>服务器</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>注解与反射</title>
     <url>/posts/41268e44/</url>
     <content><![CDATA[<blockquote>
@@ -397,6 +318,85 @@
         <tag>annotation</tag>
         <tag>反射</tag>
         <tag>reflection</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Linux服务器上简易部署django项目</title>
+    <url>/posts/58379ca9/</url>
+    <content><![CDATA[<blockquote>
+<p>本教程详细描述了如何简单实现在Linux服务器中部署django项目</p>
+</blockquote>
+<span id="more"></span>
+
+<p><strong>未经允许请勿转载！</strong> 文章首发于<a href="https://www.makerhu.com/posts/58379ca9/">在Linux服务器上简易部署django项目 | MakerHu的博客</a></p>
+<ol>
+<li>安装好python3</li>
+<li>创建虚拟环境<br> <code>python -m venv /虚拟环境名称/</code></li>
+<li>进入虚拟环境<br> <code>cd /虚拟环境名/</code></li>
+<li>进入bin目录<br> <code>cd bin</code></li>
+<li>运行虚拟环境<br> <code>source activate</code></li>
+<li>更新pip<br> <code>pip install --upgrade pip</code></li>
+<li>查看当前安装的模块<br> <code>pip freeze</code></li>
+<li>安装项目的django对应版本<br> <code>pip install django==3.1.3</code><br> 也可用清华镜像网安装（速度较快）<br> <code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple django==3.1.3</code></li>
+<li>再次查看安装模块<br> <code>pip freeze</code></li>
+<li>接着把项目在本地安装的模块都装到虚拟环境中(根据自身项目具体情况安装）<br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple cryptography</code><br><code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple apscheduler</code></li>
+<li>安装http需要的模块<br> <code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple gunicorn</code></li>
+<li>安装bleach<br> <code>pip install --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple bleach</code></li>
+<li>在服务器中配置项目的数据库，这里以mysql为例（mysql需先在linux系统中安装好）</li>
+</ol>
+<ul>
+<li>登录root<br><code>mysql -u root -p</code></li>
+<li>创建项目数据库<br><code>create database cms;</code></li>
+<li>mysql创建新用户cmsmanager , 密码123456 (cmamanager为用户名, 123456为密码，可根据自己需要修改)<br><code>CREATE USER &#39;cmsmanager&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;;</code></li>
+<li>授予数据库cms的所有权限给cmsmanager<br><code>GRANT ALL PRIVILEGES ON cms.* TO &#39;cmsmanager&#39;@&#39;%&#39;;</code></li>
+</ul>
+<p><strong>如果登录cmsmanager账户时遇到错误</strong><br><code>ERROR 1045 (28000): Access denied for user &#39;cmsmanager&#39;@&#39;localhost&#39; (using password: YES)</code><br>可能是因为你有一个用户名为空的账户，mysql会先匹配它，然后就一直提示你密码错误，需要删掉这个匿名用户，然后执行 <code>FLUSH PRIVILEGES;</code>如下：<br><code>Delete FROM user Where User=&#39;&#39; and Host=&#39;localhost&#39;;</code><br><code>flush privileges;</code><br>14. 在django项目settings.py中配置好数据库</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">  <span class="string">&#x27;default&#x27;</span>: &#123; </span><br><span class="line">    <span class="comment"># &#x27;ENGINE&#x27;: &#x27;django.db.backends.sqlite3&#x27;,</span></span><br><span class="line">    <span class="comment"># &#x27;NAME&#x27;: BASE_DIR / &#x27;db.sqlite3&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>,   <span class="comment"># 设置数据库为mysql</span></span><br><span class="line">    <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;cms&#x27;</span>,         <span class="comment"># 数据库名 </span></span><br><span class="line">    <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;cmsmanager&#x27;</span>,       <span class="comment"># 账户 </span></span><br><span class="line">    <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;123456&#x27;</span>,    <span class="comment"># 密码</span></span><br><span class="line">    <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,     <span class="comment"># 数据库的ip</span></span><br><span class="line">    <span class="string">&#x27;PORT&#x27;</span>: <span class="number">3306</span>,     <span class="comment"># 数据库的端口 </span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在django项目<strong>settings.py</strong>中允许所有主机访问</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ALLOWED_HOSTS = [<span class="string">&quot;*&quot;</span>]</span><br></pre></td></tr></table></figure>
+<ol start="15">
+<li><p>将项目打包压缩（删掉虚拟环境）</p>
+</li>
+<li><p>将项目压缩包上传至服务器中刚创建的虚拟环境（见第2步）的根目录下（与bin目录同级）并解压，我用的远程连接服务器的工具是mobaxterm</p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233104.png" alt="项目上传位置"></p>
+<p>在阿里云安全组中开放端口<br><strong>如果不能访问端口</strong><br>则</p>
+</li>
+</ol>
+<ul>
+<li>查看防火墙状态：<br><code>systemctl status firewalld</code></li>
+<li>实例中已经安装Firewalld并且已经启用firewalld.service，若需要放行 TCP 5050端口，执行命令<br><code>firewall-cmd --add-port=5050/tcp --permanent</code><br>返回结果为success即表示已经放行TCP 5050端口（端口号根据自己需要修改）。</li>
+<li>最后重新加载防火墙即可：<br><code>firewall-cmd --reload</code></li>
+</ul>
+<ol start="17">
+<li>最后，启动项目(这种方式如果关掉远程连接服务器的工具就停了，若要一直后台运行则跳过此步)<br><code>python manage.py runserver 0.0.0.0:5050</code></li>
+<li>将项目后台运行（记得先启动虚拟环境：在虚拟环境的bin目录下 <code>source activate</code>）<br>参考教程：<a href="https://www.cnblogs.com/yoyoketang/p/10593731.html">https://www.cnblogs.com/yoyoketang/p/10593731.html</a></li>
+</ol>
+<ul>
+<li><p>首先写一个启动文件：start.sh<br>在manage.py同级目录下<br><code>vim start.sh</code><br>输入：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ps</span> -aux | <span class="keyword">grep</span> <span class="keyword">python</span>|xargs kill -<span class="number">9</span></span><br><span class="line">nohup <span class="keyword">python</span> manage.<span class="keyword">py</span> runserver <span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">5050</span> &gt;cms_website.out <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210504233154.png" alt="编辑start.sh"></p>
+<p>编辑完成后按Esc建退出，输入<code>:wq</code>后按回车保存退出</p>
+</li>
+<li><p>同理编辑停止文件stop.sh<br>在manage.py同级目录下<br><code>vim stop.sh</code><br>输入：<br><code>ps -aux | grep python|xargs kill -9</code><br>编辑完成后Esc退出，输入<code>:wq</code>保存退出</p>
+</li>
+<li><p>都编辑完成后授权这两个文件<br><code>chmod +777 start.sh</code><br><code>chmod +777 stop.sh</code></p>
+</li>
+<li><p>启动时输入：<br><code>./start.sh</code></p>
+</li>
+<li><p>关闭服务输入：<br><code>./stop.sh</code></p>
+</li>
+<li><p>查看实时日志<br><code>tail -f cms_website.out</code></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>野生教程</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>django</tag>
+        <tag>服务器</tag>
       </tags>
   </entry>
   <entry>
