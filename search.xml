@@ -1,197 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>hexo使用手册</title>
-    <url>/posts/6600e9a1/</url>
-    <content><![CDATA[<blockquote>
-<p>本教程整理了hexo写博客的一些常用命令以及常用方法，供大家参考，不定期更新</p>
-</blockquote>
-<span id="more"></span>
-
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
-<li><p>清理数据<br><code>hexo clean</code></p>
-</li>
-<li><p>新建博客<br><code>hexo new &quot;My New Post&quot;</code></p>
-</li>
-<li><p>启动服务<br><code>hexo server</code> 或 <code>hexo s</code></p>
-</li>
-<li><p>生成静态文件<br><code>hexo generate</code> 或  <code>hexo g</code></p>
-</li>
-<li><p>部署到远端<br><code>hexo deploy</code> 或 <code>hexo d</code></p>
-</li>
-<li><p>创建新的页面<br><code>hexo new page &quot;pagename&quot;</code></p>
-</li>
-<li><p>日常备份及部署过程</p>
-<p>写完博客后首先是在本地检查博客效果</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<p>访问 <a href="http://localhost:4000/">http://localhost:4000</a> 查看效果<br>确认无误后，再次清空、备份再编译部署</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Backup&quot;</span></span><br><span class="line">git push -u origin main</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h2><h3 id="文章配置"><a href="#文章配置" class="headerlink" title="文章配置"></a>文章配置</h3><p>在markdown文章的头部可配置以下属性</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: 首页文章显示的标题</span><br><span class="line">date: 创建时间</span><br><span class="line">updated: 更新时间</span><br><span class="line">comments: true/false (是否开启评论)</span><br><span class="line">tags: 标签（不适用于分页）无层级关系，各标签并列</span><br><span class="line"><span class="bullet">-</span> 标签一</span><br><span class="line"><span class="bullet">-</span> 标签二</span><br><span class="line">categories: 分类（不适用于分页）有层级关系，下述例子表示本文章归类于学习大类下的微积分下的第二章</span><br><span class="line"><span class="bullet">-</span> 学习</span><br><span class="line"><span class="bullet">-</span> 微积分</span><br><span class="line"><span class="bullet">-</span> 第二章</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="首页显示文章摘要"><a href="#首页显示文章摘要" class="headerlink" title="首页显示文章摘要"></a>首页显示文章摘要</h3><ul>
-<li>方法1：使用<code>&lt;!-- more --&gt;</code>对文章进行截断，在这之前的内容会放到摘要里</li>
-<li>方法2：在markdown文章的顶部加上<code>description</code>关键字<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: </span><br><span class="line">categories: </span><br><span class="line">tags: </span><br><span class="line">description: 你对文章的整体介绍等</span><br><span class="line">---</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="界面修改"><a href="#界面修改" class="headerlink" title="界面修改"></a>界面修改</h2><h3 id="配置博文阅读目录"><a href="#配置博文阅读目录" class="headerlink" title="配置博文阅读目录"></a>配置博文阅读目录</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">toc:</span><br><span class="line">  enable: true</span><br><span class="line">  # 如果为true则自动添加序号到目录中</span><br><span class="line">  number: true</span><br><span class="line">  # 如果为true目录过长部分会换行显示</span><br><span class="line">  wrap: true</span><br><span class="line">  # 如果为true目录会保持全展开，而不是只展开激活部分</span><br><span class="line">  expand_all: true</span><br><span class="line">  # 目录的最大层级数</span><br><span class="line">  max_depth: 6</span><br></pre></td></tr></table></figure>
-
-<h2 id="hexo备份与恢复"><a href="#hexo备份与恢复" class="headerlink" title="hexo备份与恢复"></a>hexo备份与恢复</h2><p>由于hexo在将博客部署到远程仓库时是将编译后的文件部署上去的，而源文件还是保留在本地（最核心的是文章的.md文件），因而可能存在源文件丢失的风险，如：电脑丢失，文件丢失等。因此做好源文件的备份是个良好的习惯，如果将源文件备份到github，还有利于我们在其他电脑中恢复对博客的管理。</p>
-<h3 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h3><h4 id="在GitHub中创建仓库"><a href="#在GitHub中创建仓库" class="headerlink" title="在GitHub中创建仓库"></a>在GitHub中创建仓库</h4><p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111530.png"></p>
-<img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111923.png" style="zoom: 67%;" />
-
-<h4 id="将本地的博客源文件上传到GitHub"><a href="#将本地的博客源文件上传到GitHub" class="headerlink" title="将本地的博客源文件上传到GitHub"></a>将本地的博客源文件上传到GitHub</h4><p><strong>注意：在执行下列命令前先将你博客根目录下themes/&lt;主题名&gt;/下的.gitignore文件删了！</strong><br>原因是git文件不能嵌套，否则会报错（忘删导致报错解决方案：<a href="#%E4%B8%BB%E9%A2%98%E4%B8%AD%E7%9A%84.git%E6%96%87%E4%BB%B6%E6%9C%AA%E5%88%A0%E5%B0%B1%E4%B8%8A%E4%BC%A0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">主题中的.git文件未删就上传远程仓库</a>）</p>
-<p>在你的博客源文件根目录下git bash</p>
-<img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507113349.png" style="zoom:80%;" />
-
-<p>分别执行以下命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;# MyHexoBlogBackup&quot;</span> &gt;&gt; README.md</span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">&quot;first commit&quot;</span></span><br><span class="line">git branch -M main</span><br><span class="line">git remote add origin https://github.com/yourname/MyBlogBackup.git</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
-
-<p>若出现报错</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure>
-<p>请见解决方案：<a href="#git%E6%8A%A5%E9%94%99Failed-to-connect-to-github">git报错Failed to connect to github</a></p>
-<h3 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h3><p>默认前提：电脑中已安装git 、nodejs、hexo</p>
-<h4 id="克隆博客源文件"><a href="#克隆博客源文件" class="headerlink" title="克隆博客源文件"></a>克隆博客源文件</h4><p>克隆项目到本地<br><code>git clone https://github.com/yourname/MyBlogBackup.git</code></p>
-<p>若还是出现报错：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure>
-<p>请见解决方案<a href="#git%E6%8A%A5%E9%94%99Failed-to-connect-to-github">git报错Failed to connect to github</a></p>
-<h4 id="恢复博客"><a href="#恢复博客" class="headerlink" title="恢复博客"></a>恢复博客</h4><p>进入到博客源文件的根目录下git bash或cmd</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli</span><br><span class="line">npm install <span class="comment"># 安装依赖</span></span><br><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
-<p>接下来就是熟悉的命令了</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-<h4 id="日常的备份过程"><a href="#日常的备份过程" class="headerlink" title="日常的备份过程"></a>日常的备份过程</h4><p>写完博客后首先是在本地检查博客效果</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-<p>访问 <a href="http://localhost:4000/">http://localhost:4000</a> 查看效果<br>确认无误后，再次清空、备份再编译部署</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Backup&quot;</span></span><br><span class="line">git push -u origin main</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-
-<h2 id="博客链接永久化"><a href="#博客链接永久化" class="headerlink" title="博客链接永久化"></a>博客链接永久化</h2><p>hexo的默认永久链接是在 _config.yml 里配置的，其生成规则是<br><code>permalink: :year/:month/:day/:title/</code><br>效果是<code>https://makerhu.github.io/2021/05/05/hexo使用手册/</code></p>
-<p>这种方式有两个很大的<strong>缺点</strong>：</p>
-<ul>
-<li><p>一是路径中带中文名，复制分享链接时会转换成很长的字符串，不利于分享，以前面展示的效果链接为例，复制链接后的效果是<br><code>https://makerhu.github.io/2021/05/05/hexo%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</code><br>vs<br><code>https://makerhu.github.io/2021/05/05/hexo使用手册/</code></p>
-</li>
-<li><p>二是修改博客的文件名时文章的url也会发生变化，这样如果有人收藏了你的文章地址，你改了文章名称后他/她就访问不了了</p>
-</li>
-</ul>
-<p>因此，博客链接永久化有着重要的意义<br><strong>解决方案</strong>：使用hexo-abbrlink 插件</p>
-<ul>
-<li>安装<br><code>npm install hexo-abbrlink --save</code></li>
-<li>配置<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 可选 permalink: abbrlink 短链接模式</span></span><br><span class="line"><span class="comment"># permalink: posts/:abbrlink.html</span></span><br><span class="line"><span class="comment"># permalink: posts/:abbrlink/</span></span><br><span class="line">permalink: :abbrlink/ <span class="comment">#文章的永久链接</span></span><br><span class="line"><span class="comment"># abbrlink config</span></span><br><span class="line">abbrlink:</span><br><span class="line">  alg: crc32  <span class="comment">#算法: crc16(default) and crc32</span></span><br><span class="line">  rep: hex    <span class="comment">#进制: dec(default) and hex</span></span><br></pre></td></tr></table></figure></li>
-<li>hexo命令一条龙<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s	<span class="comment"># 检查效果正常后即可部署</span></span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>配置完成后博客的markdown文件顶部的Front-matter中会添加一个属性<code>abbrlink:</code>后面跟着的就是固定的链接地址</p>
-<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="无法将项目部署到远端"><a href="#无法将项目部署到远端" class="headerlink" title="无法将项目部署到远端"></a>无法将项目部署到远端</h3><ol>
-<li>问题描述<br><code>hexo d</code> 时经常报错，要试好几次才能成功<br>报错：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend dirs...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;MakerHu&#x2F;makerhu.github.io.git&#x2F;&#39;: Failed to connect to github.com port 443: Timed out</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (E:\study\self_study\myblog\node_modules\_hexo-util@2.4.0@hexo-util\lib\spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (events.js:315:20)</span><br><span class="line">      at ChildProcess.cp.emit (E:\study\self_study\myblog\node_modules\_cross-spawn@7.0.3@cross-spawn\lib\enoent.js:34:29)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (internal&#x2F;child_process.js:277:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#39;s wrong. Maybe you can find the solution here: %s https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;troubleshooting.html</span><br></pre></td></tr></table></figure></li>
-<li>解决方案<ul>
-<li>取消git代理<br><code>git config --global --unset http.proxy</code></li>
-<li>host文件添加最新的github的IP列表<br>ip列表可到这个博文获取 <a href="http://blog.yoqi.me/lyq/16489.html">github被墙最新hosts-每日更新 | 天问博客 (yoqi.me)</a></li>
-</ul>
-</li>
-</ol>
-<h3 id="git报错Failed-to-connect-to-github"><a href="#git报错Failed-to-connect-to-github" class="headerlink" title="git报错Failed to connect to github"></a>git报错Failed to connect to github</h3><ol>
-<li><p>报错：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure></li>
-<li><p>解决方案<br>方法1：</p>
-<ul>
-<li>查看git配置<br><code>git config --global -l</code></li>
-<li>检查环境变量<br><code>env|grep -i proxy</code></li>
-</ul>
-<p>方法2：</p>
-<ul>
-<li>分别执行以下命令：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.proxy http://127.0.0.1:1080</span><br><span class="line">git config --global https.proxy http://127.0.0.1:1080</span><br><span class="line">git config --global --<span class="built_in">unset</span> http.proxy</span><br><span class="line">git config --global --<span class="built_in">unset</span> https.proxy</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-</ol>
-<h3 id="主题中的-git文件未删就上传远程仓库"><a href="#主题中的-git文件未删就上传远程仓库" class="headerlink" title="主题中的.git文件未删就上传远程仓库"></a>主题中的.git文件未删就上传远程仓库</h3><p>由于.git文件不能嵌套，因此需要删除themes/&lt;主题名&gt;/下的.git文件才能上传</p>
-<ul>
-<li>删除themes/&lt;主题名&gt;/下的.git文件</li>
-<li>从暂存区删除该文件夹<br><code>git rm --cache themes/next</code></li>
-<li>重新添加到git中<br><code>git add .</code></li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://hexo.io/zh-cn/docs/">文档 | Hexo</a></li>
-<li><a href="http://blog.yoqi.me/lyq/16489.html">github被墙最新hosts-每日更新 | 天问博客 (yoqi.me)</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>野生教程</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-        <tag>博客</tag>
-        <tag>hexo备份</tag>
-        <tag>hexo恢复</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>代理模式之静态代理</title>
-    <url>/posts/3c271a1b/</url>
-    <content><![CDATA[<blockquote>
-<p>代理模式我们可以从字面上去理解它的涵义，代理就是<strong>代替</strong>某个事物去<strong>处理</strong>事情，代理在代替处理事情的时候可能还会添加一些它的补充行为。以生活中申请留学的代理机构为例，代理机构代替你去申请国外高校，除了“申请高校”这件事外，它还在申请之前帮你“查询高校信息”，并在申请成功之后向你“要代理费”。接下来我就以申请留学为例简单实现一个静态代理的例子。</p>
-</blockquote>
-<span id="more"></span>
-
-<h2 id="三个对象"><a href="#三个对象" class="headerlink" title="三个对象"></a>三个对象</h2><ul>
-<li><p><strong>要代理的事情</strong>（一般是一个接口）：申请留学这件事（StudyAbroad）</p>
-</li>
-<li><p><strong>被代理的人</strong>：学生（Student）</p>
-</li>
-<li><p><strong>代理人</strong>：留学申请机构（StudyAbroadAgent）</p>
-</li>
-</ul>
-<p>他们的<strong>关系</strong>：留学申请机构代理学生去申请留学</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="StudyAbroad-java"><a href="#StudyAbroad-java" class="headerlink" title="StudyAbroad.java"></a>StudyAbroad.java</h3><p>要代理的事：申请留学，就是一个接口</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 要代理的事情：申请留学这件事</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudyAbroad</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Student-java"><a href="#Student-java" class="headerlink" title="Student.java"></a>Student.java</h3><p>学生要出国留学，也是真正要做代理的事的对象，他实现申请留学这件事的接口</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 学生</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="keyword">this</span>.name + <span class="string">&quot;申请留学成功！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="StudyAbroadAgent-java"><a href="#StudyAbroadAgent-java" class="headerlink" title="StudyAbroadAgent.java"></a>StudyAbroadAgent.java</h3><p>代理机构同样也实现申请留学这件事的接口，但他在实现时调用了被代理人的申请留学方法，也就是<strong>替</strong>被代理人申请留学。并且在代理申请留学之前还帮助学生查询了高校信息，替学生省事了，但是代理完后要交钱😂</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 代理人：留学申请机构</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudyAbroadAgent</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 被代理的人</span></span><br><span class="line">    <span class="keyword">private</span> StudyAbroad studyAbroad;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StudyAbroadAgent</span><span class="params">(StudyAbroad studyAbroad)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.studyAbroad = studyAbroad;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        before();</span><br><span class="line">        studyAbroad.applyForStudyAbroad();  <span class="comment">// 替被代理的人完成要代理的事</span></span><br><span class="line">        after();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之前帮你查询国外高校信息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;查询国外高校信息。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之后向你要代理费</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;收取代理费。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Main-java"><a href="#Main-java" class="headerlink" title="Main.java"></a>Main.java</h3><p>主函数，请代理机构帮某个学生(MakerHu)申请留学。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student(<span class="string">&quot;MakerHu&quot;</span>);</span><br><span class="line">        StudyAbroadAgent studyAbroadAgent = <span class="keyword">new</span> StudyAbroadAgent(student);</span><br><span class="line">        studyAbroadAgent.applyForStudyAbroad();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>运行结果</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">查询国外高校信息。</span><br><span class="line">MakerHu申请留学成功！</span><br><span class="line">收取代理费。</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="静态代理模式有啥用呢"><a href="#静态代理模式有啥用呢" class="headerlink" title="静态代理模式有啥用呢?"></a>静态代理模式有啥用呢?</h2><p>在java的多线程中就用到了静态代理模式。</p>
-<p>我们在实现多线程时，首先写一个自己的类MyRunnabale实现Runnable，接着通过<code>new Thread(new MyRunnable).start();</code>开启线程。</p>
-<p>在Java中Thread实现了Runnable接口，因此在代理模式中，他们的扮演的身份分别是：</p>
-<ul>
-<li><p><strong>要代理的事情：</strong>Runnable中的run()方法</p>
-</li>
-<li><p><strong>被代理的类：</strong>你实现的类MyRunnable</p>
-</li>
-<li><p><strong>代理类：</strong>Thread</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>笔记</category>
-        <category>Java笔记</category>
-      </categories>
-      <tags>
-        <tag>代理模式</tag>
-        <tag>proxy pattern</tag>
-        <tag>静态代理</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>在Linux服务器上简易部署django项目</title>
     <url>/posts/58379ca9/</url>
     <content><![CDATA[<blockquote>
@@ -400,6 +209,132 @@
       </tags>
   </entry>
   <entry>
+    <title>hexo使用手册</title>
+    <url>/posts/6600e9a1/</url>
+    <content><![CDATA[<blockquote>
+<p>本教程整理了hexo写博客的一些常用命令以及常用方法，供大家参考，不定期更新</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
+<li><p>清理数据<br><code>hexo clean</code></p>
+</li>
+<li><p>新建博客<br><code>hexo new &quot;My New Post&quot;</code></p>
+</li>
+<li><p>启动服务<br><code>hexo server</code> 或 <code>hexo s</code></p>
+</li>
+<li><p>生成静态文件<br><code>hexo generate</code> 或  <code>hexo g</code></p>
+</li>
+<li><p>部署到远端<br><code>hexo deploy</code> 或 <code>hexo d</code></p>
+</li>
+<li><p>创建新的页面<br><code>hexo new page &quot;pagename&quot;</code></p>
+</li>
+<li><p>日常备份及部署过程</p>
+<p>写完博客后首先是在本地检查博客效果</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>访问 <a href="http://localhost:4000/">http://localhost:4000</a> 查看效果<br>确认无误后，再次清空、备份再编译部署</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Backup&quot;</span></span><br><span class="line">git push -u origin main</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h2><h3 id="文章配置"><a href="#文章配置" class="headerlink" title="文章配置"></a>文章配置</h3><p>在markdown文章的头部可配置以下属性</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: 首页文章显示的标题</span><br><span class="line">date: 创建时间</span><br><span class="line">updated: 更新时间</span><br><span class="line">comments: true/false (是否开启评论)</span><br><span class="line">tags: 标签（不适用于分页）无层级关系，各标签并列</span><br><span class="line"><span class="bullet">-</span> 标签一</span><br><span class="line"><span class="bullet">-</span> 标签二</span><br><span class="line">categories: 分类（不适用于分页）有层级关系，下述例子表示本文章归类于学习大类下的微积分下的第二章</span><br><span class="line"><span class="bullet">-</span> 学习</span><br><span class="line"><span class="bullet">-</span> 微积分</span><br><span class="line"><span class="bullet">-</span> 第二章</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="首页显示文章摘要"><a href="#首页显示文章摘要" class="headerlink" title="首页显示文章摘要"></a>首页显示文章摘要</h3><ul>
+<li>方法1：使用<code>&lt;!-- more --&gt;</code>对文章进行截断，在这之前的内容会放到摘要里</li>
+<li>方法2：在markdown文章的顶部加上<code>description</code>关键字<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: </span><br><span class="line">categories: </span><br><span class="line">tags: </span><br><span class="line">description: 你对文章的整体介绍等</span><br><span class="line">---</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="界面修改"><a href="#界面修改" class="headerlink" title="界面修改"></a>界面修改</h2><h3 id="配置博文阅读目录"><a href="#配置博文阅读目录" class="headerlink" title="配置博文阅读目录"></a>配置博文阅读目录</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">toc:</span><br><span class="line">  enable: true</span><br><span class="line">  # 如果为true则自动添加序号到目录中</span><br><span class="line">  number: true</span><br><span class="line">  # 如果为true目录过长部分会换行显示</span><br><span class="line">  wrap: true</span><br><span class="line">  # 如果为true目录会保持全展开，而不是只展开激活部分</span><br><span class="line">  expand_all: true</span><br><span class="line">  # 目录的最大层级数</span><br><span class="line">  max_depth: 6</span><br></pre></td></tr></table></figure>
+
+<h2 id="hexo备份与恢复"><a href="#hexo备份与恢复" class="headerlink" title="hexo备份与恢复"></a>hexo备份与恢复</h2><p>由于hexo在将博客部署到远程仓库时是将编译后的文件部署上去的，而源文件还是保留在本地（最核心的是文章的.md文件），因而可能存在源文件丢失的风险，如：电脑丢失，文件丢失等。因此做好源文件的备份是个良好的习惯，如果将源文件备份到github，还有利于我们在其他电脑中恢复对博客的管理。</p>
+<h3 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h3><h4 id="在GitHub中创建仓库"><a href="#在GitHub中创建仓库" class="headerlink" title="在GitHub中创建仓库"></a>在GitHub中创建仓库</h4><p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111530.png"></p>
+<img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111923.png" style="zoom: 67%;" />
+
+<h4 id="将本地的博客源文件上传到GitHub"><a href="#将本地的博客源文件上传到GitHub" class="headerlink" title="将本地的博客源文件上传到GitHub"></a>将本地的博客源文件上传到GitHub</h4><p><strong>注意：在执行下列命令前先将你博客根目录下themes/&lt;主题名&gt;/下的.gitignore文件删了！</strong><br>原因是git文件不能嵌套，否则会报错（忘删导致报错解决方案：<a href="#%E4%B8%BB%E9%A2%98%E4%B8%AD%E7%9A%84.git%E6%96%87%E4%BB%B6%E6%9C%AA%E5%88%A0%E5%B0%B1%E4%B8%8A%E4%BC%A0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">主题中的.git文件未删就上传远程仓库</a>）</p>
+<p>在你的博客源文件根目录下git bash</p>
+<img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507113349.png" style="zoom:80%;" />
+
+<p>分别执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;# MyHexoBlogBackup&quot;</span> &gt;&gt; README.md</span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">&quot;first commit&quot;</span></span><br><span class="line">git branch -M main</span><br><span class="line">git remote add origin https://github.com/yourname/MyBlogBackup.git</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+
+<p>若出现报错</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure>
+<p>请见解决方案：<a href="#git%E6%8A%A5%E9%94%99Failed-to-connect-to-github">git报错Failed to connect to github</a></p>
+<h3 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h3><p>默认前提：电脑中已安装git 、nodejs、hexo</p>
+<h4 id="克隆博客源文件"><a href="#克隆博客源文件" class="headerlink" title="克隆博客源文件"></a>克隆博客源文件</h4><p>克隆项目到本地<br><code>git clone https://github.com/yourname/MyBlogBackup.git</code></p>
+<p>若还是出现报错：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure>
+<p>请见解决方案<a href="#git%E6%8A%A5%E9%94%99Failed-to-connect-to-github">git报错Failed to connect to github</a></p>
+<h4 id="恢复博客"><a href="#恢复博客" class="headerlink" title="恢复博客"></a>恢复博客</h4><p>进入到博客源文件的根目录下git bash或cmd</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli</span><br><span class="line">npm install <span class="comment"># 安装依赖</span></span><br><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
+<p>接下来就是熟悉的命令了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+<h4 id="日常的备份过程"><a href="#日常的备份过程" class="headerlink" title="日常的备份过程"></a>日常的备份过程</h4><p>写完博客后首先是在本地检查博客效果</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+<p>访问 <a href="http://localhost:4000/">http://localhost:4000</a> 查看效果<br>确认无误后，再次清空、备份再编译部署</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Backup&quot;</span></span><br><span class="line">git push -u origin main</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<h2 id="博客链接永久化"><a href="#博客链接永久化" class="headerlink" title="博客链接永久化"></a>博客链接永久化</h2><p>hexo的默认永久链接是在 _config.yml 里配置的，其生成规则是<br><code>permalink: :year/:month/:day/:title/</code><br>效果是<code>https://makerhu.github.io/2021/05/05/hexo使用手册/</code></p>
+<p>这种方式有两个很大的<strong>缺点</strong>：</p>
+<ul>
+<li><p>一是路径中带中文名，复制分享链接时会转换成很长的字符串，不利于分享，以前面展示的效果链接为例，复制链接后的效果是<br><code>https://makerhu.github.io/2021/05/05/hexo%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</code><br>vs<br><code>https://makerhu.github.io/2021/05/05/hexo使用手册/</code></p>
+</li>
+<li><p>二是修改博客的文件名时文章的url也会发生变化，这样如果有人收藏了你的文章地址，你改了文章名称后他/她就访问不了了</p>
+</li>
+</ul>
+<p>因此，博客链接永久化有着重要的意义<br><strong>解决方案</strong>：使用hexo-abbrlink 插件</p>
+<ul>
+<li>安装<br><code>npm install hexo-abbrlink --save</code></li>
+<li>配置<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 可选 permalink: abbrlink 短链接模式</span></span><br><span class="line"><span class="comment"># permalink: posts/:abbrlink.html</span></span><br><span class="line"><span class="comment"># permalink: posts/:abbrlink/</span></span><br><span class="line">permalink: :abbrlink/ <span class="comment">#文章的永久链接</span></span><br><span class="line"><span class="comment"># abbrlink config</span></span><br><span class="line">abbrlink:</span><br><span class="line">  alg: crc32  <span class="comment">#算法: crc16(default) and crc32</span></span><br><span class="line">  rep: hex    <span class="comment">#进制: dec(default) and hex</span></span><br></pre></td></tr></table></figure></li>
+<li>hexo命令一条龙<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s	<span class="comment"># 检查效果正常后即可部署</span></span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>配置完成后博客的markdown文件顶部的Front-matter中会添加一个属性<code>abbrlink:</code>后面跟着的就是固定的链接地址</p>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="无法将项目部署到远端"><a href="#无法将项目部署到远端" class="headerlink" title="无法将项目部署到远端"></a>无法将项目部署到远端</h3><ol>
+<li>问题描述<br><code>hexo d</code> 时经常报错，要试好几次才能成功<br>报错：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend dirs...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;MakerHu&#x2F;makerhu.github.io.git&#x2F;&#39;: Failed to connect to github.com port 443: Timed out</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (E:\study\self_study\myblog\node_modules\_hexo-util@2.4.0@hexo-util\lib\spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (events.js:315:20)</span><br><span class="line">      at ChildProcess.cp.emit (E:\study\self_study\myblog\node_modules\_cross-spawn@7.0.3@cross-spawn\lib\enoent.js:34:29)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (internal&#x2F;child_process.js:277:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#39;s wrong. Maybe you can find the solution here: %s https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;troubleshooting.html</span><br></pre></td></tr></table></figure></li>
+<li>解决方案<ul>
+<li>取消git代理<br><code>git config --global --unset http.proxy</code></li>
+<li>host文件添加最新的github的IP列表<br>ip列表可到这个博文获取 <a href="http://blog.yoqi.me/lyq/16489.html">github被墙最新hosts-每日更新 | 天问博客 (yoqi.me)</a></li>
+</ul>
+</li>
+</ol>
+<h3 id="git报错Failed-to-connect-to-github"><a href="#git报错Failed-to-connect-to-github" class="headerlink" title="git报错Failed to connect to github"></a>git报错Failed to connect to github</h3><ol>
+<li><p>报错：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure></li>
+<li><p>解决方案<br>方法1：</p>
+<ul>
+<li>查看git配置<br><code>git config --global -l</code></li>
+<li>检查环境变量<br><code>env|grep -i proxy</code></li>
+</ul>
+<p>方法2：</p>
+<ul>
+<li>分别执行以下命令：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global http.proxy http://127.0.0.1:1080</span><br><span class="line">git config --global https.proxy http://127.0.0.1:1080</span><br><span class="line">git config --global --<span class="built_in">unset</span> http.proxy</span><br><span class="line">git config --global --<span class="built_in">unset</span> https.proxy</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h3 id="主题中的-git文件未删就上传远程仓库"><a href="#主题中的-git文件未删就上传远程仓库" class="headerlink" title="主题中的.git文件未删就上传远程仓库"></a>主题中的.git文件未删就上传远程仓库</h3><p>由于.git文件不能嵌套，因此需要删除themes/&lt;主题名&gt;/下的.git文件才能上传</p>
+<ul>
+<li>删除themes/&lt;主题名&gt;/下的.git文件</li>
+<li>从暂存区删除该文件夹<br><code>git rm --cache themes/next</code></li>
+<li>重新添加到git中<br><code>git add .</code></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://hexo.io/zh-cn/docs/">文档 | Hexo</a></li>
+<li><a href="http://blog.yoqi.me/lyq/16489.html">github被墙最新hosts-每日更新 | 天问博客 (yoqi.me)</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>野生教程</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>博客</tag>
+        <tag>hexo备份</tag>
+        <tag>hexo恢复</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>爬虫实现力扣(LeetCode)本地刷题的快捷工具</title>
     <url>/posts/fe73207c/</url>
     <content><![CDATA[<blockquote>
@@ -584,6 +519,71 @@
         <tag>LeetCode</tag>
         <tag>刷题</tag>
         <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>代理模式之静态代理</title>
+    <url>/posts/3c271a1b/</url>
+    <content><![CDATA[<blockquote>
+<p>代理模式我们可以从字面上去理解它的涵义，代理就是<strong>代替</strong>某个事物去<strong>处理</strong>事情，代理在代替处理事情的时候可能还会添加一些它的补充行为。以生活中申请留学的代理机构为例，代理机构代替你去申请国外高校，除了“申请高校”这件事外，它还在申请之前帮你“查询高校信息”，并在申请成功之后向你“要代理费”。接下来我就以申请留学为例简单实现一个静态代理的例子。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="三个对象"><a href="#三个对象" class="headerlink" title="三个对象"></a>三个对象</h2><ul>
+<li><p><strong>要代理的事情</strong>（一般是一个接口）：申请留学这件事（StudyAbroad）</p>
+</li>
+<li><p><strong>被代理的人</strong>：学生（Student）</p>
+</li>
+<li><p><strong>代理人</strong>：留学申请机构（StudyAbroadAgent）</p>
+</li>
+</ul>
+<p>他们的<strong>关系</strong>：留学申请机构代理学生去申请留学</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="StudyAbroad-java"><a href="#StudyAbroad-java" class="headerlink" title="StudyAbroad.java"></a>StudyAbroad.java</h3><p>要代理的事：申请留学，就是一个接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 要代理的事情：申请留学这件事</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudyAbroad</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Student-java"><a href="#Student-java" class="headerlink" title="Student.java"></a>Student.java</h3><p>学生要出国留学，也是真正要做代理的事的对象，他实现申请留学这件事的接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 学生</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="keyword">this</span>.name + <span class="string">&quot;申请留学成功！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="StudyAbroadAgent-java"><a href="#StudyAbroadAgent-java" class="headerlink" title="StudyAbroadAgent.java"></a>StudyAbroadAgent.java</h3><p>代理机构同样也实现申请留学这件事的接口，但他在实现时调用了被代理人的申请留学方法，也就是<strong>替</strong>被代理人申请留学。并且在代理申请留学之前还帮助学生查询了高校信息，替学生省事了，但是代理完后要交钱😂</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 代理人：留学申请机构</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudyAbroadAgent</span> <span class="keyword">implements</span> <span class="title">StudyAbroad</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 被代理的人</span></span><br><span class="line">    <span class="keyword">private</span> StudyAbroad studyAbroad;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StudyAbroadAgent</span><span class="params">(StudyAbroad studyAbroad)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.studyAbroad = studyAbroad;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyForStudyAbroad</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        before();</span><br><span class="line">        studyAbroad.applyForStudyAbroad();  <span class="comment">// 替被代理的人完成要代理的事</span></span><br><span class="line">        after();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之前帮你查询国外高校信息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;查询国外高校信息。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请之后向你要代理费</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;收取代理费。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Main-java"><a href="#Main-java" class="headerlink" title="Main.java"></a>Main.java</h3><p>主函数，请代理机构帮某个学生(MakerHu)申请留学。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student(<span class="string">&quot;MakerHu&quot;</span>);</span><br><span class="line">        StudyAbroadAgent studyAbroadAgent = <span class="keyword">new</span> StudyAbroadAgent(student);</span><br><span class="line">        studyAbroadAgent.applyForStudyAbroad();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>运行结果</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">查询国外高校信息。</span><br><span class="line">MakerHu申请留学成功！</span><br><span class="line">收取代理费。</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="静态代理模式有啥用呢"><a href="#静态代理模式有啥用呢" class="headerlink" title="静态代理模式有啥用呢?"></a>静态代理模式有啥用呢?</h2><p>在java的多线程中就用到了静态代理模式。</p>
+<p>我们在实现多线程时，首先写一个自己的类MyRunnabale实现Runnable，接着通过<code>new Thread(new MyRunnable).start();</code>开启线程。</p>
+<p>在Java中Thread实现了Runnable接口，因此在代理模式中，他们的扮演的身份分别是：</p>
+<ul>
+<li><p><strong>要代理的事情：</strong>Runnable中的run()方法</p>
+</li>
+<li><p><strong>被代理的类：</strong>你实现的类MyRunnable</p>
+</li>
+<li><p><strong>代理类：</strong>Thread</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>笔记</category>
+        <category>Java笔记</category>
+      </categories>
+      <tags>
+        <tag>代理模式</tag>
+        <tag>proxy pattern</tag>
+        <tag>静态代理</tag>
       </tags>
   </entry>
   <entry>
