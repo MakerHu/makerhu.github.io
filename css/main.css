@@ -1213,7 +1213,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #f43dff;
+  background: #ffcb91;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2710,7 +2710,8 @@ ul.breadcrumb li + li:last-child {
 }
 /* header-页面背景 */
 body {
-  background-image: url("/images/background.png");
+  background-image: linear-gradient(to top, #a6c3d3 0%, #304352 100%);
+  background-image: url("https://gitee.com/MakerHu/typora_images/raw/master/img/20210912105306.png");
   background-repeat: repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -2780,11 +2781,7 @@ body {
 /**************************** footer ******************************/
 /* footer中的copyright */
 .copyright {
-  color: #f8f6f6;
-}
-/* footer中的访问量 */
-.busuanzi-count {
-  color: #f8f6f6;
+  color: #555;
 }
 /************************ Button ***************************/
 /* back-to-top返回顶部样式 */
