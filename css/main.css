@@ -1213,7 +1213,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #06f0ff;
+  background: #dff4c3;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2778,7 +2778,7 @@ body {
 .content-wrap {
   opacity: 0.98;
 }
-/* post-引用快 */
+/* post-引用块 */
 blockquote {
   border-left: 4px solid #a6c3d3;
   background-color: rgba(215,230,242,0.431);
