@@ -716,11 +716,12 @@
     <title>快速上手SpringBoot项目（登录注册保姆级教程）</title>
     <url>/posts/5b2ca0db/</url>
     <content><![CDATA[<blockquote>
-<p>本文章对SpringBoot开发后端项目结构做了简单介绍，并示范了使用SpringBoot+MySQL实现登录的后端功能，适合小白快速入门</p>
+<p>本文章对SpringBoot开发后端项目结构做了简单介绍，并示范了使用SpringBoot+MySQL实现登录的后端功能，与本博客的另一篇文章 <a href="https://www.makerhu.com/posts/78e35d03/">Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客</a> 共同组成了前后端分离项目的整体，适合小白上手 Vue + SpringBoot + Mysql 的项目开发。</p>
 </blockquote>
 <span id="more"></span>
 
 <p><strong>未经允许请勿转载！</strong> 文章首发于<a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu的博客</a></p>
+<p>前端教程：<a href="https://www.makerhu.com/posts/78e35d03/">Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客</a></p>
 <h2 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h2><p>使用本教程的前置条件是开发环境中已安装了以下几个东西，若无可以先找相关教程安装配置好。</p>
 <p><strong>管理工具：</strong>maven</p>
 <p><strong>IDE：</strong> IDEA</p>
@@ -986,12 +987,23 @@
 <p>这里的<code>@PostMapping(&quot;/register&quot;)</code>表示处理post请求，路由为/user/register</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">registController</span><span class="params">(<span class="meta">@RequestBody</span> User newUser)</span></span>&#123;</span><br><span class="line">    User user = userService.registService(newUser);</span><br><span class="line">    <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.success(user,<span class="string">&quot;注册成功！&quot;</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.error(<span class="string">&quot;456&quot;</span>,<span class="string">&quot;用户名已存在！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li><p>完整的UserController代码</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.service.UserService;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.utils.Result;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.Resource;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">loginController</span><span class="params">(<span class="meta">@RequestParam</span> String uname, <span class="meta">@RequestParam</span> String password)</span></span>&#123;</span><br><span class="line">        User user = userService.loginService(uname, password);</span><br><span class="line">        <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.success(user,<span class="string">&quot;登录成功！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.error(<span class="string">&quot;123&quot;</span>,<span class="string">&quot;账号或密码错误！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">registController</span><span class="params">(<span class="meta">@RequestBody</span> User newUser)</span></span>&#123;</span><br><span class="line">        User user = userService.registService(newUser);</span><br><span class="line">        <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.success(user,<span class="string">&quot;注册成功！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.error(<span class="string">&quot;456&quot;</span>,<span class="string">&quot;用户名已存在！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.service.UserService;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.utils.Result;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.Resource;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">loginController</span><span class="params">(<span class="meta">@RequestParam</span> String uname, <span class="meta">@RequestParam</span> String password)</span></span>&#123;</span><br><span class="line">        User user = userService.loginService(uname, password);</span><br><span class="line">        <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.success(user,<span class="string">&quot;登录成功！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.error(<span class="string">&quot;123&quot;</span>,<span class="string">&quot;账号或密码错误！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">registController</span><span class="params">(<span class="meta">@RequestBody</span> User newUser)</span></span>&#123;</span><br><span class="line">        User user = userService.registService(newUser);</span><br><span class="line">        <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.success(user,<span class="string">&quot;注册成功！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.error(<span class="string">&quot;456&quot;</span>,<span class="string">&quot;用户名已存在！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="处理跨域访问问题"><a href="#处理跨域访问问题" class="headerlink" title="处理跨域访问问题"></a>处理跨域访问问题</h2><blockquote>
+<p>跨域问题可以简单理解成如果你的前端项目的<strong>IP地址</strong>和<strong>端口号</strong>和后端的<strong>IP地址</strong>和<strong>端口号</strong>不一样，就会导致前端无法获取到数据，这是一个规定。而在前后端分离开发的项目中，前后端项目的端口号一般都是不一样的，假设我们这个项目的前端端口号是 8080，后端端口号是 8081，就会造成跨域访问的问题，跨域访问的问题可以在前端解决也可以在后端解决，后端只要加上一个配置文件就行了</p>
+</blockquote>
+<ul>
+<li><p>在<code>config</code>文件下创建全局跨域配置类<code>GlobalCorsConfig.java</code></p>
+<p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20220206000716.png" alt="创建全局跨域配置文件"></p>
+</li>
+<li><p><strong>GlobalCorsConfig.java 文件</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.CorsRegistry;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.WebMvcConfigurer;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalCorsConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> WebMvcConfigurer <span class="title">corsConfigurer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> WebMvcConfigurer() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addCorsMappings</span><span class="params">(CorsRegistry registry)</span> </span>&#123;</span><br><span class="line">                registry.addMapping(<span class="string">&quot;/**&quot;</span>)    <span class="comment">//添加映射路径，“/**”表示对所有的路径实行全局跨域访问权限的设置</span></span><br><span class="line">                        .allowedOrigins(<span class="string">&quot;*&quot;</span>)    <span class="comment">//开放哪些ip、端口、域名的访问权限</span></span><br><span class="line">                        .allowCredentials(<span class="keyword">true</span>)  <span class="comment">//是否允许发送Cookie信息</span></span><br><span class="line">                        .allowedMethods(<span class="string">&quot;GET&quot;</span>, <span class="string">&quot;POST&quot;</span>, <span class="string">&quot;PUT&quot;</span>, <span class="string">&quot;DELETE&quot;</span>)     <span class="comment">//开放哪些Http方法，允许跨域访问</span></span><br><span class="line">                        .allowedHeaders(<span class="string">&quot;*&quot;</span>)     <span class="comment">//允许HTTP请求中的携带哪些Header信息</span></span><br><span class="line">                        .exposedHeaders(<span class="string">&quot;*&quot;</span>);   <span class="comment">//暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>处理跨域问题是为前后端分离开发做铺垫，这里这样配置好就行了，暂时放着不需要管，等开发前端 Vue 项目时就不会出问题了。</p>
 <p>至此所有的代码就都写完啦！！！</p>
 <p>接下来就是运行测试一下是否成功就行了。</p>
 </li>
-</ol>
+</ul>
 <h2 id="Postman测试"><a href="#Postman测试" class="headerlink" title="Postman测试"></a>Postman测试</h2><ol>
 <li><p>打开postman</p>
 <p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210630182908.png" alt="postman"></p>
@@ -1015,7 +1027,13 @@
 <p>至此整个项目都写完并测试完啦！感谢你能耐心看到这，希望本教程对你有所帮助。</p>
 </li>
 </ol>
-<h2 id="项目完整代码"><a href="#项目完整代码" class="headerlink" title="项目完整代码"></a>项目完整代码</h2><p><a href="https://github.com/MakerHu/springboot-login-demo">MakerHu/springboot-login-demo: Springboot后端登录注册项目演示demo (github.com)</a></p>
+<h2 id="项目源代码"><a href="#项目源代码" class="headerlink" title="项目源代码"></a>项目源代码</h2><ul>
+<li>Vue 前端：<a href="https://github.com/MakerHu/vue-login-demo">MakerHu/vue-login-demo (github.com)</a></li>
+<li>SpringBoot 后端：<a href="https://github.com/MakerHu/springboot-login-demo">MakerHu/springboot-login-demo (github.com)</a></li>
+</ul>
+<h2 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h2><ul>
+<li>前端教程：<a href="https://www.makerhu.com/posts/78e35d03/">Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客</a></li>
+</ul>
 ]]></content>
       <categories>
         <category>学习</category>
@@ -1036,13 +1054,14 @@
 <span id="more"></span>
 
 <p><strong>未经允许请勿转载！</strong> 文章首发于<a href="https://www.makerhu.com/posts/78e35d03/">Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客</a></p>
+<p>后端教程：<a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客</a></p>
 <p>项目演示：</p>
 <p><img src="vue-login-demo-video.gif" alt="演示视频"></p>
 <p><strong>说明：</strong></p>
 <ul>
 <li>本文中后半部分涉及到与后端的交互，需要先根据本人的另一个教程：<a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客</a> 在本地运行起后端后才能测试，这个 Vue 前端项目与前面这个教程的 SpringBoot 项目配套的前后端项目，因此<strong>建议先看完后端的文章再看此文章</strong>，当然如果只是要看前端登录注册页面的代码，也是没有问题的，只要忽略目录中<strong>前后端数据交互</strong>之后的内容就行了。</li>
 <li>本文中🛠标志后面跟着的命令都是要在命令行窗口运行的命令，命令窗口用 cmd 就行了</li>
-<li>文章最后有项目（前端和后端）的源代码哦</li>
+<li>文章最后有项目（前端和后端）的<strong>源代码</strong>哦</li>
 </ul>
 <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><ul>
 <li><p>Node.js</p>
@@ -1360,7 +1379,7 @@
 <li>SpringBoot 后端：<a href="https://github.com/MakerHu/springboot-login-demo">MakerHu/springboot-login-demo (github.com)</a></li>
 </ul>
 <h2 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h2><ul>
-<li><a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客</a></li>
+<li>后端教程：<a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客</a></li>
 </ul>
 ]]></content>
       <categories>
