@@ -30,18 +30,18 @@
 <meta property="og:site_name" content="MakerHu&amp;nbsp;的博客">
 <meta property="og:description" content="本教程整理了hexo写博客的一些常用命令以及常用方法，供大家参考，不定期更新">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111530.png">
-<meta property="og:image" content="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111923.png">
-<meta property="og:image" content="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507113349.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/6600e9a1/20210507111530.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/6600e9a1/20210507111923.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/6600e9a1/20210507113349.png">
 <meta property="article:published_time" content="2021-05-05T03:40:05.000Z">
-<meta property="article:modified_time" content="2021-08-29T13:38:44.092Z">
+<meta property="article:modified_time" content="2022-03-27T15:35:45.449Z">
 <meta property="article:author" content="MakerHu">
 <meta property="article:tag" content="hexo">
 <meta property="article:tag" content="博客">
 <meta property="article:tag" content="hexo备份">
 <meta property="article:tag" content="hexo恢复">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111530.png">
+<meta name="twitter:image" content="https://www.makerhu.com/posts/6600e9a1/20210507111530.png">
 
 <link rel="canonical" href="https://www.makerhu.com/posts/6600e9a1/">
 
@@ -235,7 +235,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-29 21:38:44" itemprop="dateModified" datetime="2021-08-29T21:38:44+08:00">2021-08-29</time>
+                <time title="修改时间：2022-03-27 23:35:45" itemprop="dateModified" datetime="2022-03-27T23:35:45+08:00">2022-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -320,12 +320,12 @@
 <h2 id="界面修改"><a href="#界面修改" class="headerlink" title="界面修改"></a>界面修改</h2><h3 id="配置博文阅读目录"><a href="#配置博文阅读目录" class="headerlink" title="配置博文阅读目录"></a>配置博文阅读目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">toc:</span><br><span class="line">  enable: true</span><br><span class="line">  # 如果为true则自动添加序号到目录中</span><br><span class="line">  number: true</span><br><span class="line">  # 如果为true目录过长部分会换行显示</span><br><span class="line">  wrap: true</span><br><span class="line">  # 如果为true目录会保持全展开，而不是只展开激活部分</span><br><span class="line">  expand_all: true</span><br><span class="line">  # 目录的最大层级数</span><br><span class="line">  max_depth: 6</span><br></pre></td></tr></table></figure>
 
 <h2 id="hexo备份与恢复"><a href="#hexo备份与恢复" class="headerlink" title="hexo备份与恢复"></a>hexo备份与恢复</h2><p>由于hexo在将博客部署到远程仓库时是将编译后的文件部署上去的，而源文件还是保留在本地（最核心的是文章的.md文件），因而可能存在源文件丢失的风险，如：电脑丢失，文件丢失等。因此做好源文件的备份是个良好的习惯，如果将源文件备份到github，还有利于我们在其他电脑中恢复对博客的管理。</p>
-<h3 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h3><h4 id="在GitHub中创建仓库"><a href="#在GitHub中创建仓库" class="headerlink" title="在GitHub中创建仓库"></a>在GitHub中创建仓库</h4><p><img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111530.png"></p>
-<img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507111923.png" style="zoom: 67%;" />
+<h3 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h3><h4 id="在GitHub中创建仓库"><a href="#在GitHub中创建仓库" class="headerlink" title="在GitHub中创建仓库"></a>在GitHub中创建仓库</h4><p><img src="/posts/6600e9a1/20210507111530.png"></p>
+<img src="/posts/6600e9a1/20210507111923.png" style="zoom: 67%;">
 
 <h4 id="将本地的博客源文件上传到GitHub"><a href="#将本地的博客源文件上传到GitHub" class="headerlink" title="将本地的博客源文件上传到GitHub"></a>将本地的博客源文件上传到GitHub</h4><p><strong>注意：在执行下列命令前先将你博客根目录下themes/&lt;主题名&gt;/下的.gitignore文件删了！</strong><br>原因是git文件不能嵌套，否则会报错（忘删导致报错解决方案：<a href="#%E4%B8%BB%E9%A2%98%E4%B8%AD%E7%9A%84.git%E6%96%87%E4%BB%B6%E6%9C%AA%E5%88%A0%E5%B0%B1%E4%B8%8A%E4%BC%A0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">主题中的.git文件未删就上传远程仓库</a>）</p>
 <p>在你的博客源文件根目录下git bash</p>
-<img src="https://gitee.com/MakerHu/typora_images/raw/master/img/20210507113349.png" style="zoom:80%;" />
+<img src="/posts/6600e9a1/20210507113349.png" style="zoom:80%;">
 
 <p>分别执行以下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;# MyHexoBlogBackup&quot;</span> &gt;&gt; README.md</span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">&quot;first commit&quot;</span></span><br><span class="line">git branch -M main</span><br><span class="line">git remote add origin https://github.com/yourname/MyBlogBackup.git</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>

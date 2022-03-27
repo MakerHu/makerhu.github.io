@@ -1213,7 +1213,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #0fdf88;
+  background: #96d691;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2710,8 +2710,7 @@ ul.breadcrumb li + li:last-child {
 }
 /* header-页面背景 */
 body {
-  background-image: linear-gradient(to top, #a6c3d3 0%, #304352 100%);
-  background-image: url("https://gitee.com/MakerHu/typora_images/raw/master/img/20210912105306.png");
+  background-image: url("/images/background.png");
   background-repeat: repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
