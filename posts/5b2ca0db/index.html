@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-myicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-myicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="0zVCCdiQVjFknPmHkJCs_o-nXjWofA6_6H3m5_b4coE">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.makerhu.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文章对SpringBoot开发后端项目结构做了简单介绍，并示范了使用SpringBoot+MySQL实现登录的后端功能，与本博客的另一篇文章 Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客 共同组成了前后端分离项目的整体，适合小白上手 Vue + SpringBoot + Mysql 的项目开发。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速上手SpringBoot项目（登录注册保姆级教程）">
+<meta property="og:url" content="https://www.makerhu.com/posts/5b2ca0db/index.html">
+<meta property="og:site_name" content="MakerHu&amp;nbsp;的博客">
+<meta property="og:description" content="本文章对SpringBoot开发后端项目结构做了简单介绍，并示范了使用SpringBoot+MySQL实现登录的后端功能，与本博客的另一篇文章 Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客 共同组成了前后端分离项目的整体，适合小白上手 Vue + SpringBoot + Mysql 的项目开发。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20220215165842.gif">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629210809.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629211408.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629211755.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629223940.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629225008.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629225618.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629230552.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629230907.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629231452.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629231749.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629232246.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629232535.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629234318.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629234515.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629235403.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210629235703.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630000910.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630001501.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630002003.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630002452.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630010734.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630013358.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630013719.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630014607.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630190513.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630021309.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630021356.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630021652.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630022152.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630022249.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630022502.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630115952.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630120140.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630185108.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630153407.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630153737.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630162053.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630162331.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630162651.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630163207.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630163356.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630164253.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630182301.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630175732.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630180002.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630174130.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630174215.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630175120.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20220206000716.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630182908.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630183243.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630183612.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/5b2ca0db/20210630183907-164839402645947.png">
+<meta property="article:published_time" content="2021-07-29T10:08:31.021Z">
+<meta property="article:modified_time" content="2022-04-07T08:53:12.443Z">
+<meta property="article:author" content="MakerHu">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="SpringBoot+MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.makerhu.com/posts/5b2ca0db/20220215165842.gif">
+
+<link rel="canonical" href="https://www.makerhu.com/posts/5b2ca0db/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu&nbsp;的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">MakerHu&nbsp;的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">慢慢来，会很快</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">26</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.makerhu.com/posts/5b2ca0db/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.png">
+      <meta itemprop="name" content="MakerHu">
+      <meta itemprop="description" content="慢慢来，会很快">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MakerHu&nbsp;的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          快速上手SpringBoot项目（登录注册保姆级教程）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-29 18:08:31" itemprop="dateCreated datePublished" datetime="2021-07-29T18:08:31+08:00">2021-07-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-07 16:53:12" itemprop="dateModified" datetime="2022-04-07T16:53:12+08:00">2022-04-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/%E9%87%8E%E7%94%9F%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">野生教程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/5b2ca0db/" class="post-meta-item leancloud_visitors" data-flag-title="快速上手SpringBoot项目（登录注册保姆级教程）" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">评论数：</span>
+    
+    <a title="valine" href="/posts/5b2ca0db/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/5b2ca0db/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本文章对SpringBoot开发后端项目结构做了简单介绍，并示范了使用SpringBoot+MySQL实现登录的后端功能，与本博客的另一篇文章 <a href="https://www.makerhu.com/posts/78e35d03/">Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客</a> 共同组成了前后端分离项目的整体，适合小白上手 Vue + SpringBoot + Mysql 的项目开发。</p>
+</blockquote>
+<span id="more"></span>
+
+<p><strong>未经允许请勿转载！</strong> 文章首发于<a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu的博客</a></p>
+<p><strong>前后端完整项目演示：</strong> </p>
+<p><img src="/posts/5b2ca0db/20220215165842.gif" alt="前后端完整项目演示"></p>
+<p><strong>本文章只涉及后端教程</strong>，前端教程请看本人的另一篇文章：</p>
+<p><strong>前端教程：</strong><a href="https://www.makerhu.com/posts/78e35d03/">Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客</a></p>
+<h2 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h2><p>使用本教程的前置条件是开发环境中已安装了以下几个东西，若无可以先找相关教程安装配置好。</p>
+<p><strong>管理工具：</strong>maven</p>
+<p><strong>IDE：</strong> IDEA</p>
+<p><strong>数据库：</strong> MySQL</p>
+<p><strong>测试工具：</strong>Postman（非必须，但方便测试且安装和使用都挺简单的）</p>
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><p><strong>注意：创建项目时保持网络通畅</strong></p>
+<ol>
+<li><p>打开IDEA</p>
+<p><img src="/posts/5b2ca0db/20210629210809.png" alt="IDEA图标"></p>
+</li>
+<li><p>新建项目</p>
+<p>情况一：</p>
+<p><img src="/posts/5b2ca0db/20210629211408.png" alt="新建项目第一步"></p>
+<p>情况二：</p>
+<p><img src="/posts/5b2ca0db/20210629211755.png" alt="新建项目第一步"></p>
+<p>设置项目的基本信息，其中注意jdk版本要与Java版本匹配，这里使用jdk1.8和java8</p>
+</li>
+</ol>
+<p><img src="/posts/5b2ca0db/20210629223940.png" alt="新建项目第二步"></p>
+<p>选择SpringBoot版本，选择项目依赖（依赖可以创建完项目后在pom文件中修改）</p>
+<p><img src="/posts/5b2ca0db/20210629225008.png" alt="新建项目第三步"></p>
+<p><img src="/posts/5b2ca0db/20210629225618.png" alt="新建项目第三步"></p>
+<p>至此项目就创建完成啦！</p>
+<h2 id="目录结构（初始状态）"><a href="#目录结构（初始状态）" class="headerlink" title="目录结构（初始状态）"></a>目录结构（初始状态）</h2><p><img src="/posts/5b2ca0db/20210629230552.png" alt="项目目录结构"></p>
+<h2 id="配置数据库"><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h2><p>创建完项目后，如果直接运行项目，我们会发现项目报错了</p>
+<p><img src="/posts/5b2ca0db/20210629230907.png" alt="报错图"></p>
+<p>报错的原因是我们在创建项目时导入了数据库相关的依赖，但是项目却还没有进行数据库相关配置</p>
+<p>所以接下来我们先进行数据库的配置</p>
+<h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><p>要配置数据库，首先咱们得有个数据库，因此我们先用MySQL创建一个。由于本项目要演示登录注册功能的实现，所以在此我将创建一个用户表，保存用户的账号信息。</p>
+<ol>
+<li>按Win+R打开“运行”，输入cmd</li>
+</ol>
+<p><img src="/posts/5b2ca0db/20210629231452.png" alt="cmd"></p>
+<ol start="2">
+<li><p>输入<code>mysql -u root -p</code>后输入密码，登录MySQL</p>
+<p><img src="/posts/5b2ca0db/20210629231749.png" alt="登录MySQL"></p>
+</li>
+<li><p>创建数据库<code>create database logindemo</code><strong>logindemo</strong>为数据库名，根据你的情况修改</p>
+<p><img src="/posts/5b2ca0db/20210629232246.png" alt="创建数据库"></p>
+</li>
+<li><p>进入数据库<code>use logindemo</code></p>
+<p><img src="/posts/5b2ca0db/20210629232535.png" alt="进入数据库"></p>
+</li>
+<li><p>创建user表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">user</span></span><br><span class="line">(</span><br><span class="line">    uid <span class="type">int</span>(<span class="number">10</span>) <span class="keyword">primary</span> key <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">    uname <span class="type">varchar</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    password <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span> (uname)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/posts/5b2ca0db/20210629234318.png"></p>
+<p>uid: 用户编号，主键，自增</p>
+<p>uname: 用户名，作为登录的账号（业务主键），不可重复</p>
+<p>password: 密码，因为可能要加密，所以长度设了较长的255</p>
+</li>
+<li><p>查看表是否创建成功</p>
+<p><code>desc user;</code></p>
+<p><img src="/posts/5b2ca0db/20210629234515.png" alt="查看user表信息"></p>
+<p>到这数据库就创建完成啦，接下来就是在项目中配置数据库相关信息了。</p>
+</li>
+</ol>
+<h3 id="配置数据库-1"><a href="#配置数据库-1" class="headerlink" title="配置数据库"></a>配置数据库</h3><ol>
+<li><p>找到配置文件application.properties</p>
+<p><img src="/posts/5b2ca0db/20210629235403.png"></p>
+</li>
+<li><p>输入数据库相关配置信息（此处配置了项目端口号为8081，可不配置，默认端口号为8080）</p>
+<p><strong>注意：配置url处logindemo改为你的数据库名称</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置端口号为8081</span></span><br><span class="line"><span class="string">server.port=8081</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置数据库</span></span><br><span class="line"><span class="comment"># 配置驱动</span></span><br><span class="line"><span class="string">spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver</span></span><br><span class="line"><span class="comment"># 若连接的是云数据库则将localhost改为云端ip</span></span><br><span class="line"><span class="string">spring.datasource.url=jdbc:mysql://localhost:3306/logindemo?serverTimezone=UTC</span></span><br><span class="line"><span class="comment"># Mysql用户</span></span><br><span class="line"><span class="string">spring.datasource.username=root</span></span><br><span class="line"><span class="comment"># Mysql对应用户密码</span></span><br><span class="line"><span class="string">spring.datasource.password=123456</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/posts/5b2ca0db/20210629235703.png" alt="application.properties"></p>
+<p>现在再次运行项目就能成功运行啦！</p>
+</li>
+<li><p>在IDEA中连接数据库（此步非必须，只是为了开发方便）</p>
+<p>在IDEA中连接数据库可以让我们在开发时直接可视化查看数据库的详细信息，建议配置一下。</p>
+<p><img src="/posts/5b2ca0db/20210630000910.png"></p>
+<p>配置数据库基本信息</p>
+<p><strong>注意：这一步有可能出现时区错误或者缺少依赖文件！！！</strong></p>
+<p><strong>解决方案</strong></p>
+<p><strong>时区错误：</strong>见图中配置时区</p>
+<p><strong>缺少文件：</strong>根据提示点击下载，但由于服务器在外网，有可能需要科学上网</p>
+<p><img src="/posts/5b2ca0db/20210630001501.png"></p>
+<p><img src="/posts/5b2ca0db/20210630002003.png"></p>
+<p>完成以上配置后就能在IDEA中管理数据库啦！</p>
+<p><img src="/posts/5b2ca0db/20210630002452.png"></p>
+</li>
+</ol>
+<h2 id="项目架构图"><a href="#项目架构图" class="headerlink" title="项目架构图"></a>项目架构图</h2><p>在说项目的目录结构之前，我们先来聊一聊后端的架构大概是什么样的，方便我们对目录结构的理解。</p>
+<p><img src="/posts/5b2ca0db/20210630010734.png" alt="项目架构图"></p>
+<ul>
+<li><strong>数据持久层</strong>是的目的是在java对象与数据库之间建立映射，也就是说它的作用是将某一个Java类对应到数据库中的一张表。在我们的项目中，就将创建一个实体类User映射到数据库的user表，表中的每个字段对应于实体类的每个属性。而之前配置的JPA的作用就是帮助我们完成类到数据表的映射。<ul>
+<li>repository: 存放一些数据访问类（也就是一些能操纵数据库的类）的包，比如存放能对user表进行增删改查的类</li>
+<li>domain：存放实体类的包，比如User类，其作为对应数据库user表的一个实体类</li>
+</ul>
+</li>
+<li><strong>业务逻辑层</strong>的作用是处理业务逻辑。比如在本项目中，我们就在业务逻辑层实现登录注册的逻辑，像是判断是否有用户名重复，密码是否正确等逻辑<ul>
+<li>service: 存放业务逻辑接口的包</li>
+<li>serviceImpl: 存放业务逻辑实现类的包，其中的类实现service中的接口</li>
+</ul>
+</li>
+<li><strong>控制层</strong>的作用是接收视图层的请求并调用业务逻辑层的方法。比如视图层请求登录并发来了用户的账号和密码，那么控制层就调用业务逻辑层的登录方法，并将账号密码作为参数传入，在将结果返回给视图层。<ul>
+<li>controller: 存放控制器的包。比如UserController</li>
+</ul>
+</li>
+<li><strong>视图层</strong>的作用是展现数据，由于本项目写的是纯后端，就不展开解释视图层了。</li>
+</ul>
+<p><strong>注意：根据架构我们可以发现，最佳的开发方式是自底向上开发，因为包之间的调用是上层调用下层，所以下层先实现能保证实现多少测试多少</strong></p>
+<h2 id="完善项目的基本目录结构"><a href="#完善项目的基本目录结构" class="headerlink" title="完善项目的基本目录结构"></a>完善项目的基本目录结构</h2><p>根据上述架构图的设计，我们就能创建对应的包让我们的项目框架更加清晰了。</p>
+<ol>
+<li><p>创建各种包（以domain包为例）</p>
+<p>注意本项目中service与serviceImpl包为父子关系，也可以并列，这取决于你的喜好</p>
+<p>最终效果见下一步</p>
+<p><img src="/posts/5b2ca0db/20210630013358.png" alt="创建包"></p>
+<p><img src="/posts/5b2ca0db/20210630013719.png"></p>
+</li>
+<li><p>最终目录结构</p>
+<p>包含<code>domain</code> <code>repository</code> <code>service</code> <code>serviceImpl</code> <code>controller</code> <code>utils</code> <code>config</code> </p>
+<p><img src="/posts/5b2ca0db/20210630014607.png" alt="最终目录结构"></p>
+<p>这时候眼尖的同学就发现了，怎么还多了俩： <code>utils</code> <code>config</code> </p>
+<p>这两个包的作用：</p>
+<ul>
+<li>**utils: **存放工具类，一些自己封装的工具</li>
+<li>**config: **存放配置类，一些配置如登录拦截器，安全配置等</li>
+</ul>
+<p>这里先建好了再说，具体怎么用之后会说。</p>
+</li>
+</ol>
+<h2 id="登录注册功能实现"><a href="#登录注册功能实现" class="headerlink" title="登录注册功能实现"></a>登录注册功能实现</h2><p>根据框架特点，我们将自底向上开发，所以将按照 实体类-dao-service-serviceImpl-controller 的顺序逐步开发。</p>
+<h3 id="所有类或接口的目录位置"><a href="#所有类或接口的目录位置" class="headerlink" title="所有类或接口的目录位置"></a>所有类或接口的目录位置</h3><p>为了方便你在下面的教程中明确的知道文件应该创建在什么位置，在此我就先把所有文件的目录位置展示出来了，你可以在需要的时候随时回来查看，现在可以先跳过这一步。</p>
+<p><img src="/posts/5b2ca0db/20210630190513.png" alt="所有类或接口的目录位置"></p>
+<h3 id="实现User实体类"><a href="#实现User实体类" class="headerlink" title="实现User实体类"></a>实现User实体类</h3><ol>
+<li><p>在domain中创建User.java</p>
+<p><img src="/posts/5b2ca0db/20210630021309.png" alt="创建User类"></p>
+<p><img src="/posts/5b2ca0db/20210630021356.png" alt="创建User类"></p>
+</li>
+<li><p>创建对应user表中字段的属性</p>
+<p>其中注意要添加<code>@Table(name = &quot;user&quot;)</code>和<code>@Entity</code>注解</p>
+<ul>
+<li><strong>@Table(name = “user”)</strong> 说明此实体类对应于数据库的user表</li>
+<li><strong>@Entity</strong> 说明此类是个实体类</li>
+</ul>
+<p>主键uid上要加上<code>@Id</code>与<code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//domain中的User.java</span></span><br><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.domain;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Table(name = &quot;user&quot;)</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 注意属性名要与数据表中的字段名一致</span></span><br><span class="line">    <span class="comment">// 主键自增int(10)对应long</span></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> uid;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用户名属性varchar对应String</span></span><br><span class="line">    <span class="keyword">private</span> String uname;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 密码属性varchar对应String</span></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/posts/5b2ca0db/20210630021652.png"></p>
+</li>
+<li><p>为属性生成get,set方法</p>
+<ul>
+<li><p>将光标移至要插入get, set方法的位置</p>
+</li>
+<li><p>右键-generate-getter and setter</p>
+<p><img src="/posts/5b2ca0db/20210630022152.png"></p>
+<p><img src="/posts/5b2ca0db/20210630022249.png"></p>
+</li>
+<li><p>选中所有属性-OK</p>
+<p><img src="/posts/5b2ca0db/20210630022502.png"></p>
+</li>
+<li><p>最后得到User.java（也可以纯手敲）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.domain;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Table(name = &quot;user&quot;)</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 注意属性名要与数据表中的字段名一致</span></span><br><span class="line">    <span class="comment">// 主键自增int(10)对应long</span></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> uid;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用户名属性varchar对应String</span></span><br><span class="line">    <span class="keyword">private</span> String uname;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 密码属性varchar对应String</span></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getUid</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUid</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.uid = uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUname</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> uname;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUname</span><span class="params">(String uname)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.uname = uname;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.password = password;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此User实体类就创建好啦，如果要实现其他表的实体类也类似。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="实现UserDao"><a href="#实现UserDao" class="headerlink" title="实现UserDao"></a>实现UserDao</h3><ol>
+<li><p>在repository包中创建UserDao接口</p>
+<p><img src="/posts/5b2ca0db/20210630115952.png"></p>
+<p><img src="/posts/5b2ca0db/20210630120140.png" alt="创建UserDao"></p>
+</li>
+<li><p>添加一些访问数据库的方法(这里添加的是根据用户名查询用户方法)</p>
+<ul>
+<li>首先要添加注解<code>@Repository</code></li>
+<li>接口要继承<code>JpaRepository</code>，这样JPA就能帮助我们完成对数据库的映射，也就是说接口里写的方法只要符合格式可以不需要实现SQL语句就能直接用了。</li>
+<li>如果JPA没有提供你想要的方法，可以自定义SQL语句</li>
+</ul>
+<p><img src="/posts/5b2ca0db/20210630185108.png" alt="UserDao"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.repository;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.jpa.repository.JpaRepository;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Repository;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span> <span class="keyword">extends</span> <span class="title">JpaRepository</span>&lt;<span class="title">User</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">User <span class="title">findByUname</span><span class="params">(String uname)</span></span>; <span class="comment">//通过用户名uname查找用户，注意要按照JPA的格式使用驼峰命名法</span></span><br><span class="line">    <span class="function">User <span class="title">findByUnameAndPassword</span><span class="params">(String uname, String password)</span></span>;<span class="comment">//通过用户名uname和密码查找用户</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于我们只实现登录注册功能，所以只要有根据账号密码查询用户和插入用户信息的方法就行了，这里我们已经实现了根据用户名密码查找用户的方法，而插入用户信息的方法save(object o)JPA已经帮我们实现了，可以直接调用，这里就不需要写了。</p>
+<p>**注意:**这里接口方法的命名要按照JPA提供的命名格式,比如findBy, deleteBy等等,且要求驼峰命名法。如果自定义查询方法可以不遵守这个规则</p>
+<p>自定义查询方法例子(本项目不需要用到):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Query(value = &quot;select * from user where uname LIKE ?1 OR email LIKE ?2 OR lastdid LIKE ?3 OR uid LIKE ?4&quot;,nativeQuery = true)</span></span><br><span class="line"><span class="function">Page&lt;User&gt; <span class="title">findUserswithoutgender</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        String uname,</span></span></span><br><span class="line"><span class="function"><span class="params">        String email,</span></span></span><br><span class="line"><span class="function"><span class="params">        String lastdid,</span></span></span><br><span class="line"><span class="function"><span class="params">        String uid,</span></span></span><br><span class="line"><span class="function"><span class="params">        Pageable request</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="实现UserService"><a href="#实现UserService" class="headerlink" title="实现UserService"></a>实现UserService</h3><ol>
+<li><p>在service包中创建UserService接口</p>
+<p><img src="/posts/5b2ca0db/20210630153407.png" alt="创建UserService接口"></p>
+<p><img src="/posts/5b2ca0db/20210630153737.png" alt="创建UserService接口"></p>
+</li>
+<li><p>添加登录注册需要用到的业务逻辑方法</p>
+<ul>
+<li>最终UserService的完整代码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 登录业务逻辑</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> uname 账户名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> password 密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">User <span class="title">loginService</span><span class="params">(String uname, String password)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册业务逻辑</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> user 要注册的User对象，属性中主键uid要为空，若uid不为空可能会覆盖已存在的user</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">User <span class="title">registService</span><span class="params">(User user)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>完成了接口方法的定义，接下来是在UserServiceImpl中实现这些方法啦</p>
+</li>
+</ol>
+<h3 id="实现UserServiceImpl"><a href="#实现UserServiceImpl" class="headerlink" title="实现UserServiceImpl"></a>实现UserServiceImpl</h3><p>我们将在UserServiceImpl中实现UserService中的方法，完整的UserServiceImpl代码在此步骤的最后一小步里</p>
+<ol>
+<li><p>在serviceImpl包中创建UserServiceImpl类</p>
+<p><img src="/posts/5b2ca0db/20210630162053.png" alt="创建UserServiceImpl类"></p>
+<p><img src="/posts/5b2ca0db/20210630162331.png" alt="创建UserServiceImpl类"></p>
+</li>
+<li><p>添加需要实现的方法</p>
+<ul>
+<li><p>添加<code>implements UserService</code></p>
+<p>此时会报错，但没关系，只是因为方法还没实现。</p>
+<p><img src="/posts/5b2ca0db/20210630162651.png"></p>
+</li>
+<li><p>鼠标悬停在红色波浪线自动生成需要实现的方法（也可以手动一个个写）</p>
+<p><img src="/posts/5b2ca0db/20210630163207.png" alt="生成方法"></p>
+<p><img src="/posts/5b2ca0db/20210630163356.png" alt="生成方法"></p>
+</li>
+<li><p>生成方法后的样子</p>
+<p><img src="/posts/5b2ca0db/20210630164253.png" alt="生成方法后的样子"></p>
+</li>
+</ul>
+</li>
+<li><p>实现登录业务逻辑</p>
+<ul>
+<li><p>因为要用到UserDao中的方法，所以先通过<code>@Resource</code>注解帮助我们实例化UserDao对象</p>
+</li>
+<li><p>登录业务逻辑代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> UserDao userDao;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">loginService</span><span class="params">(String uname, String password)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果账号密码都对则返回登录的用户对象，若有一个错误则返回null</span></span><br><span class="line">    User user = userDao.findByUnameAndPassword(uname, password);</span><br><span class="line">    <span class="comment">// 重要信息置空</span></span><br><span class="line">    <span class="keyword">if</span>(user != <span class="keyword">null</span>)&#123;</span><br><span class="line">        user.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>实现注册业务逻辑</p>
+<ul>
+<li><p>注册业务逻辑代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">registService</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//当新用户的用户名已存在时</span></span><br><span class="line">    <span class="keyword">if</span>(userDao.findByUname(user.getUname())!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="comment">// 无法注册</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//返回创建好的用户对象(带uid)</span></span><br><span class="line">        User newUser = userDao.save(user);</span><br><span class="line">        <span class="keyword">if</span>(newUser != <span class="keyword">null</span>)&#123;</span><br><span class="line">            newUser.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newUser;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>添加<code>@Service</code>注解</p>
+<p><img src="/posts/5b2ca0db/20210630182301.png" alt="添加@Service注解"></p>
+</li>
+<li><p>最终UserServiceImpl完整代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.service.serviceImpl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.repository.UserDao;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.service.UserService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.Resource;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> UserDao userDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">loginService</span><span class="params">(String uname, String password)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 如果账号密码都对则返回登录的用户对象，若有一个错误则返回null</span></span><br><span class="line">        User user = userDao.findByUnameAndPassword(uname, password);</span><br><span class="line">        <span class="comment">// 重要信息置空</span></span><br><span class="line">        <span class="keyword">if</span>(user != <span class="keyword">null</span>)&#123;</span><br><span class="line">            user.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">registService</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//当新用户的用户名已存在时</span></span><br><span class="line">        <span class="keyword">if</span>(userDao.findByUname(user.getUname())!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="comment">// 无法注册</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//返回创建好的用户对象(带uid)</span></span><br><span class="line">            User newUser = userDao.save(user);</span><br><span class="line">            <span class="keyword">if</span>(newUser != <span class="keyword">null</span>)&#123;</span><br><span class="line">                newUser.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> newUser;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>至此UserServiceImpl就写完啦！</p>
+</li>
+</ol>
+<h3 id="实现工具类Result"><a href="#实现工具类Result" class="headerlink" title="实现工具类Result"></a>实现工具类Result</h3><p>工具类Result的作用是作为返回给前端的统一后的对象。也就是说返回给前端的都是Result对象，只是对象中的属性不太一样，这样方便前端固定接收格式。</p>
+<ol>
+<li><p>在utils包中创建Result类</p>
+<p><img src="/posts/5b2ca0db/20210630175732.png" alt="创建Result类"></p>
+<p><img src="/posts/5b2ca0db/20210630180002.png" alt="创建Result类"></p>
+</li>
+<li><p>最终Result代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Result</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String code;</span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line">    <span class="keyword">private</span> T data;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCode</span><span class="params">(String code)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.code = code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMsg</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.msg = msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(T data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.data = data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Result</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Result</span><span class="params">(T data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.data = data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Result <span class="title">success</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Result result = <span class="keyword">new</span> Result&lt;&gt;();</span><br><span class="line">        result.setCode(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        result.setMsg(<span class="string">&quot;成功&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Result&lt;T&gt; <span class="title">success</span><span class="params">(T data)</span> </span>&#123;</span><br><span class="line">        Result&lt;T&gt; result = <span class="keyword">new</span> Result&lt;&gt;(data);</span><br><span class="line">        result.setCode(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        result.setMsg(<span class="string">&quot;成功&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Result&lt;T&gt; <span class="title">success</span><span class="params">(T data,String msg)</span> </span>&#123;</span><br><span class="line">        Result&lt;T&gt; result = <span class="keyword">new</span> Result&lt;&gt;(data);</span><br><span class="line">        result.setCode(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        result.setMsg(msg);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Result <span class="title">error</span><span class="params">(String code, String msg)</span> </span>&#123;</span><br><span class="line">        Result result = <span class="keyword">new</span> Result();</span><br><span class="line">        result.setCode(code);</span><br><span class="line">        result.setMsg(msg);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出Result是个模板类，因此想要返回什么数据类型给前端都行，如<code>Result&lt;User&gt;</code>，要是没看懂没关系，看到下面就知道怎么用了。因为里面有很多静态方法，可以直接用<code>类名.方法名</code>调用。</p>
+</li>
+</ol>
+<h3 id="实现UserController"><a href="#实现UserController" class="headerlink" title="实现UserController"></a>实现UserController</h3><ol>
+<li><p>在controller包中创建UserController类</p>
+<p><img src="/posts/5b2ca0db/20210630174130.png" alt="创建UserController类"></p>
+<p><img src="/posts/5b2ca0db/20210630174215.png" alt="创建UserController类"></p>
+</li>
+<li><p>添加<code>@RestController</code>与<code>@RequestMapping(&quot;/user&quot;)</code>注解，注入UserService</p>
+<ul>
+<li>注解@RequestMapping中的”/user”是这个控制器类的基路由</li>
+</ul>
+<p><img src="/posts/5b2ca0db/20210630175120.png"></p>
+</li>
+<li><p>实现登录的控制</p>
+<p>这里的<code>@PostMapping(&quot;/login&quot;)</code>表示处理post请求，路由为/user/login</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">loginController</span><span class="params">(<span class="meta">@RequestParam</span> String uname, <span class="meta">@RequestParam</span> String password)</span></span>&#123;</span><br><span class="line">    User user = userService.loginService(uname, password);</span><br><span class="line">    <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.success(user,<span class="string">&quot;登录成功！&quot;</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.error(<span class="string">&quot;123&quot;</span>,<span class="string">&quot;账号或密码错误！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>实现注册的控制</p>
+<p>这里的<code>@PostMapping(&quot;/register&quot;)</code>表示处理post请求，路由为/user/register</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">registController</span><span class="params">(<span class="meta">@RequestBody</span> User newUser)</span></span>&#123;</span><br><span class="line">    User user = userService.registService(newUser);</span><br><span class="line">    <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.success(user,<span class="string">&quot;注册成功！&quot;</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.error(<span class="string">&quot;456&quot;</span>,<span class="string">&quot;用户名已存在！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>完整的UserController代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.domain.User;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.service.UserService;</span><br><span class="line"><span class="keyword">import</span> com.springboot.springbootlogindemo.utils.Result;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.Resource;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">loginController</span><span class="params">(<span class="meta">@RequestParam</span> String uname, <span class="meta">@RequestParam</span> String password)</span></span>&#123;</span><br><span class="line">        User user = userService.loginService(uname, password);</span><br><span class="line">        <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.success(user,<span class="string">&quot;登录成功！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.error(<span class="string">&quot;123&quot;</span>,<span class="string">&quot;账号或密码错误！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;User&gt; <span class="title">registController</span><span class="params">(<span class="meta">@RequestBody</span> User newUser)</span></span>&#123;</span><br><span class="line">        User user = userService.registService(newUser);</span><br><span class="line">        <span class="keyword">if</span>(user!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.success(user,<span class="string">&quot;注册成功！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Result.error(<span class="string">&quot;456&quot;</span>,<span class="string">&quot;用户名已存在！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="处理跨域访问问题"><a href="#处理跨域访问问题" class="headerlink" title="处理跨域访问问题"></a>处理跨域访问问题</h2><blockquote>
+<p>跨域问题可以简单理解成如果你的前端项目的<strong>IP地址</strong>和<strong>端口号</strong>和后端的<strong>IP地址</strong>和<strong>端口号</strong>不一样，就会导致前端无法获取到数据，这是一个规定。而在前后端分离开发的项目中，前后端项目的端口号一般都是不一样的，假设我们这个项目的前端端口号是 8080，后端端口号是 8081，就会造成跨域访问的问题，跨域访问的问题可以在前端解决也可以在后端解决，后端只要加上一个配置文件就行了</p>
+</blockquote>
+<ul>
+<li><p>在<code>config</code>文件下创建全局跨域配置类<code>GlobalCorsConfig.java</code></p>
+<p><img src="/posts/5b2ca0db/20220206000716.png" alt="创建全局跨域配置文件"></p>
+</li>
+<li><p><strong>GlobalCorsConfig.java 文件</strong></p>
+<p><strong>注意！！！</strong> ：<strong>SpringBoot2.4.0</strong> 以后下方 <code>allowedOrigins</code> 需要被 <code>allowedOriginPatterns</code> 代替！！！！</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.springboot.springbootlogindemo.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.CorsRegistry;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.WebMvcConfigurer;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalCorsConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> WebMvcConfigurer <span class="title">corsConfigurer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> WebMvcConfigurer() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addCorsMappings</span><span class="params">(CorsRegistry registry)</span> </span>&#123;</span><br><span class="line">                registry.addMapping(<span class="string">&quot;/**&quot;</span>)    <span class="comment">//添加映射路径，“/**”表示对所有的路径实行全局跨域访问权限的设置</span></span><br><span class="line">                        .allowedOrigins(<span class="string">&quot;*&quot;</span>)    <span class="comment">//开放哪些ip、端口、域名的访问权限 SpringBoot2.4.0以后allowedOrigins被allowedOriginPatterns代替</span></span><br><span class="line">                        .allowCredentials(<span class="keyword">true</span>)  <span class="comment">//是否允许发送Cookie信息</span></span><br><span class="line">                        .allowedMethods(<span class="string">&quot;GET&quot;</span>, <span class="string">&quot;POST&quot;</span>, <span class="string">&quot;PUT&quot;</span>, <span class="string">&quot;DELETE&quot;</span>)     <span class="comment">//开放哪些Http方法，允许跨域访问</span></span><br><span class="line">                        .allowedHeaders(<span class="string">&quot;*&quot;</span>)     <span class="comment">//允许HTTP请求中的携带哪些Header信息</span></span><br><span class="line">                        .exposedHeaders(<span class="string">&quot;*&quot;</span>);   <span class="comment">//暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>处理跨域问题是为前后端分离开发做铺垫，这里这样配置好就行了，暂时放着不需要管，等开发前端 Vue 项目时就不会出问题了。</p>
+<p>至此所有的代码就都写完啦！！！</p>
+<p>接下来就是运行测试一下是否成功就行了。</p>
+</li>
+</ul>
+<h2 id="Postman测试"><a href="#Postman测试" class="headerlink" title="Postman测试"></a>Postman测试</h2><ol>
+<li><p>打开postman</p>
+<p><img src="/posts/5b2ca0db/20210630182908.png" alt="postman"></p>
+</li>
+<li><p>测试注册用户</p>
+<p><img src="/posts/5b2ca0db/20210630183243.png" alt="测试注册"></p>
+<p>输入选则请求方式Post，输入路由<code>http://localhost:8081/user/register</code>，输入用户json对象后点击<strong>Send</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;uname&quot;</span>: <span class="string">&quot;hhh&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;123&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>成功收到后端返回消息</p>
+<p><img src="/posts/5b2ca0db/20210630183612.png" alt="注册成功消息"></p>
+</li>
+<li><p>登录测试</p>
+<p><img src="/posts/5b2ca0db/20210630183907-164839402645947.png" alt="登录测试"></p>
+<p>类似于注册测试</p>
+<ul>
+<li>请求方式：POST</li>
+<li>url：<code>http://localhost:8081/user/login</code></li>
+<li>参数：见图中4，5步</li>
+</ul>
+<p>至此整个项目都写完并测试完啦！感谢你能耐心看到这，希望本教程对你有所帮助。</p>
+</li>
+</ol>
+<h2 id="项目源代码"><a href="#项目源代码" class="headerlink" title="项目源代码"></a>项目源代码</h2><ul>
+<li>Vue 前端：<a target="_blank" rel="noopener" href="https://github.com/MakerHu/vue-login-demo">MakerHu/vue-login-demo (github.com)</a></li>
+<li>SpringBoot 后端：<a target="_blank" rel="noopener" href="https://github.com/MakerHu/springboot-login-demo">MakerHu/springboot-login-demo (github.com)</a></li>
+</ul>
+<h2 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h2><ul>
+<li>前端教程：<a href="https://www.makerhu.com/posts/78e35d03/">Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/SpringBoot/" rel="tag"><i class="fa fa-tag"></i> SpringBoot</a>
+              <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
+              <a href="/tags/SpringBoot-MySQL/" rel="tag"><i class="fa fa-tag"></i> SpringBoot+MySQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/58379ca9/" rel="prev" title="在Linux服务器上简易部署django项目">
+      <i class="fa fa-chevron-left"></i> 在Linux服务器上简易部署django项目
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/41268e44/" rel="next" title="注解与反射">
+      注解与反射 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">前置条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.</span> <span class="nav-text">创建项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%EF%BC%88%E5%88%9D%E5%A7%8B%E7%8A%B6%E6%80%81%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">目录结构（初始状态）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">4.</span> <span class="nav-text">配置数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">4.1.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E5%BA%93-1"><span class="nav-number">4.2.</span> <span class="nav-text">配置数据库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="nav-number">5.</span> <span class="nav-text">项目架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-number">6.</span> <span class="nav-text">完善项目的基本目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0"><span class="nav-number">7.</span> <span class="nav-text">登录注册功能实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%80%E6%9C%89%E7%B1%BB%E6%88%96%E6%8E%A5%E5%8F%A3%E7%9A%84%E7%9B%AE%E5%BD%95%E4%BD%8D%E7%BD%AE"><span class="nav-number">7.1.</span> <span class="nav-text">所有类或接口的目录位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0User%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="nav-number">7.2.</span> <span class="nav-text">实现User实体类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0UserDao"><span class="nav-number">7.3.</span> <span class="nav-text">实现UserDao</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0UserService"><span class="nav-number">7.4.</span> <span class="nav-text">实现UserService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0UserServiceImpl"><span class="nav-number">7.5.</span> <span class="nav-text">实现UserServiceImpl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%B7%A5%E5%85%B7%E7%B1%BBResult"><span class="nav-number">7.6.</span> <span class="nav-text">实现工具类Result</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0UserController"><span class="nav-number">7.7.</span> <span class="nav-text">实现UserController</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E8%B7%A8%E5%9F%9F%E8%AE%BF%E9%97%AE%E9%97%AE%E9%A2%98"><span class="nav-number">8.</span> <span class="nav-text">处理跨域访问问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Postman%E6%B5%8B%E8%AF%95"><span class="nav-number">9.</span> <span class="nav-text">Postman测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">10.</span> <span class="nav-text">项目源代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%8E%A8%E8%8D%90"><span class="nav-number">11.</span> <span class="nav-text">相关推荐</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="MakerHu"
+      src="/images/author.png">
+  <p class="site-author-name" itemprop="name">MakerHu</p>
+  <div class="site-description" itemprop="description">慢慢来，会很快</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MakerHu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MakerHu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/makerhu" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;makerhu" rel="noopener" target="_blank"><i class="fas fa-globe fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/278cd7fff709" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;278cd7fff709" rel="noopener" target="_blank"><i class="fas fa-book-open fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_44043758?spm=1010.2135.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_44043758?spm&#x3D;1010.2135.3001.5343" rel="noopener" target="_blank"><i class="fas fa-crosshairs fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MakerHu</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '76wfmteWgCcUQAq7kwLDXz2X-MdYXbMMI',
+      appKey     : 'dPYMOaMhWCh2NlzVwlFD8525',
+      placeholder: "一起讨论吧！填写「邮箱」能够及时收到回复通知哦~",
+      avatar     : 'retro',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : 'https://76wfmtew.api.lncldglobal.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

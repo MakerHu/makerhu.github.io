@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-myicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-myicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="0zVCCdiQVjFknPmHkJCs_o-nXjWofA6_6H3m5_b4coE">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.makerhu.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="注解与注释其实非常的相似，只不过注释是用来让开发人员知道某段代码的作用是什么都有哪些参数等，而注解则是写给程序看的一个“注释”，注解中主要包含了它本身的名称，以及它的参数，单纯地看一个注解其实与注释没啥区别。但注解往往会与反射组合使用，反射可以让我们在程序运行时观察并操作某个类中的信息，当然包括注解，这在实现一些框架的过程中有很大作用（比如实现实体类到数据库表的自动映射）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="注解与反射">
+<meta property="og:url" content="https://www.makerhu.com/posts/41268e44/index.html">
+<meta property="og:site_name" content="MakerHu&amp;nbsp;的博客">
+<meta property="og:description" content="注解与注释其实非常的相似，只不过注释是用来让开发人员知道某段代码的作用是什么都有哪些参数等，而注解则是写给程序看的一个“注释”，注解中主要包含了它本身的名称，以及它的参数，单纯地看一个注解其实与注释没啥区别。但注解往往会与反射组合使用，反射可以让我们在程序运行时观察并操作某个类中的信息，当然包括注解，这在实现一些框架的过程中有很大作用（比如实现实体类到数据库表的自动映射）。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-09T12:45:45.000Z">
+<meta property="article:modified_time" content="2021-08-29T13:47:03.705Z">
+<meta property="article:author" content="MakerHu">
+<meta property="article:tag" content="注解">
+<meta property="article:tag" content="annotation">
+<meta property="article:tag" content="反射">
+<meta property="article:tag" content="reflection">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.makerhu.com/posts/41268e44/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>注解与反射 | MakerHu&nbsp;的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">MakerHu&nbsp;的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">慢慢来，会很快</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">26</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.makerhu.com/posts/41268e44/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.png">
+      <meta itemprop="name" content="MakerHu">
+      <meta itemprop="description" content="慢慢来，会很快">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MakerHu&nbsp;的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          注解与反射
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-09 20:45:45" itemprop="dateCreated datePublished" datetime="2021-08-09T20:45:45+08:00">2021-08-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-29 21:47:03" itemprop="dateModified" datetime="2021-08-29T21:47:03+08:00">2021-08-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/%E7%AC%94%E8%AE%B0/Java%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">Java笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/41268e44/" class="post-meta-item leancloud_visitors" data-flag-title="注解与反射" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">评论数：</span>
+    
+    <a title="valine" href="/posts/41268e44/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/41268e44/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>注解与注释其实非常的相似，只不过注释是用来让开发人员知道某段代码的作用是什么都有哪些参数等，而注解则是写给程序看的一个“注释”，注解中主要包含了它本身的名称，以及它的参数，单纯地看一个注解其实与注释没啥区别。但注解往往会与反射组合使用，反射可以让我们在程序运行时观察并操作某个类中的信息，当然包括注解，这在实现一些框架的过程中有很大作用（比如实现实体类到数据库表的自动映射）。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="注解（Annotation）"><a href="#注解（Annotation）" class="headerlink" title="注解（Annotation）"></a>注解（Annotation）</h2><h3 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h3><blockquote>
+<p>元注解的作用是注解其他的注解，Java定义了4个标准的meta-annotation类型，他们被用来提供对其他annotation类型的说明。</p>
+<p>存在包java.lang.annotation中</p>
+</blockquote>
+<p><strong>四个标准元注解：</strong></p>
+<blockquote>
+<p>注解注解的注解，也就是注解的注解，只能用在注解上。</p>
+</blockquote>
+<ul>
+<li><strong>@Target</strong> 用于描述注解的使用范围（如方法、类、字段上等）</li>
+<li><strong>@Retention</strong> 表示在什么级别保存该注释信息，用于描述注解的生命周期<ul>
+<li>SOURCE &lt; CLASS &lt; RUNTIME</li>
+</ul>
+</li>
+<li><strong>@Document</strong> 说明该注解将被包含在javadoc中</li>
+<li><strong>@Inherited</strong> 说明子类可以继承父类中的该注解</li>
+</ul>
+<h3 id="Target"><a href="#Target" class="headerlink" title="@Target"></a>@Target</h3><p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.METHOD)</span>	<span class="comment">// 示例在这</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> myAnnotation &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中参数ElementType的可选值有：</p>
+<p><code>TYPE</code> <code>FIELD</code> <code>METHOD</code> <code>PARAMETER</code> <code>CONSTRUCTOR</code> <code>LOCAL_VARIABLE</code> <code>ANNOTATION_TYPE</code> <code>PACKAGE</code> <code>TYPE_PARAMETER</code> <code>TYPE_USE</code></p>
+<h3 id="Retention"><a href="#Retention" class="headerlink" title="@Retention"></a>@Retention</h3><blockquote>
+<p>表示注解在什么范围有效，如源码级别、编译后的class级别、运行时级别</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.METHOD)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span>	<span class="comment">// 示例在这</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyAnnotation &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中参数的可选值有：</p>
+<p><code>SOURCE</code> <code>CLASS</code> <code>RUNTIME</code></p>
+<p>参数的关系为<strong>包含</strong>关系，<strong>RUNTIME &gt; CLASS &gt; SOURCE</strong></p>
+<h3 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h3><p>自定义多参数的注解示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="comment">// @interface 自动继承java.lang.annotation.Annotation接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyAnnotation &#123;</span><br><span class="line">    <span class="comment">// 自定义注解的参数：注解的类型 参数名称();</span></span><br><span class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> &quot;defaultName&quot;</span>;    <span class="comment">// 参数可以设定默认值，否则使用该注解是时就必须写参数</span></span><br><span class="line">    <span class="function">String <span class="title">school</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义只带一个参数的注解示例：</p>
+<p>如果之定义一个参数最好将参数命名为<code>value()</code>，因为命名为value在使用注解时可以省略<code>value = </code> </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="comment">// @interface 自动继承java.lang.annotation.Annotation接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyAnnotation &#123;</span><br><span class="line">    <span class="comment">// 自定义注解的参数：注解的类型 参数名称();</span></span><br><span class="line">    String[] value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="反射（Reflection）"><a href="#反射（Reflection）" class="headerlink" title="反射（Reflection）"></a>反射（Reflection）</h2><blockquote>
+<p><strong>反射式编程</strong>（英语：reflective programming）或<strong>反射</strong>（英语：reflection），是指计算机程序在运行时（runtime）可以访问、检测和修改它本身状态或行为的一种能力。用比喻来说，反射就是程序在运行的时候能够“观察”并且修改自己的行为。——维基百科</p>
+</blockquote>
+<h3 id="理解反射"><a href="#理解反射" class="headerlink" title="理解反射"></a>理解反射</h3><p>我对反射的一个比较形象的理解是，java中的反射与物理中光的反射也有一些相似的地方。在现实生活中，我们能够通过镜子看到某个物体反射后的像，而java中的反射就是以类加载过程中会生成的<strong>Class对象</strong>作为“镜子”，通过这面镜子，我们能在程序运行时观察并操作某个类的内部结构。因此学习反射绕不开对Class类的学习。（个人的理解，可能表达并不准确）</p>
+<h3 id="反射机制提供的功能"><a href="#反射机制提供的功能" class="headerlink" title="反射机制提供的功能"></a>反射机制提供的功能</h3><ul>
+<li>在运行时判断任意一个对象所属的类型</li>
+<li>在运行时构造任意一个类的对象</li>
+<li>在运行时判断任意一个类所具有的成员变量和方法</li>
+<li>在运行时获取泛型信息</li>
+<li>在运行时调用任意一个对象的成员变量和方法</li>
+<li>在运行时处理注解</li>
+<li>生成动态代理</li>
+<li>……</li>
+</ul>
+<h3 id="理解java中的Class类"><a href="#理解java中的Class类" class="headerlink" title="理解java中的Class类"></a>理解java中的Class类</h3><p><strong>Class类</strong></p>
+<ul>
+<li>Class本身也是一个类</li>
+<li>Class类<strong>只能由系统创建</strong>对象</li>
+<li>一个加载的类在JVM中有且仅有一个Class实例</li>
+<li>一个Class对象对应的是一个加载到JVM中的一个.class文件</li>
+<li>每个类的实例都会知道自己是由哪个Class实例所生成</li>
+<li>通过Class可以完全地得到一个类中的所有被加载的结构</li>
+<li>Class类是Reflection的根源，针对任何你想动态加载、运行的类，唯有先获得相应的Class对象</li>
+</ul>
+<h3 id="获取Class对象的几种方式"><a href="#获取Class对象的几种方式" class="headerlink" title="获取Class对象的几种方式"></a>获取Class对象的几种方式</h3><p>这里我们写了两个类Person与Student，其中Student继承Person，本文章中所有的Person类与Student类都是以下列出的代码。</p>
+<p><strong>Person类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Student类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.experiment.annotation.MyAnnotation;</span><br><span class="line"><span class="keyword">import</span> com.experiment.annotation.MyAnnotation02;</span><br><span class="line"></span><br><span class="line"><span class="meta">@MyAnnotation(name = &quot;MakerHu&quot;, school = &quot;BJTU&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@MyAnnotation02(&quot;studentCardId&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String studentId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.setName(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getStudentId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> studentId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStudentId</span><span class="params">(String studentId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.studentId = studentId;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>通过代码可以更好地理解如何获取Class对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.experiment.reflection.getclass;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        Person student1 = <span class="keyword">new</span> Student(<span class="string">&quot;学生&quot;</span>);</span><br><span class="line">        Person student2 = <span class="keyword">new</span> Student(<span class="string">&quot;学生&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取Class对象的几种方法</span></span><br><span class="line">        <span class="comment">// 方法一：通过对象获得</span></span><br><span class="line">        Class c1_1 = student1.getClass();</span><br><span class="line">        Class c1_2 = student2.getClass();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 方法二：通过Class.forName获得（需要抛出异常）</span></span><br><span class="line">        Class c2 = Class.forName(<span class="string">&quot;com.experiment.reflection.getclass.Student&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 方法三：通过类名.Class获得（效率最高）</span></span><br><span class="line">        Class c3 = Student.class;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 方式四：基本内置类型的包装类有一个Type属性</span></span><br><span class="line">        Class c4 = Integer.TYPE;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获得父类类型</span></span><br><span class="line">        Class c5 = c1_1.getSuperclass();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;c1_1: &quot;</span> + c1_1.hashCode());</span><br><span class="line">        System.out.println(<span class="string">&quot;c1_2: &quot;</span> + c1_2.hashCode());</span><br><span class="line">        System.out.println(<span class="string">&quot;c2: &quot;</span> + c2.hashCode());</span><br><span class="line">        System.out.println(<span class="string">&quot;c3: &quot;</span> + c3.hashCode());</span><br><span class="line">        System.out.println(<span class="string">&quot;c4: &quot;</span> + c4);</span><br><span class="line">        System.out.println(<span class="string">&quot;c5: &quot;</span> + c5);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码的输出为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">c1_1: 460141958</span><br><span class="line">c1_2: 460141958</span><br><span class="line">c2: 460141958</span><br><span class="line">c3: 460141958</span><br><span class="line">c4: int</span><br><span class="line">c5: class com.experiment.reflection.getclass.Person</span><br></pre></td></tr></table></figure>
+
+<p>从c1到c3的输出我们可以发现，不管Class对象是如何获得的，只要其为某个类的Class对象，其在内存中就只有一个，也就是<strong>一个类拥有唯一的一个Class对象</strong>。</p>
+<h3 id="通过Class对象获取类的信息"><a href="#通过Class对象获取类的信息" class="headerlink" title="通过Class对象获取类的信息"></a>通过Class对象获取类的信息</h3><p>不说废话，直接上代码，详见注释。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.experiment.reflection.getClassMsg;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获得类的信息</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetClassMsg</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchFieldException, NoSuchMethodException </span>&#123;</span><br><span class="line">        Class c1 = Class.forName(<span class="string">&quot;com.experiment.reflection.getclass.Student&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获得类的名字</span></span><br><span class="line">        System.out.println(c1.getName());   <span class="comment">// 获得包名+类名</span></span><br><span class="line">        System.out.println(c1.getSimpleName()); <span class="comment">// 获得类名</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获得类的属性</span></span><br><span class="line">        Field[] fields = c1.getFields();    <span class="comment">// getFields()只能获取到本类或父类中的publics属性</span></span><br><span class="line">        fields = c1.getDeclaredFields();    <span class="comment">// getDeclaredFields()可以获取到本类所有属性</span></span><br><span class="line">        Field name = c1.getField(<span class="string">&quot;name&quot;</span>);   <span class="comment">// 获取到本类或父类中的指定名称的public属性</span></span><br><span class="line">        Field studentId = c1.getDeclaredField(<span class="string">&quot;studentId&quot;</span>); <span class="comment">// 获取到本类的指定名称的属性，private属性也可获取到</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获得类中的方法</span></span><br><span class="line">        Method[] methods = c1.getMethods(); <span class="comment">// 获得本类及其父类的所有public方法</span></span><br><span class="line">        methods = c1.getDeclaredMethods();  <span class="comment">// 获得本类的所有方法</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获得指定的方法</span></span><br><span class="line">        Method setName = c1.getMethod(<span class="string">&quot;setName&quot;</span>,String.class);  <span class="comment">// 通过方法名和参数类型获取本类或父类的指定public方法，为的是防止有重载时找不到特定方法</span></span><br><span class="line">        Method setStudentId = c1.getDeclaredMethod(<span class="string">&quot;setStudentId&quot;</span>,String.class);    <span class="comment">//获取本类的所有指定方法</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取构造器</span></span><br><span class="line">        Constructor[] constructors = c1.getConstructors();  <span class="comment">// 获取本类所有public构造器</span></span><br><span class="line">        Constructor[] constructors1 = c1.getDeclaredConstructors(); <span class="comment">// 获取本类的所有构造器</span></span><br><span class="line">        Constructor constructor = c1.getConstructor(String.class);  <span class="comment">//获得本类的指定参数的public构造器</span></span><br><span class="line">        Constructor constructor1 = c1.getDeclaredConstructor(<span class="keyword">null</span>);  <span class="comment">//获得本类的指定参数的构造器</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="动态操作对象"><a href="#动态操作对象" class="headerlink" title="动态操作对象"></a>动态操作对象</h3><p>同样，看代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.experiment.reflection.operateObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.experiment.reflection.getclass.Student;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态操作对象</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OperateObject</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NoSuchFieldException </span>&#123;</span><br><span class="line">        <span class="comment">// 获得Class对象</span></span><br><span class="line">        Class c1 = Class.forName(<span class="string">&quot;com.experiment.reflection.getclass.Student&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 构造一个对象</span></span><br><span class="line">        Student student = (Student)c1.newInstance();    <span class="comment">//利用无参构造器构造</span></span><br><span class="line"></span><br><span class="line">        Constructor constructor = c1.getDeclaredConstructor(String.class);</span><br><span class="line">        Student student1 = (Student) constructor.newInstance(<span class="string">&quot;Makerhu&quot;</span>);    <span class="comment">// 利用有参构造器构造</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 通过反射调用方法</span></span><br><span class="line">        Method setStudentId = c1.getDeclaredMethod(<span class="string">&quot;setStudentId&quot;</span>, String.class);</span><br><span class="line">        setStudentId.invoke(student1,<span class="string">&quot;123425&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 通过反射操作属性</span></span><br><span class="line">        Field studentId = c1.getDeclaredField(<span class="string">&quot;studentId&quot;</span>);</span><br><span class="line">        studentId.setAccessible(<span class="keyword">true</span>);  <span class="comment">// 私有属性设置访问权限为true后就可以修改</span></span><br><span class="line">        studentId.set(student1, <span class="string">&quot;9876543&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="获取泛型信息"><a href="#获取泛型信息" class="headerlink" title="获取泛型信息"></a>获取泛型信息</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.experiment.reflection.getclass.Student;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.ParameterizedType;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Type;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 反射获取泛型信息</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OperateGenericType</span> </span>&#123;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test01</span><span class="params">(Map&lt;String, Student&gt; map, List&lt;Student&gt; list, String str)</span></span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;test01&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="function"><span class="keyword">public</span> Map&lt;String, Student&gt; <span class="title">test02</span><span class="params">()</span></span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;test02&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NoSuchMethodException </span>&#123;</span><br><span class="line">            Method method = OperateGenericType.class.getMethod(<span class="string">&quot;test01&quot;</span>,Map.class,List.class,String.class);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取参数类型</span></span><br><span class="line">            System.out.println(<span class="string">&quot;获取参数类型&quot;</span>);</span><br><span class="line">            Type[] genericParameterTypes = method.getGenericParameterTypes();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (Type genericParameterType : genericParameterTypes) &#123;</span><br><span class="line">                  System.out.println(<span class="string">&quot;\n# &quot;</span> + genericParameterType);</span><br><span class="line">                  <span class="keyword">if</span> (genericParameterType <span class="keyword">instanceof</span> ParameterizedType)&#123;</span><br><span class="line">                        System.out.println(<span class="string">&quot;=================&quot;</span>);</span><br><span class="line">                        Type[] actualTypeArguments = ((ParameterizedType) genericParameterType).getActualTypeArguments();</span><br><span class="line">                        <span class="keyword">for</span> (Type actualTypeArgument : actualTypeArguments) &#123;</span><br><span class="line">                              System.out.println(actualTypeArgument);</span><br><span class="line">                        &#125;</span><br><span class="line">                  &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取返回值类型</span></span><br><span class="line">            System.out.println(<span class="string">&quot;\n获取返回值类型&quot;</span>);</span><br><span class="line">            method = OperateGenericType.class.getMethod(<span class="string">&quot;test02&quot;</span>);</span><br><span class="line">            Type genericReturnType = method.getGenericReturnType();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(genericReturnType <span class="keyword">instanceof</span> ParameterizedType)&#123;</span><br><span class="line">                  Type[] actualTypeArguments = ((ParameterizedType) genericReturnType).getActualTypeArguments();</span><br><span class="line">                  <span class="keyword">for</span> (Type actualTypeArgument : actualTypeArguments) &#123;</span><br><span class="line">                        System.out.println(actualTypeArgument);</span><br><span class="line">                  &#125;</span><br><span class="line">            &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">获取参数类型</span><br><span class="line"></span><br><span class="line"><span class="comment"># java.util.Map&lt;java.lang.String, com.experiment.reflection.getclass.Student&gt;</span></span><br><span class="line">=================</span><br><span class="line">class java.lang.String</span><br><span class="line">class com.experiment.reflection.getclass.Student</span><br><span class="line"></span><br><span class="line"><span class="comment"># java.util.List&lt;com.experiment.reflection.getclass.Student&gt;</span></span><br><span class="line">=================</span><br><span class="line">class com.experiment.reflection.getclass.Student</span><br><span class="line"></span><br><span class="line"><span class="comment"># class java.lang.String</span></span><br><span class="line"></span><br><span class="line">获取返回值类型</span><br><span class="line">class java.lang.String</span><br><span class="line">class com.experiment.reflection.getclass.Student</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="获取注解信息"><a href="#获取注解信息" class="headerlink" title="获取注解信息"></a>获取注解信息</h3><p>先看看自定义的两个注解MyAnnotation与MyAnnotation02，这两个注解在Student类中被使用，具体看前面的Student类的代码。</p>
+<p><strong>注解1：MyAnnotation</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyAnnotation &#123;</span><br><span class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> &quot;defaultName&quot;</span>;</span><br><span class="line">    <span class="function">String <span class="title">school</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注解2：MyAnnotation02</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Target(ElementType.FIELD)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyAnnotation02 &#123;</span><br><span class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>通过反射获取注解信息：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.experiment.annotation.MyAnnotation;</span><br><span class="line"><span class="keyword">import</span> com.experiment.annotation.MyAnnotation02;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Annotation;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过反射获取注解</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OperateAnnotation</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchFieldException </span>&#123;</span><br><span class="line">        Class c1 = Class.forName(<span class="string">&quot;com.experiment.reflection.getclass.Student&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 通过反射获得某个类的类注解</span></span><br><span class="line">        Annotation[] annotations = c1.getAnnotations();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取某个特定的注解</span></span><br><span class="line">        <span class="comment">// 方法一</span></span><br><span class="line">        MyAnnotation annotation = (MyAnnotation) c1.getAnnotation(MyAnnotation.class);</span><br><span class="line">        <span class="comment">// 方法二</span></span><br><span class="line">        Field field = c1.getDeclaredField(<span class="string">&quot;studentId&quot;</span>);</span><br><span class="line">        MyAnnotation02 annotation02 = field.getAnnotation(MyAnnotation02.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获得注解的参数的值</span></span><br><span class="line">        System.out.println(annotation.name());</span><br><span class="line">        System.out.println(annotation.school());</span><br><span class="line">        System.out.println(annotation02.value());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>笔记整理于：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1p4411P7V3">【狂神说Java】注解和反射_哔哩哔哩_bilibili</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B3%A8%E8%A7%A3/" rel="tag"><i class="fa fa-tag"></i> 注解</a>
+              <a href="/tags/annotation/" rel="tag"><i class="fa fa-tag"></i> annotation</a>
+              <a href="/tags/%E5%8F%8D%E5%B0%84/" rel="tag"><i class="fa fa-tag"></i> 反射</a>
+              <a href="/tags/reflection/" rel="tag"><i class="fa fa-tag"></i> reflection</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/5b2ca0db/" rel="prev" title="快速上手SpringBoot项目（登录注册保姆级教程）">
+      <i class="fa fa-chevron-left"></i> 快速上手SpringBoot项目（登录注册保姆级教程）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/fe73207c/" rel="next" title="爬虫实现力扣(LeetCode)本地刷题的快捷工具">
+      爬虫实现力扣(LeetCode)本地刷题的快捷工具 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%EF%BC%88Annotation%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">注解（Annotation）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.1.</span> <span class="nav-text">元注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Target"><span class="nav-number">1.2.</span> <span class="nav-text">@Target</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Retention"><span class="nav-number">1.3.</span> <span class="nav-text">@Retention</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.4.</span> <span class="nav-text">自定义注解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%EF%BC%88Reflection%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">反射（Reflection）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%8F%8D%E5%B0%84"><span class="nav-number">2.1.</span> <span class="nav-text">理解反射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6%E6%8F%90%E4%BE%9B%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">2.2.</span> <span class="nav-text">反射机制提供的功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3java%E4%B8%AD%E7%9A%84Class%E7%B1%BB"><span class="nav-number">2.3.</span> <span class="nav-text">理解java中的Class类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96Class%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">2.4.</span> <span class="nav-text">获取Class对象的几种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87Class%E5%AF%B9%E8%B1%A1%E8%8E%B7%E5%8F%96%E7%B1%BB%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="nav-number">2.5.</span> <span class="nav-text">通过Class对象获取类的信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%93%8D%E4%BD%9C%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.6.</span> <span class="nav-text">动态操作对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%B3%9B%E5%9E%8B%E4%BF%A1%E6%81%AF"><span class="nav-number">2.7.</span> <span class="nav-text">获取泛型信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%B3%A8%E8%A7%A3%E4%BF%A1%E6%81%AF"><span class="nav-number">2.8.</span> <span class="nav-text">获取注解信息</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="MakerHu"
+      src="/images/author.png">
+  <p class="site-author-name" itemprop="name">MakerHu</p>
+  <div class="site-description" itemprop="description">慢慢来，会很快</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MakerHu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MakerHu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/makerhu" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;makerhu" rel="noopener" target="_blank"><i class="fas fa-globe fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/278cd7fff709" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;278cd7fff709" rel="noopener" target="_blank"><i class="fas fa-book-open fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_44043758?spm=1010.2135.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_44043758?spm&#x3D;1010.2135.3001.5343" rel="noopener" target="_blank"><i class="fas fa-crosshairs fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MakerHu</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '76wfmteWgCcUQAq7kwLDXz2X-MdYXbMMI',
+      appKey     : 'dPYMOaMhWCh2NlzVwlFD8525',
+      placeholder: "一起讨论吧！填写「邮箱」能够及时收到回复通知哦~",
+      avatar     : 'retro',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : 'https://76wfmtew.api.lncldglobal.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

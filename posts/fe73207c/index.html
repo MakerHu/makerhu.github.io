@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-myicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-myicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="0zVCCdiQVjFknPmHkJCs_o-nXjWofA6_6H3m5_b4coE">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.makerhu.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="相信大家都在力扣上刷过题，力扣上虽然能在线写题，但在线编译运行的速度先对于本地运行还是比较慢，且一些自动补全的功能也不如自己的IDE优秀，因此，我们一般会在本地建个小项目解题，解完后再复制到力扣上提交。为了方便我们在本地快速搭建起力扣的解题环境，我写了一个小工具帮助我们把力扣的题目描述爬取到本地，并生成基础的代码，这样我们就能快速地专注于解题本身了。接下来我将展示一下工具的使用效果，并向大家提供">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爬虫实现力扣(LeetCode)本地刷题的快捷工具">
+<meta property="og:url" content="https://www.makerhu.com/posts/fe73207c/index.html">
+<meta property="og:site_name" content="MakerHu&amp;nbsp;的博客">
+<meta property="og:description" content="相信大家都在力扣上刷过题，力扣上虽然能在线写题，但在线编译运行的速度先对于本地运行还是比较慢，且一些自动补全的功能也不如自己的IDE优秀，因此，我们一般会在本地建个小项目解题，解完后再复制到力扣上提交。为了方便我们在本地快速搭建起力扣的解题环境，我写了一个小工具帮助我们把力扣的题目描述爬取到本地，并生成基础的代码，这样我们就能快速地专注于解题本身了。接下来我将展示一下工具的使用效果，并向大家提供">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809214602.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809215022.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809215244.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809215417.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809221315.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809221617.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809222733.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809233000.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809233111.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810110103.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810110158.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810110333.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810113838.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810155757.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810155842.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810161348.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810162008.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810162906.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210809214602-164839551789874.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810163246.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810163432.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810164926.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810165322.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810170040.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810171255.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810171507.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810172115.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810172205.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/fe73207c/20210810173331.png">
+<meta property="article:published_time" content="2021-08-09T13:29:05.000Z">
+<meta property="article:modified_time" content="2022-03-27T15:39:04.346Z">
+<meta property="article:author" content="MakerHu">
+<meta property="article:tag" content="力扣">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.makerhu.com/posts/fe73207c/20210809214602.png">
+
+<link rel="canonical" href="https://www.makerhu.com/posts/fe73207c/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>爬虫实现力扣(LeetCode)本地刷题的快捷工具 | MakerHu&nbsp;的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">MakerHu&nbsp;的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">慢慢来，会很快</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">26</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.makerhu.com/posts/fe73207c/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.png">
+      <meta itemprop="name" content="MakerHu">
+      <meta itemprop="description" content="慢慢来，会很快">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MakerHu&nbsp;的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          爬虫实现力扣(LeetCode)本地刷题的快捷工具
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-09 21:29:05" itemprop="dateCreated datePublished" datetime="2021-08-09T21:29:05+08:00">2021-08-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-27 23:39:04" itemprop="dateModified" datetime="2022-03-27T23:39:04+08:00">2022-03-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">项目</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/fe73207c/" class="post-meta-item leancloud_visitors" data-flag-title="爬虫实现力扣(LeetCode)本地刷题的快捷工具" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">评论数：</span>
+    
+    <a title="valine" href="/posts/fe73207c/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/fe73207c/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>相信大家都在力扣上刷过题，力扣上虽然能在线写题，但在线编译运行的速度先对于本地运行还是比较慢，且一些自动补全的功能也不如自己的IDE优秀，因此，我们一般会在本地建个小项目解题，解完后再复制到力扣上提交。为了方便我们在本地快速搭建起力扣的解题环境，我写了一个小工具帮助我们把力扣的题目描述爬取到本地，并生成基础的代码，这样我们就能快速地专注于解题本身了。接下来我将展示一下工具的使用效果，并向大家提供源代码及部署方式。</p>
+</blockquote>
+<span id="more"></span>
+
+<p><strong>未经允许请勿转载！</strong> 文章首发于<a href="https://www.makerhu.com/posts/fe73207c/">爬虫实现力扣(LeetCode)本地刷题的快捷工具 | MakerHu的博客</a></p>
+<h2 id="效果演示"><a href="#效果演示" class="headerlink" title="效果演示"></a>效果演示</h2><ol>
+<li>复制路径中的题目英文名</li>
+</ol>
+<p><img src="/posts/fe73207c/20210809214602.png" alt="路径中的题目英文名"></p>
+<ol start="2">
+<li><p>运行打包好的jar包</p>
+<p><img src="/posts/fe73207c/20210809215022.png" alt="运行打包好的jar包"></p>
+</li>
+<li><p>打开本地项目</p>
+<p><img src="/posts/fe73207c/20210809215244.png" alt="打开本地项目"></p>
+</li>
+<li><p>开始本地专注解题</p>
+<p><img src="/posts/fe73207c/20210809215417.png" alt="本地解题"></p>
+</li>
+</ol>
+<p>是不是非常地方便快捷😁</p>
+<p>如果你也想拥有一个这样的工具就接着往下看吧，二十分钟之内你也能实现上述的效果哈！</p>
+<h2 id="项目部署与打包"><a href="#项目部署与打包" class="headerlink" title="项目部署与打包"></a>项目部署与打包</h2><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p><strong>环境要求：</strong></p>
+<ul>
+<li>jdk1.8（最好是1.8，其他版本我没有试过）</li>
+<li>Maven</li>
+<li>git</li>
+<li>IDEA（当然也能用你喜欢的集成开发环境）</li>
+<li>IDEA安装markdown插件（为的是能够有上述题目在本地的显示效果，否则可能显示的是纯文本）</li>
+</ul>
+<p>具体的环境搭建我就不教学了，网上的教程非常多且详细，相信大家都能搭建起来。</p>
+<h3 id="克隆项目到本地"><a href="#克隆项目到本地" class="headerlink" title="克隆项目到本地"></a>克隆项目到本地</h3><p><strong>项目地址：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/MakerHu/LeetCodeSpiderJava">MakerHu/LeetCodeSpiderJava: 爬取力扣的题目并在本地生成基础的项目文件 (github.com)</a></p>
+<ol>
+<li><p>打开IDEA，点击Git-&gt;Clone</p>
+<p><img src="/posts/fe73207c/20210809221315.png" alt="点击Git-&gt;Clone"></p>
+</li>
+<li><p>点击上方的项目地址，复制仓库的url</p>
+<p><img src="/posts/fe73207c/20210809221617.png"></p>
+</li>
+<li><p>将url粘贴到刚刚打开的Clone窗口中，并选择项目位置，点击Clone</p>
+<p><img src="/posts/fe73207c/20210809222733.png" alt="把项目克隆到本地"></p>
+</li>
+<li><p>稍等一会儿，等项目依赖自动配置完后点击启动类中的运行</p>
+<p><img src="/posts/fe73207c/20210809233000.png" alt="运行项目"></p>
+</li>
+<li><p>若显示下面的运行结果则说明项目运行成功了</p>
+<p><img src="/posts/fe73207c/20210809233111.png" alt="项目运行成功"></p>
+</li>
+</ol>
+<h3 id="创建本地刷题项目"><a href="#创建本地刷题项目" class="headerlink" title="创建本地刷题项目"></a>创建本地刷题项目</h3><p>我们把刷题和爬取题目的项目分离开来，为的是解耦，也方便之后的迁移与重用。</p>
+<p>这里我将演示创建一个基础的java项目，当然你也可以创建Maven项目等，因为爬虫工具的原理是在某个文件夹下创建文件夹，并将题目内容markdown文件及基础代码创建到该文件夹下。</p>
+<ol>
+<li><p>创建一个基础的java项目</p>
+<p><img src="/posts/fe73207c/20210810110103.png"></p>
+<p><img src="/posts/fe73207c/20210810110158.png"></p>
+<p><img src="/posts/fe73207c/20210810110333.png"></p>
+</li>
+</ol>
+<h3 id="在爬虫项目的配置文件中配置基本信息"><a href="#在爬虫项目的配置文件中配置基本信息" class="headerlink" title="在爬虫项目的配置文件中配置基本信息"></a>在爬虫项目的配置文件中配置基本信息</h3><p><strong>打开爬虫项目的配置文件</strong></p>
+<p><img src="/posts/fe73207c/20210810113838.png"></p>
+<p>配置文件settings.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java项目中要存放解题的根文件夹，如 E:/LeetCode/src/com/leetcode</span></span><br><span class="line"><span class="attr">question_location</span> = <span class="string">E:/000_collection/myLeetCode/src/com/leetcode</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 解题所在的包 如：com.leetcode 若没有(也就是放在src文件夹下)则为空</span></span><br><span class="line"><span class="attr">base_package</span> = <span class="string">com.leetcode</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 解题文件夹名称的前缀（可以是任意字符串）</span></span><br><span class="line"><span class="meta">folder.prefix</span> = <span class="string">p</span></span><br><span class="line"><span class="comment"># 解题文件夹是否包含力扣题目名（true 或 false）</span></span><br><span class="line"><span class="meta">folder.include_question_name</span> = <span class="string">true</span></span><br><span class="line"><span class="comment"># 解题文件夹是否按照时间分类（true 或 false）</span></span><br><span class="line"><span class="attr">sort_by_time</span> = <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用来存储题目信息的markdown文件的前缀（可以是任意字符串）</span></span><br><span class="line"><span class="meta">question_markdown_filename.prefix</span> = <span class="string">p</span></span><br><span class="line"><span class="comment"># 用来存储题目信息的markdown文件名是否包含题目编号（true 或 false）</span></span><br><span class="line"><span class="meta">question_markdown_filename.include_question_id</span> = <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用来存储题目信息的markdown文件名是否包含题目名以及是否用中文题目名命名（true 或 false）</span></span><br><span class="line"><span class="meta">question_markdown_filename.include_question_name</span> = <span class="string">true</span></span><br><span class="line"><span class="meta">question_markdown_filename.zh_cn</span> = <span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="配置基本路径及基础包"><a href="#配置基本路径及基础包" class="headerlink" title="配置基本路径及基础包"></a>配置基本路径及基础包</h4><p><strong>基本路径：question_location</strong></p>
+<p>在settings.proterties配置文件中的属性<code>question_location</code>表示解题的根路径，爬虫创建的文件夹将会放到该路径下。</p>
+<p>以上面示例中的<code>question_location = E:/000_collection/myLeetCode/src</code>为例，比如说爬取了题号为22的题目，则会在<code>E:/000_collection/myLeetCode/src</code>文件夹下创建<code>p22</code>文件夹，最终得到<code>E:/000_collection/myLeetCode/src/p22</code></p>
+<p><strong>注意：</strong>配置的路径中的斜杠必须是正斜杠<code>/</code>，别写成反斜杠了！！！</p>
+<p><strong>基础包：base_package</strong></p>
+<p>在settings.proterties配置文件中的属性<code>base_package</code>表示解题所在的包，这要与基本路径<code>question_location</code>中<code>src</code>之后的路径对应，否则会出错。</p>
+<p>示例1：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">若 question_location = E:/000_collection/myLeetCode/src</span><br><span class="line">则 base_package =</span><br><span class="line">没错，base_package就等于空，因为question_location中的src就是包的根位置</span><br></pre></td></tr></table></figure>
+
+<p>示例2：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">若 question_location = E:/000_collection/myLeetCode/src/com/leetcode</span><br><span class="line">则 base_package = com.leetcode</span><br></pre></td></tr></table></figure>
+
+
+
+<p>对于上述的两个示例的情况，我分别实际演示一下如何配置。</p>
+<p><strong>示例1：将题目爬取到<code>src</code>下</strong></p>
+<ol>
+<li><p>打开刚刚创建的<strong>解题项目</strong>，右键src-&gt;Copy Path-&gt;Absloute Path，也就是复制src的本地绝对路径，也可以直接到资源管理器中复制</p>
+<p><img src="/posts/fe73207c/20210810155757.png" alt="复制路径"></p>
+<p><img src="/posts/fe73207c/20210810155842.png" alt="复制路径"></p>
+</li>
+<li><p>将刚复制的路径粘贴到<strong>爬虫项目</strong>的settings.properties配置文件中的<code>question_location</code>去</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java项目中要存放解题的根文件夹，如 E:/LeetCode/src/com/leetcode</span></span><br><span class="line"><span class="attr">question_location</span> = <span class="string">E:\000_collection\myLeetCode\src</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，此时的路径为反斜杠，将其都改为斜杠<code>/</code></p>
+<p>修改后：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java项目中要存放解题的根文件夹，如 E:/LeetCode/src/com/leetcode</span></span><br><span class="line"><span class="attr">question_location</span> = <span class="string">E:/000_collection/myLeetCode/src</span></span><br></pre></td></tr></table></figure></li>
+<li><p>将<strong>爬虫项目</strong>的settings.properties配置文件中的<code>base_package</code>属性等号之后置为空</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解题所在的包 如：com.leetcode 若没有(也就是放在src文件夹下)则为空</span></span><br><span class="line"><span class="attr">base_package</span> = <span class="string"></span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>示例2：将题目爬取到指定的包下</strong></p>
+<p>假设我的解题项目中存在包com.leetcode，我要将题目爬取到这个包下。</p>
+<ol>
+<li><p>打开<strong>解题项目</strong>，右键leetcode-&gt;Copy Path-&gt;Absloute Path，也就是复制leetcode的本地绝对路径，也可以直接到资源管理器中复制</p>
+<p><img src="/posts/fe73207c/20210810161348.png" alt="复制路径"></p>
+</li>
+<li><p>将刚复制的路径粘贴到<strong>爬虫项目</strong>的settings.properties配置文件中的<code>question_location</code>去</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java项目中要存放解题的根文件夹，如 E:/LeetCode/src/com/leetcode</span></span><br><span class="line"><span class="attr">question_location</span> = <span class="string">E:\000_collection\myLeetCode\src\com\leetcode</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，此时的路径为反斜杠，将其都改为斜杠<code>/</code></p>
+<p>修改后：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java项目中要存放解题的根文件夹，如 E:/LeetCode/src/com/leetcode</span></span><br><span class="line"><span class="attr">question_location</span> = <span class="string">E:/000_collection/myLeetCode/src/com/leetcode</span></span><br></pre></td></tr></table></figure></li>
+<li><p>将<strong>爬虫项目</strong>的settings.properties配置文件中的<code>base_package</code>属性设置为刚刚选择的包，也就是将src之后的路径中的斜杠改为点，或者你可以在刚刚选择的包（leetcode）中随便创建一个类，看一下第一行的package是什么就复制过来，别带分号就行。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解题所在的包 如：com.leetcode 若没有(也就是放在src文件夹下)则为空</span></span><br><span class="line"><span class="attr">base_package</span> = <span class="string">com.leetcode</span></span><br></pre></td></tr></table></figure>
+
+<p>不确定的话就随便在这个包下创建一个类，看一下第一行是啥，然后再把这个类删了</p>
+<p><img src="/posts/fe73207c/20210810162008.png" alt="查看包"></p>
+</li>
+</ol>
+<h4 id="配置其他属性"><a href="#配置其他属性" class="headerlink" title="配置其他属性"></a>配置其他属性</h4><p>除了<code>question_location</code>和<code>base_package</code>的配置比较重要外，其他的配置都是与文件夹命名方式或文件命名方式有关的配置，使用默认的也挺好的。具体可以看配置文件中的注释尝试修改修改，并看看爬取后的效果，这里就不做详细的解释了，相信大家都看懂或者试出差别。这里就再把配置文件放出来吧。</p>
+<p>settings.properties文件：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java项目中要存放解题的根文件夹，如 E:/LeetCode/src/com/leetcode</span></span><br><span class="line"><span class="attr">question_location</span> = <span class="string">E:/000_collection/myLeetCode/src/com/leetcode</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 解题所在的包 如：com.leetcode 若没有(也就是放在src文件夹下)则为空</span></span><br><span class="line"><span class="attr">base_package</span> = <span class="string">com.leetcode</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 解题文件夹名称的前缀（可以是任意字符串）</span></span><br><span class="line"><span class="meta">folder.prefix</span> = <span class="string">p</span></span><br><span class="line"><span class="comment"># 解题文件夹是否包含力扣题目名（true 或 false）</span></span><br><span class="line"><span class="meta">folder.include_question_name</span> = <span class="string">true</span></span><br><span class="line"><span class="comment"># 解题文件夹是否按照时间分类（true 或 false）</span></span><br><span class="line"><span class="attr">sort_by_time</span> = <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用来存储题目信息的markdown文件的前缀（可以是任意字符串）</span></span><br><span class="line"><span class="meta">question_markdown_filename.prefix</span> = <span class="string">p</span></span><br><span class="line"><span class="comment"># 用来存储题目信息的markdown文件名是否包含题目编号（true 或 false）</span></span><br><span class="line"><span class="meta">question_markdown_filename.include_question_id</span> = <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用来存储题目信息的markdown文件名是否包含题目名以及是否用中文题目名命名（true 或 false）</span></span><br><span class="line"><span class="meta">question_markdown_filename.include_question_name</span> = <span class="string">true</span></span><br><span class="line"><span class="meta">question_markdown_filename.zh_cn</span> = <span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="爬取题目到本地"><a href="#爬取题目到本地" class="headerlink" title="爬取题目到本地"></a>爬取题目到本地</h3><h4 id="直接运行爬虫项目爬取"><a href="#直接运行爬虫项目爬取" class="headerlink" title="直接运行爬虫项目爬取"></a>直接运行爬虫项目爬取</h4><ol>
+<li><p>运行项目</p>
+<p><img src="/posts/fe73207c/20210810162906.png" alt="运行爬虫"></p>
+</li>
+<li><p>输入力扣中题目的英文名（地址栏中的），回车</p>
+<p><img src="/posts/fe73207c/20210809214602-164839551789874.png"></p>
+<p><img src="/posts/fe73207c/20210810163246.png" alt="输入题目英文名"></p>
+</li>
+<li><p>完成</p>
+<p><img src="/posts/fe73207c/20210810163432.png" alt="题目生成完毕"></p>
+</li>
+</ol>
+<h4 id="将项目打成jar包后爬取"><a href="#将项目打成jar包后爬取" class="headerlink" title="将项目打成jar包后爬取"></a>将项目打成jar包后爬取</h4><p>通过上面的方式已经能实现我们要的功能了，但是有个缺点就是每次都要打开项目运行，相对比较麻烦。我们可以将该项目打包成jar包，之后只要运行jar包就能运行了，且配置文件会从jar包中分离出来，可以随时修改配置，非常方便。</p>
+<ol>
+<li><p>回到爬虫项目中，首先双击右侧的<code>Maven-&gt;Lifecycle-&gt;clean</code>当运行结束后，再双击<code>Maven-&gt;Lifecycle-&gt;package</code></p>
+<p><img src="/posts/fe73207c/20210810164926.png" alt="打包项目"></p>
+</li>
+<li><p>此时左侧会出现<code>target</code>文件夹，将打好的jar包（SNAPSHOT结尾的）复制出来，放到任意一个空文件夹里</p>
+<p><img src="/posts/fe73207c/20210810165322.png" alt="复制打好的jar包"></p>
+</li>
+<li><p>可以先将复制出来的jar包重命名个短点的名字，然后打开jar包所在的文件夹，在地址栏中输入<code>cmd</code></p>
+<p><img src="/posts/fe73207c/20210810170040.png" alt="打开命令行窗口"></p>
+</li>
+<li><p>输入命令<code>java -jar 包名.jar</code>，因为我的包名重命名为<code>LeetCodesSpider</code>所以我输入的命令就是<code>java -jar LeetCodeSpider.jar</code></p>
+<p>此时会报错，系统找不到指定的路径，因为我将配置文件从jar包中分离出来了，但我们还没将配置文件放到指定的位置，所以找不到。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">E:\000_collection\LeetCodeTool&gt;java -jar LeetCodeSpider.jar</span><br><span class="line">java.io.FileNotFoundException: src\main\resources\settings.properties (系统找不到指定的路径。)</span><br><span class="line">        at java.io.FileInputStream.open0(Native Method)</span><br><span class="line">        at java.io.FileInputStream.open(Unknown Source)</span><br><span class="line">        at java.io.FileInputStream.&lt;init&gt;(Unknown Source)</span><br><span class="line">        at java.io.FileInputStream.&lt;init&gt;(Unknown Source)</span><br><span class="line">        at config.Settings.&lt;init&gt;(Settings.java:14)</span><br><span class="line">        at SpiderApplication.main(SpiderApplication.java:15)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)</span><br><span class="line">        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)</span><br><span class="line">        at java.lang.reflect.Method.invoke(Unknown Source)</span><br><span class="line">        at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:48)</span><br><span class="line">        at org.springframework.boot.loader.Launcher.launch(Launcher.java:87)</span><br><span class="line">        at org.springframework.boot.loader.Launcher.launch(Launcher.java:51)</span><br><span class="line">        at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:52)</span><br><span class="line">请输入LeetCode中题目的英文名（见浏览器路径，不带斜杠）：</span><br></pre></td></tr></table></figure>
+
+<p>既然找不到，我们就创建对应文件夹并把配置文件放到里面去就行了。</p>
+<p>将报错中的<code>src\main\resources</code>复制下来。重新打开jar包所在的文件夹，在地址栏中输入<code>cmd</code>，之后输入命令创建文件夹</p>
+<p><code>mkdir src\main\resources</code></p>
+<p>现在打开jar包所在的文件夹我们就能看到刚创建好的文件夹了。</p>
+<p><img src="/posts/fe73207c/20210810171255.png"></p>
+<p>接着我们将爬虫项目中的settings.properties文件复制到<code>src\main\resources</code>文件夹下</p>
+<p><img src="/posts/fe73207c/20210810171507.png" alt="复制配置文件到指定文件夹"></p>
+<p>到这里还没有结束。由于我们爬取题目后会生成一些基础的代码，包括<code>Main.java</code>和<code>Solution.java</code>，而这两个文件是根据两个模板文件生成的，因此我们也要将两个模板文件放到<code>src\main\resources</code>中。</p>
+<p>进入爬虫项目，复制<code>resources</code>文件夹下的整个<code>template</code>文件夹，将其粘贴到刚刚在jar包同级目录中创建的<code>src\main\resources</code>文件夹下。</p>
+<p><img src="/posts/fe73207c/20210810172115.png" alt="复制template文件夹"></p>
+<p><img src="/posts/fe73207c/20210810172205.png" alt="放到与settings.properties同级目录中"></p>
+<p>再次在jar包所在目录打开<code>cmd</code>输入命令<code>java -jar 包名.jar</code>就能正常使用了！</p>
+</li>
+<li><p>编辑配置文件</p>
+<p>由于配置文件与jar包分离，所以只要源代码没变，要想修改什么配置直接在jar包所在目录下的配置文件<code>src\main\resources\settings.properties</code>中修改配置属性就行了，可以用记事本vscode等任意你喜欢的文本编辑器打开修改。</p>
+</li>
+</ol>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><ol>
+<li><p>解题时题目图片显示不出来，可能是IDEA开了代理，关了就行</p>
+<p><code>File-&gt;settings-&gt;Appearance &amp; Behavior-&gt;System Settings-&gt;HTTP Proxy</code>。</p>
+<p><img src="/posts/fe73207c/20210810173331.png" alt="关闭代理"></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E5%8A%9B%E6%89%A3/" rel="tag"><i class="fa fa-tag"></i> 力扣</a>
+              <a href="/tags/LeetCode/" rel="tag"><i class="fa fa-tag"></i> LeetCode</a>
+              <a href="/tags/%E5%88%B7%E9%A2%98/" rel="tag"><i class="fa fa-tag"></i> 刷题</a>
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"><i class="fa fa-tag"></i> 爬虫</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/41268e44/" rel="prev" title="注解与反射">
+      <i class="fa fa-chevron-left"></i> 注解与反射
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/3c271a1b/" rel="next" title="代理模式之静态代理">
+      代理模式之静态代理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA"><span class="nav-number">1.</span> <span class="nav-text">效果演示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%93%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">项目部署与打包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87"><span class="nav-number">2.1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%8B%E9%9A%86%E9%A1%B9%E7%9B%AE%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="nav-number">2.2.</span> <span class="nav-text">克隆项目到本地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%AC%E5%9C%B0%E5%88%B7%E9%A2%98%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.3.</span> <span class="nav-text">创建本地刷题项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E7%88%AC%E8%99%AB%E9%A1%B9%E7%9B%AE%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%AD%E9%85%8D%E7%BD%AE%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-number">2.4.</span> <span class="nav-text">在爬虫项目的配置文件中配置基本信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%9F%BA%E6%9C%AC%E8%B7%AF%E5%BE%84%E5%8F%8A%E5%9F%BA%E7%A1%80%E5%8C%85"><span class="nav-number">2.4.1.</span> <span class="nav-text">配置基本路径及基础包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%85%B6%E4%BB%96%E5%B1%9E%E6%80%A7"><span class="nav-number">2.4.2.</span> <span class="nav-text">配置其他属性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%88%AC%E5%8F%96%E9%A2%98%E7%9B%AE%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="nav-number">2.5.</span> <span class="nav-text">爬取题目到本地</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E8%BF%90%E8%A1%8C%E7%88%AC%E8%99%AB%E9%A1%B9%E7%9B%AE%E7%88%AC%E5%8F%96"><span class="nav-number">2.5.1.</span> <span class="nav-text">直接运行爬虫项目爬取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%86%E9%A1%B9%E7%9B%AE%E6%89%93%E6%88%90jar%E5%8C%85%E5%90%8E%E7%88%AC%E5%8F%96"><span class="nav-number">2.5.2.</span> <span class="nav-text">将项目打成jar包后爬取</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">常见问题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="MakerHu"
+      src="/images/author.png">
+  <p class="site-author-name" itemprop="name">MakerHu</p>
+  <div class="site-description" itemprop="description">慢慢来，会很快</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MakerHu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MakerHu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/makerhu" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;makerhu" rel="noopener" target="_blank"><i class="fas fa-globe fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/278cd7fff709" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;278cd7fff709" rel="noopener" target="_blank"><i class="fas fa-book-open fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_44043758?spm=1010.2135.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_44043758?spm&#x3D;1010.2135.3001.5343" rel="noopener" target="_blank"><i class="fas fa-crosshairs fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MakerHu</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '76wfmteWgCcUQAq7kwLDXz2X-MdYXbMMI',
+      appKey     : 'dPYMOaMhWCh2NlzVwlFD8525',
+      placeholder: "一起讨论吧！填写「邮箱」能够及时收到回复通知哦~",
+      avatar     : 'retro',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : 'https://76wfmtew.api.lncldglobal.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

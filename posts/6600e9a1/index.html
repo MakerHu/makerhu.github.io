@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-myicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-myicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="0zVCCdiQVjFknPmHkJCs_o-nXjWofA6_6H3m5_b4coE">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.makerhu.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本教程整理了hexo写博客的一些常用命令以及常用方法，供大家参考，不定期更新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo使用手册">
+<meta property="og:url" content="https://www.makerhu.com/posts/6600e9a1/index.html">
+<meta property="og:site_name" content="MakerHu&amp;nbsp;的博客">
+<meta property="og:description" content="本教程整理了hexo写博客的一些常用命令以及常用方法，供大家参考，不定期更新">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.makerhu.com/posts/6600e9a1/20210507111530.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/6600e9a1/20210507111923.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/6600e9a1/20210507113349.png">
+<meta property="article:published_time" content="2021-05-05T03:40:05.000Z">
+<meta property="article:modified_time" content="2022-03-27T15:35:45.449Z">
+<meta property="article:author" content="MakerHu">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="博客">
+<meta property="article:tag" content="hexo备份">
+<meta property="article:tag" content="hexo恢复">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.makerhu.com/posts/6600e9a1/20210507111530.png">
+
+<link rel="canonical" href="https://www.makerhu.com/posts/6600e9a1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>hexo使用手册 | MakerHu&nbsp;的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">MakerHu&nbsp;的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">慢慢来，会很快</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">26</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.makerhu.com/posts/6600e9a1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.png">
+      <meta itemprop="name" content="MakerHu">
+      <meta itemprop="description" content="慢慢来，会很快">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MakerHu&nbsp;的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          hexo使用手册
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-05 11:40:05" itemprop="dateCreated datePublished" datetime="2021-05-05T11:40:05+08:00">2021-05-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-27 23:35:45" itemprop="dateModified" datetime="2022-03-27T23:35:45+08:00">2022-03-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/%E9%87%8E%E7%94%9F%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">野生教程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/6600e9a1/" class="post-meta-item leancloud_visitors" data-flag-title="hexo使用手册" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">评论数：</span>
+    
+    <a title="valine" href="/posts/6600e9a1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/6600e9a1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本教程整理了hexo写博客的一些常用命令以及常用方法，供大家参考，不定期更新</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
+<li><p>清理数据<br><code>hexo clean</code></p>
+</li>
+<li><p>新建博客<br><code>hexo new &quot;My New Post&quot;</code></p>
+</li>
+<li><p>启动服务<br><code>hexo server</code> 或 <code>hexo s</code></p>
+</li>
+<li><p>生成静态文件<br><code>hexo generate</code> 或  <code>hexo g</code></p>
+</li>
+<li><p>部署到远端<br><code>hexo deploy</code> 或 <code>hexo d</code></p>
+</li>
+<li><p>创建新的页面<br><code>hexo new page &quot;pagename&quot;</code></p>
+</li>
+<li><p>日常备份及部署过程</p>
+<p>写完博客后首先是在本地检查博客效果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>访问 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a> 查看效果<br>确认无误后，再次清空、备份再编译部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Backup&quot;</span></span><br><span class="line">git push -u origin main</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h2><h3 id="文章配置"><a href="#文章配置" class="headerlink" title="文章配置"></a>文章配置</h3><p>在markdown文章的头部可配置以下属性</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 首页文章显示的标题</span><br><span class="line">date: 创建时间</span><br><span class="line">updated: 更新时间</span><br><span class="line">comments: true/false (是否开启评论)</span><br><span class="line">tags: 标签（不适用于分页）无层级关系，各标签并列</span><br><span class="line"><span class="bullet">-</span> 标签一</span><br><span class="line"><span class="bullet">-</span> 标签二</span><br><span class="line">categories: 分类（不适用于分页）有层级关系，下述例子表示本文章归类于学习大类下的微积分下的第二章</span><br><span class="line"><span class="bullet">-</span> 学习</span><br><span class="line"><span class="bullet">-</span> 微积分</span><br><span class="line"><span class="bullet">-</span> 第二章</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="首页显示文章摘要"><a href="#首页显示文章摘要" class="headerlink" title="首页显示文章摘要"></a>首页显示文章摘要</h3><ul>
+<li>方法1：使用<code>&lt;!-- more --&gt;</code>对文章进行截断，在这之前的内容会放到摘要里</li>
+<li>方法2：在markdown文章的顶部加上<code>description</code>关键字<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: </span><br><span class="line">categories: </span><br><span class="line">tags: </span><br><span class="line">description: 你对文章的整体介绍等</span><br><span class="line">---</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="界面修改"><a href="#界面修改" class="headerlink" title="界面修改"></a>界面修改</h2><h3 id="配置博文阅读目录"><a href="#配置博文阅读目录" class="headerlink" title="配置博文阅读目录"></a>配置博文阅读目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">toc:</span><br><span class="line">  enable: true</span><br><span class="line">  # 如果为true则自动添加序号到目录中</span><br><span class="line">  number: true</span><br><span class="line">  # 如果为true目录过长部分会换行显示</span><br><span class="line">  wrap: true</span><br><span class="line">  # 如果为true目录会保持全展开，而不是只展开激活部分</span><br><span class="line">  expand_all: true</span><br><span class="line">  # 目录的最大层级数</span><br><span class="line">  max_depth: 6</span><br></pre></td></tr></table></figure>
+
+<h2 id="hexo备份与恢复"><a href="#hexo备份与恢复" class="headerlink" title="hexo备份与恢复"></a>hexo备份与恢复</h2><p>由于hexo在将博客部署到远程仓库时是将编译后的文件部署上去的，而源文件还是保留在本地（最核心的是文章的.md文件），因而可能存在源文件丢失的风险，如：电脑丢失，文件丢失等。因此做好源文件的备份是个良好的习惯，如果将源文件备份到github，还有利于我们在其他电脑中恢复对博客的管理。</p>
+<h3 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h3><h4 id="在GitHub中创建仓库"><a href="#在GitHub中创建仓库" class="headerlink" title="在GitHub中创建仓库"></a>在GitHub中创建仓库</h4><p><img src="/posts/6600e9a1/20210507111530.png"></p>
+<img src="/posts/6600e9a1/20210507111923.png" style="zoom: 67%;">
+
+<h4 id="将本地的博客源文件上传到GitHub"><a href="#将本地的博客源文件上传到GitHub" class="headerlink" title="将本地的博客源文件上传到GitHub"></a>将本地的博客源文件上传到GitHub</h4><p><strong>注意：在执行下列命令前先将你博客根目录下themes/&lt;主题名&gt;/下的.gitignore文件删了！</strong><br>原因是git文件不能嵌套，否则会报错（忘删导致报错解决方案：<a href="#%E4%B8%BB%E9%A2%98%E4%B8%AD%E7%9A%84.git%E6%96%87%E4%BB%B6%E6%9C%AA%E5%88%A0%E5%B0%B1%E4%B8%8A%E4%BC%A0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">主题中的.git文件未删就上传远程仓库</a>）</p>
+<p>在你的博客源文件根目录下git bash</p>
+<img src="/posts/6600e9a1/20210507113349.png" style="zoom:80%;">
+
+<p>分别执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;# MyHexoBlogBackup&quot;</span> &gt;&gt; README.md</span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">&quot;first commit&quot;</span></span><br><span class="line">git branch -M main</span><br><span class="line">git remote add origin https://github.com/yourname/MyBlogBackup.git</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+
+<p>若出现报错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure>
+<p>请见解决方案：<a href="#git%E6%8A%A5%E9%94%99Failed-to-connect-to-github">git报错Failed to connect to github</a></p>
+<h3 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h3><p>默认前提：电脑中已安装git 、nodejs、hexo</p>
+<h4 id="克隆博客源文件"><a href="#克隆博客源文件" class="headerlink" title="克隆博客源文件"></a>克隆博客源文件</h4><p>克隆项目到本地<br><code>git clone https://github.com/yourname/MyBlogBackup.git</code></p>
+<p>若还是出现报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure>
+<p>请见解决方案<a href="#git%E6%8A%A5%E9%94%99Failed-to-connect-to-github">git报错Failed to connect to github</a></p>
+<h4 id="恢复博客"><a href="#恢复博客" class="headerlink" title="恢复博客"></a>恢复博客</h4><p>进入到博客源文件的根目录下git bash或cmd</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli</span><br><span class="line">npm install <span class="comment"># 安装依赖</span></span><br><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
+<p>接下来就是熟悉的命令了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+<h4 id="日常的备份过程"><a href="#日常的备份过程" class="headerlink" title="日常的备份过程"></a>日常的备份过程</h4><p>写完博客后首先是在本地检查博客效果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+<p>访问 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a> 查看效果<br>确认无误后，再次清空、备份再编译部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Backup&quot;</span></span><br><span class="line">git push -u origin main</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<h2 id="博客链接永久化"><a href="#博客链接永久化" class="headerlink" title="博客链接永久化"></a>博客链接永久化</h2><p>hexo的默认永久链接是在 _config.yml 里配置的，其生成规则是<br><code>permalink: :year/:month/:day/:title/</code><br>效果是<code>https://makerhu.github.io/2021/05/05/hexo使用手册/</code></p>
+<p>这种方式有两个很大的<strong>缺点</strong>：</p>
+<ul>
+<li><p>一是路径中带中文名，复制分享链接时会转换成很长的字符串，不利于分享，以前面展示的效果链接为例，复制链接后的效果是<br><code>https://makerhu.github.io/2021/05/05/hexo%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</code><br>vs<br><code>https://makerhu.github.io/2021/05/05/hexo使用手册/</code></p>
+</li>
+<li><p>二是修改博客的文件名时文章的url也会发生变化，这样如果有人收藏了你的文章地址，你改了文章名称后他/她就访问不了了</p>
+</li>
+</ul>
+<p>因此，博客链接永久化有着重要的意义<br><strong>解决方案</strong>：使用hexo-abbrlink 插件</p>
+<ul>
+<li>安装<br><code>npm install hexo-abbrlink --save</code></li>
+<li>配置<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可选 permalink: abbrlink 短链接模式</span></span><br><span class="line"><span class="comment"># permalink: posts/:abbrlink.html</span></span><br><span class="line"><span class="comment"># permalink: posts/:abbrlink/</span></span><br><span class="line">permalink: :abbrlink/ <span class="comment">#文章的永久链接</span></span><br><span class="line"><span class="comment"># abbrlink config</span></span><br><span class="line">abbrlink:</span><br><span class="line">  alg: crc32  <span class="comment">#算法: crc16(default) and crc32</span></span><br><span class="line">  rep: hex    <span class="comment">#进制: dec(default) and hex</span></span><br></pre></td></tr></table></figure></li>
+<li>hexo命令一条龙<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s	<span class="comment"># 检查效果正常后即可部署</span></span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>配置完成后博客的markdown文件顶部的Front-matter中会添加一个属性<code>abbrlink:</code>后面跟着的就是固定的链接地址</p>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="无法将项目部署到远端"><a href="#无法将项目部署到远端" class="headerlink" title="无法将项目部署到远端"></a>无法将项目部署到远端</h3><ol>
+<li>问题描述<br><code>hexo d</code> 时经常报错，要试好几次才能成功<br>报错：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">INFO  Copying files from extend dirs...</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;MakerHu&#x2F;makerhu.github.io.git&#x2F;&#39;: Failed to connect to github.com port 443: Timed out</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (E:\study\self_study\myblog\node_modules\_hexo-util@2.4.0@hexo-util\lib\spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (events.js:315:20)</span><br><span class="line">      at ChildProcess.cp.emit (E:\study\self_study\myblog\node_modules\_cross-spawn@7.0.3@cross-spawn\lib\enoent.js:34:29)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (internal&#x2F;child_process.js:277:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#39;s wrong. Maybe you can find the solution here: %s https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;troubleshooting.html</span><br></pre></td></tr></table></figure></li>
+<li>解决方案<ul>
+<li>取消git代理<br><code>git config --global --unset http.proxy</code></li>
+<li>host文件添加最新的github的IP列表<br>ip列表可到这个博文获取 <a target="_blank" rel="noopener" href="http://blog.yoqi.me/lyq/16489.html">github被墙最新hosts-每日更新 | 天问博客 (yoqi.me)</a></li>
+</ul>
+</li>
+</ol>
+<h3 id="git报错Failed-to-connect-to-github"><a href="#git报错Failed-to-connect-to-github" class="headerlink" title="git报错Failed to connect to github"></a>git报错Failed to connect to github</h3><ol>
+<li><p>报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fatal: unable to access <span class="string">&#x27;https://github.com/yourname/MyBlogBackup.git/&#x27;</span>: Failed to connect to github.com port 443: Timed out</span><br></pre></td></tr></table></figure></li>
+<li><p>解决方案<br>方法1：</p>
+<ul>
+<li>查看git配置<br><code>git config --global -l</code></li>
+<li>检查环境变量<br><code>env|grep -i proxy</code></li>
+</ul>
+<p>方法2：</p>
+<ul>
+<li>分别执行以下命令：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy http://127.0.0.1:1080</span><br><span class="line">git config --global https.proxy http://127.0.0.1:1080</span><br><span class="line">git config --global --<span class="built_in">unset</span> http.proxy</span><br><span class="line">git config --global --<span class="built_in">unset</span> https.proxy</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h3 id="主题中的-git文件未删就上传远程仓库"><a href="#主题中的-git文件未删就上传远程仓库" class="headerlink" title="主题中的.git文件未删就上传远程仓库"></a>主题中的.git文件未删就上传远程仓库</h3><p>由于.git文件不能嵌套，因此需要删除themes/&lt;主题名&gt;/下的.git文件才能上传</p>
+<ul>
+<li>删除themes/&lt;主题名&gt;/下的.git文件</li>
+<li>从暂存区删除该文件夹<br><code>git rm --cache themes/next</code></li>
+<li>重新添加到git中<br><code>git add .</code></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">文档 | Hexo</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.yoqi.me/lyq/16489.html">github被墙最新hosts-每日更新 | 天问博客 (yoqi.me)</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/hexo/" rel="tag"><i class="fa fa-tag"></i> hexo</a>
+              <a href="/tags/%E5%8D%9A%E5%AE%A2/" rel="tag"><i class="fa fa-tag"></i> 博客</a>
+              <a href="/tags/hexo%E5%A4%87%E4%BB%BD/" rel="tag"><i class="fa fa-tag"></i> hexo备份</a>
+              <a href="/tags/hexo%E6%81%A2%E5%A4%8D/" rel="tag"><i class="fa fa-tag"></i> hexo恢复</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/posts/58379ca9/" rel="next" title="在Linux服务器上简易部署django项目">
+      在Linux服务器上简易部署django项目 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E6%96%87%E7%AB%A0"><span class="nav-number">2.</span> <span class="nav-text">写文章</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">文章配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E9%A1%B5%E6%98%BE%E7%A4%BA%E6%96%87%E7%AB%A0%E6%91%98%E8%A6%81"><span class="nav-number">2.2.</span> <span class="nav-text">首页显示文章摘要</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%95%8C%E9%9D%A2%E4%BF%AE%E6%94%B9"><span class="nav-number">3.</span> <span class="nav-text">界面修改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%8D%9A%E6%96%87%E9%98%85%E8%AF%BB%E7%9B%AE%E5%BD%95"><span class="nav-number">3.1.</span> <span class="nav-text">配置博文阅读目录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hexo%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="nav-number">4.</span> <span class="nav-text">hexo备份与恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD"><span class="nav-number">4.1.</span> <span class="nav-text">备份</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8GitHub%E4%B8%AD%E5%88%9B%E5%BB%BA%E4%BB%93%E5%BA%93"><span class="nav-number">4.1.1.</span> <span class="nav-text">在GitHub中创建仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%86%E6%9C%AC%E5%9C%B0%E7%9A%84%E5%8D%9A%E5%AE%A2%E6%BA%90%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%88%B0GitHub"><span class="nav-number">4.1.2.</span> <span class="nav-text">将本地的博客源文件上传到GitHub</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D"><span class="nav-number">4.2.</span> <span class="nav-text">恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%8B%E9%9A%86%E5%8D%9A%E5%AE%A2%E6%BA%90%E6%96%87%E4%BB%B6"><span class="nav-number">4.2.1.</span> <span class="nav-text">克隆博客源文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E5%8D%9A%E5%AE%A2"><span class="nav-number">4.2.2.</span> <span class="nav-text">恢复博客</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E5%B8%B8%E7%9A%84%E5%A4%87%E4%BB%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">4.2.3.</span> <span class="nav-text">日常的备份过程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%9A%E5%AE%A2%E9%93%BE%E6%8E%A5%E6%B0%B8%E4%B9%85%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">博客链接永久化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="nav-number">6.</span> <span class="nav-text">踩坑记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E6%B3%95%E5%B0%86%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0%E8%BF%9C%E7%AB%AF"><span class="nav-number">6.1.</span> <span class="nav-text">无法将项目部署到远端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git%E6%8A%A5%E9%94%99Failed-to-connect-to-github"><span class="nav-number">6.2.</span> <span class="nav-text">git报错Failed to connect to github</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E4%B8%AD%E7%9A%84-git%E6%96%87%E4%BB%B6%E6%9C%AA%E5%88%A0%E5%B0%B1%E4%B8%8A%E4%BC%A0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">6.3.</span> <span class="nav-text">主题中的.git文件未删就上传远程仓库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="MakerHu"
+      src="/images/author.png">
+  <p class="site-author-name" itemprop="name">MakerHu</p>
+  <div class="site-description" itemprop="description">慢慢来，会很快</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MakerHu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MakerHu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/makerhu" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;makerhu" rel="noopener" target="_blank"><i class="fas fa-globe fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/278cd7fff709" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;278cd7fff709" rel="noopener" target="_blank"><i class="fas fa-book-open fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_44043758?spm=1010.2135.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_44043758?spm&#x3D;1010.2135.3001.5343" rel="noopener" target="_blank"><i class="fas fa-crosshairs fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MakerHu</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '76wfmteWgCcUQAq7kwLDXz2X-MdYXbMMI',
+      appKey     : 'dPYMOaMhWCh2NlzVwlFD8525',
+      placeholder: "一起讨论吧！填写「邮箱」能够及时收到回复通知哦~",
+      avatar     : 'retro',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : 'https://76wfmtew.api.lncldglobal.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-myicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-myicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="0zVCCdiQVjFknPmHkJCs_o-nXjWofA6_6H3m5_b4coE">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.makerhu.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文面向小白，用 Vue 实现了登录注册的功能，并能够与 SpringBoot 后端进行数据交互。麻雀虽小，五脏俱全，本项目用到了 vue-router、axios、Element UI、代理服务器、导航守卫等技术或工具，与本博客的另一篇文章快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客 共同组成了前后端分离项目的整体，适合小白上手 Vue + SpringB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue 实现登录注册功能（前后端分离完整案例）">
+<meta property="og:url" content="https://www.makerhu.com/posts/78e35d03/index.html">
+<meta property="og:site_name" content="MakerHu&amp;nbsp;的博客">
+<meta property="og:description" content="本文面向小白，用 Vue 实现了登录注册的功能，并能够与 SpringBoot 后端进行数据交互。麻雀虽小，五脏俱全，本项目用到了 vue-router、axios、Element UI、代理服务器、导航守卫等技术或工具，与本博客的另一篇文章快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客 共同组成了前后端分离项目的整体，适合小白上手 Vue + SpringB">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/vue-login-demo-video.gif">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220205224309328.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204105146311.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204104255119.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204105731357.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204110213333.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204110547005.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204115003485.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220205181536482.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204154825935.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204154955196.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204161201654.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204164603724.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204165553214.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204230813619.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204180700385.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204181348812.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204231001677.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204182056530.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204231156617.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204231614360.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204231848142.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204233952220.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204234200544.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220204234423069.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220205145546498.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220205163502539.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220205172440156.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220205173334284.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220205173856007.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220205174250415.png">
+<meta property="og:image" content="https://www.makerhu.com/posts/78e35d03/image-20220205180346293.png">
+<meta property="article:published_time" content="2022-02-05T14:47:36.000Z">
+<meta property="article:modified_time" content="2022-03-27T15:48:00.415Z">
+<meta property="article:author" content="MakerHu">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="前后端分离">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="Vue+SpringBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.makerhu.com/posts/78e35d03/vue-login-demo-video.gif">
+
+<link rel="canonical" href="https://www.makerhu.com/posts/78e35d03/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Vue 实现登录注册功能（前后端分离完整案例） | MakerHu&nbsp;的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">MakerHu&nbsp;的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">慢慢来，会很快</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">26</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.makerhu.com/posts/78e35d03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.png">
+      <meta itemprop="name" content="MakerHu">
+      <meta itemprop="description" content="慢慢来，会很快">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MakerHu&nbsp;的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vue 实现登录注册功能（前后端分离完整案例）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-05 22:47:36" itemprop="dateCreated datePublished" datetime="2022-02-05T22:47:36+08:00">2022-02-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-27 23:48:00" itemprop="dateModified" datetime="2022-03-27T23:48:00+08:00">2022-03-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/%E9%87%8E%E7%94%9F%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">野生教程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/posts/78e35d03/" class="post-meta-item leancloud_visitors" data-flag-title="Vue 实现登录注册功能（前后端分离完整案例）" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">评论数：</span>
+    
+    <a title="valine" href="/posts/78e35d03/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/78e35d03/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本文面向小白，用 Vue 实现了登录注册的功能，并能够与 SpringBoot 后端进行数据交互。麻雀虽小，五脏俱全，本项目用到了 vue-router、axios、Element UI、代理服务器、导航守卫等技术或工具，与本博客的另一篇文章<a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客</a> 共同组成了前后端分离项目的整体，适合小白上手 Vue + SpringBoot + Mysql 的项目开发。</p>
+</blockquote>
+<span id="more"></span>
+
+<p><strong>未经允许请勿转载！</strong> 文章首发于<a href="https://www.makerhu.com/posts/78e35d03/">Vue 实现登录注册功能（前后端分离完整案例） | MakerHu 的博客</a></p>
+<p>后端教程：<a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客</a></p>
+<p>项目演示：</p>
+<p><img src="/posts/78e35d03/vue-login-demo-video.gif" alt="演示视频"></p>
+<p><strong>说明：</strong></p>
+<ul>
+<li>本文中后半部分涉及到与后端的交互，需要先根据本人的另一个教程：<a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客</a> 在本地运行起后端后才能测试，这个 Vue 前端项目是与前面这个教程的 SpringBoot 项目配套的前后端项目，因此<strong>建议先看完后端的文章再看此文章</strong>，当然如果只是要看前端登录注册页面的代码，也是没有问题的，只要忽略目录中<strong>前后端数据交互</strong>之后的内容就行了。</li>
+<li>本文中🛠标志后面跟着的命令都是要在命令行窗口运行的命令，命令窗口用 cmd 就行了</li>
+<li>文章最后有项目（前端和后端）的<strong>源代码</strong>哦</li>
+</ul>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><ul>
+<li><p>Node.js</p>
+<p>Node 版本要求：Vue CLI 4.x 需要 <a target="_blank" rel="noopener" href="https://nodejs.org/">Node.js</a> v8.9 或更高版本 (推荐 v10 以上)。</p>
+</li>
+</ul>
+<h3 id="安装-Vue-脚手架"><a href="#安装-Vue-脚手架" class="headerlink" title="安装 Vue 脚手架"></a>安装 Vue 脚手架</h3><p><strong>官网地址：</strong><a target="_blank" rel="noopener" href="https://cli.vuejs.org/zh/guide/installation.html">安装 | Vue CLI (vuejs.org)</a></p>
+<ul>
+<li><p>卸载旧版本的脚手架（之前安装过旧版本的脚手架才需要执行）：在任意地方打开 cmd 运行命令🛠<code>npm uninstall vue-cli -g</code></p>
+<blockquote>
+<p>关于旧版本</p>
+<p>Vue CLI 的包名称由 <code>vue-cli</code> 改成了 <code>@vue/cli</code>。 如果你已经全局安装了旧版本的 <code>vue-cli</code> (1.x 或 2.x)，你需要先通过 <code>npm uninstall vue-cli -g</code> 或 <code>yarn global remove vue-cli</code> 卸载它。—— <a target="_blank" rel="noopener" href="https://cli.vuejs.org/zh/guide/installation.html#:~:text=%E5%85%B3%E4%BA%8E%E6%97%A7%E7%89%88%E6%9C%AC,%E5%8D%B8%E8%BD%BD%E5%AE%83%E3%80%82">Vue 官网</a></p>
+</blockquote>
+</li>
+<li><p>安装新版本的脚手架：🛠<code>npm install -g @vue/cli</code></p>
+</li>
+<li><p>检查脚手架是否安装成功（能看到版本号说明安装成功）：🛠<code>vue --version</code></p>
+<p><img src="/posts/78e35d03/image-20220205224309328.png" alt="脚手架安装成功"></p>
+</li>
+<li><p>如果已经安装过新版的脚手架<code>@vue/cli</code>可进行全局升级：🛠<code>npm update -g @vue/cli</code></p>
+</li>
+</ul>
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><ul>
+<li><p>进入你要创建 Vue 项目的文件夹</p>
+<p><img src="/posts/78e35d03/image-20220204105146311.png" alt="进入项目文件夹"></p>
+</li>
+<li><p>在 cmd 命令框中输入以下命令来创建一个新项目<br>🛠<code>vue create vue-login-demo</code></p>
+<ul>
+<li><p>其中<code>vue-login-demo</code>为项目名，可根据需要修改</p>
+</li>
+<li><p>选择 [Vue 2] 回车，因为是默认选项，可以直接回车</p>
+<p><img src="/posts/78e35d03/image-20220204104255119.png" alt="创建项目"></p>
+</li>
+<li><p>成功提示</p>
+<p><img src="/posts/78e35d03/image-20220204105731357.png" alt="项目创建成功显示"></p>
+</li>
+</ul>
+</li>
+<li><p>试运行新创建的初始化项目</p>
+<ul>
+<li>首先进入项目目录：🛠<code>cd vue-login-demo</code></li>
+<li>运行项目：🛠<code>npm run serve</code></li>
+</ul>
+<p><img src="/posts/78e35d03/image-20220204110213333.png" alt="运行项目"></p>
+</li>
+<li><p>在浏览器地址栏中输入<code>http://localhost:8080/</code>回车，即可看到创建的初始化项目的效果，此页面是脚手架中写的一个HelloWorld示例页面，之后可以删了换成你写的页面。</p>
+<p><img src="/posts/78e35d03/image-20220204110547005.png" alt="初始化项目效果"></p>
+</li>
+</ul>
+<h2 id="Vue-项目的一些基本命令"><a href="#Vue-项目的一些基本命令" class="headerlink" title="Vue 项目的一些基本命令"></a>Vue 项目的一些基本命令</h2><ul>
+<li>启动项目：在 Vue 项目的根目录中打开 cmd ，运行命令🛠<code>npm run serve</code></li>
+<li>停止项目：在运行 Vue 项目的命令行窗口按快捷键 ctrl + C</li>
+<li>安装插件：在 Vue 项目的根目录中打开 cmd，运行命令🛠<code>npm install xxx</code></li>
+</ul>
+<h2 id="项目文件结构"><a href="#项目文件结构" class="headerlink" title="项目文件结构"></a>项目文件结构</h2><blockquote>
+<p>创建完项目后，为了帮助未来的开发，我们首先要熟悉一下刚刚通过 Vue 脚手架创建的项目中的每个文件的作用是什么</p>
+</blockquote>
+<h3 id="初始项目结构"><a href="#初始项目结构" class="headerlink" title="初始项目结构"></a>初始项目结构</h3><p><img src="/posts/78e35d03/image-20220204115003485.png" alt="项目文件结构"></p>
+<ul>
+<li><p><strong>public 文件夹</strong></p>
+<ul>
+<li><p><strong>favicon.ico：</strong>页面的图标</p>
+</li>
+<li><p><strong>index.html：</strong>页面的总入口，Vue项目一般是一个单页应用，也就是只有一个页面，我们看到的页面变化其实都是在这个页面中对某个组件进行局部刷新，这个页面中存在一个 id 为 app 的 div 标签，这个标签就是 App.vue 这个根组件的挂载点，可以简单理解为框架会把 App.vue 这个根节点放到 index.html 中的<code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code>这个位置</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width,initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;icon&quot;</span> <span class="attr">href</span>=<span class="string">&quot;&lt;%= BASE_URL %&gt;favicon.ico&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>&lt;%= htmlWebpackPlugin.options.title %&gt;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">noscript</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">strong</span>&gt;</span>We&#x27;re sorry but &lt;%= htmlWebpackPlugin.options.title %&gt; doesn&#x27;t work properly without JavaScript enabled. Please enable it to continue.<span class="tag">&lt;/<span class="name">strong</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">noscript</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- built files will be auto injected --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>src 文件夹</strong></p>
+<ul>
+<li><strong>assets 文件夹：</strong>资源文件，如存放一些图片 css 文件等</li>
+<li><strong>components 文件夹：</strong>项目的公共组件，就是一些整个项目都有可能用到的组件，如一些公用的弹窗、输入框、按钮等</li>
+</ul>
+</li>
+<li><p><strong>App.vue：</strong>项目的根组件，其他所有组件都包含在这个组件里，作为它的子组件或孙子组件</p>
+</li>
+<li><p><strong>main.js：</strong>整个项目的入口文件，在运行<code>npm run serve</code>命令时首先就运行了 main.js 这个文件，主要用来创建 Vue 实例，并作为桥梁将 App.vue 组件挂载到 index.html 中，此文件还负责全局引入一些插件并安装插件等功能，如引入 Element UI</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 关闭 Vue 的生产提示</span></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 Vue 实例对象</span></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  render: <span class="function"><span class="params">h</span> =&gt;</span> h(App),  <span class="comment">// render 函数将帮助解析模板，传入的参数 h 为一个函数，该函数可用来解析 App 这个组件</span></span><br><span class="line">&#125;).$mount(<span class="string">&#x27;#app&#x27;</span>) <span class="comment">// 将 App.vue 组件挂载到 index.html 中的 id 为 app 的 div 标签上</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="补充项目结构"><a href="#补充项目结构" class="headerlink" title="补充项目结构"></a>补充项目结构</h3><p>这里列出一些在本项目写完后会多出来的一些文件目录，简单介绍，在这里看不懂正常，把整篇教程看完后就能看懂了。</p>
+<p><img src="/posts/78e35d03/image-20220205181536482.png" alt="补充后的目录结构"></p>
+<ul>
+<li><p><strong>src 文件夹</strong></p>
+<ul>
+<li><strong>views 文件夹：</strong>用来存放页面组件，主要是一些页面路由跳转要刷新的那些最大的组件</li>
+<li><strong>router 文件夹：</strong>用来配置项目的路由</li>
+</ul>
+</li>
+<li><p><strong>vue.config.js 文件：</strong>配置文件，如配置代理服务器等</p>
+</li>
+</ul>
+<h2 id="引入-Element-UI"><a href="#引入-Element-UI" class="headerlink" title="引入 Element UI"></a>引入 Element UI</h2><blockquote>
+<p>Element UI 是由饿了么公司开发的一套桌面组件库，像一些表格、按钮、时间选择器等都可以直接使用，且简洁美观</p>
+</blockquote>
+<p>官网：<a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/installation">组件 | Element</a></p>
+<ul>
+<li><p>安装 Element UI：在项目根目录中打开cmd，输入🛠<code>npm i element-ui -S</code> 没有报error就说明安装成功</p>
+</li>
+<li><p>引入 Element，在<code>src/main.js</code>中添加三行代码（下方中注释为Element 1、2、3的三行）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> ElementUI <span class="keyword">from</span> <span class="string">&#x27;element-ui&#x27;</span>;	<span class="comment">// Element 1</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;element-ui/lib/theme-chalk/index.css&#x27;</span>; <span class="comment">// Element 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 关闭 Vue 的生产提示</span></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用插件</span></span><br><span class="line">Vue.use(ElementUI); <span class="comment">// Element 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 Vue 实例对象</span></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  render: <span class="function"><span class="params">h</span> =&gt;</span> h(App),</span><br><span class="line">&#125;).$mount(<span class="string">&#x27;#app&#x27;</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p>在 <code>src/App.vue</code> 中写个 Element 的按钮组件测试一下<code>&lt;el-button&gt;test&lt;/el-button&gt;</code></p>
+<p><img src="/posts/78e35d03/image-20220204154825935.png" alt="测试ElementUI"></p>
+<p><img src="/posts/78e35d03/image-20220204154955196.png" alt="测试ElementUI"></p>
+</li>
+</ul>
+<h2 id="编写登录组件"><a href="#编写登录组件" class="headerlink" title="编写登录组件"></a>编写登录组件</h2><ul>
+<li><p>在项目<code>src/views</code>文件夹下创建<code>login</code>文件夹并创建<code>Login.vue</code>组件</p>
+<p><img src="/posts/78e35d03/image-20220204161201654.png" alt="创建Login组件"></p>
+</li>
+<li><p>在 App.vue 中注册 Login.vue 组件，把没用的 HelloWorld 都删了（红框部分）添加绿框部分的代码</p>
+<p><img src="/posts/78e35d03/image-20220204164603724.png" alt="注册 Login.vue 组件"></p>
+<p><strong>修改后的App.vue</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id&#x3D;&quot;app&quot;&gt;</span><br><span class="line">    &lt;Login&gt;&lt;&#x2F;Login&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">import Login from &#39;.&#x2F;views&#x2F;login&#x2F;Login.vue&#39;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line">  name: &#39;App&#39;,</span><br><span class="line">  components: &#123;</span><br><span class="line">    Login</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style&gt;</span><br><span class="line">#app &#123;</span><br><span class="line">  font-family: Avenir, Helvetica, Arial, sans-serif;</span><br><span class="line">  -webkit-font-smoothing: antialiased;</span><br><span class="line">  -moz-osx-font-smoothing: grayscale;</span><br><span class="line">  text-align: center;</span><br><span class="line">  color: #2c3e50;</span><br><span class="line">  margin-top: 60px;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>测试组件是否正常显示</p>
+<p>先在 Login.vue 组件中写个最简单的文本显示</p>
+<p><strong>Login.vue：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">      &lt;h1&gt;Login test&lt;&#x2F;h1&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>查看页面是否变更，如果正常显示 Login.vue 里的内容则说明 App.vue 中 Login 组件注册成功</p>
+<p><img src="/posts/78e35d03/image-20220204165553214.png" alt="测试组件是否注册成功"></p>
+</li>
+<li><p>完善 Login.vue 组件的页面、样式和一些基本逻辑。到 Element UI 中找到表单组件，这里使用的是自定义校验规则这个例子<a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/form">Element UI 表单</a>，将该例子进行修改成为登录组件</p>
+<p><strong>修改后的 Login.vue：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;el-card class&#x3D;&quot;box-card&quot;&gt;</span><br><span class="line">      &lt;h2&gt;登录&lt;&#x2F;h2&gt;</span><br><span class="line">      &lt;el-form</span><br><span class="line">        :model&#x3D;&quot;ruleForm&quot;</span><br><span class="line">        status-icon</span><br><span class="line">        :rules&#x3D;&quot;rules&quot;</span><br><span class="line">        ref&#x3D;&quot;ruleForm&quot;</span><br><span class="line">        label-position&#x3D;&quot;left&quot;</span><br><span class="line">        label-width&#x3D;&quot;70px&quot;</span><br><span class="line">        class&#x3D;&quot;login-from&quot;</span><br><span class="line">      &gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;用户名&quot; prop&#x3D;&quot;uname&quot;&gt;</span><br><span class="line">          &lt;el-input v-model&#x3D;&quot;ruleForm.uname&quot;&gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;密码&quot; prop&#x3D;&quot;password&quot;&gt;</span><br><span class="line">          &lt;el-input</span><br><span class="line">            type&#x3D;&quot;password&quot;</span><br><span class="line">            v-model&#x3D;&quot;ruleForm.password&quot;</span><br><span class="line">            autocomplete&#x3D;&quot;off&quot;</span><br><span class="line">          &gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">      &lt;&#x2F;el-form&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;btnGroup&quot;&gt;</span><br><span class="line">        &lt;el-button type&#x3D;&quot;primary&quot; @click&#x3D;&quot;submitForm(&#39;ruleForm&#39;)&quot;</span><br><span class="line">          &gt;登录&lt;&#x2F;el-button</span><br><span class="line">        &gt;</span><br><span class="line">        &lt;el-button @click&#x3D;&quot;resetForm(&#39;ruleForm&#39;)&quot;&gt;重置&lt;&#x2F;el-button&gt;</span><br><span class="line">        &lt;router-link to&#x3D;&quot;&#x2F;register&quot;&gt;</span><br><span class="line">          &lt;el-button style&#x3D;&quot;margin-left:10px&quot;&gt;注册&lt;&#x2F;el-button&gt;</span><br><span class="line">        &lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;el-card&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      ruleForm: &#123;</span><br><span class="line">        uname: &quot;&quot;,</span><br><span class="line">        password: &quot;&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      rules: &#123;</span><br><span class="line">        uname: [</span><br><span class="line">          &#123; required: true, message: &quot;用户名不能为空！&quot;, trigger: &quot;blur&quot; &#125;,</span><br><span class="line">        ],</span><br><span class="line">        password: [</span><br><span class="line">          &#123; required: true, message: &quot;密码不能为空！&quot;, trigger: &quot;blur&quot; &#125;,</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    submitForm(formName) &#123;</span><br><span class="line">      this.$refs[formName].validate((valid) &#x3D;&gt; &#123;</span><br><span class="line">        if (valid) &#123;</span><br><span class="line">          alert(&quot;submit!&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          console.log(&quot;error submit!!&quot;);</span><br><span class="line">          return false;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    resetForm(formName) &#123;</span><br><span class="line">      this.$refs[formName].resetFields();</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">.box-card &#123;</span><br><span class="line">  margin: auto auto;</span><br><span class="line">  width: 400px;</span><br><span class="line">&#125;</span><br><span class="line">.login-from &#123;</span><br><span class="line">  margin: auto auto;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>显示效果：</p>
+<p><img src="/posts/78e35d03/image-20220204230813619.png" alt="登录页面初步完成"></p>
+</li>
+</ul>
+<h2 id="配置路由"><a href="#配置路由" class="headerlink" title="配置路由"></a>配置路由</h2><blockquote>
+<p>在写网站应用的过程中，离不开一个功能，就是页面的跳转，而在 Vue 这种单页应用中，一个网站就只有一个页面，我们看到所谓页面的“跳转”其实只是同一个页面中的局部组件的刷新，而路由的指的是浏览器地址栏中的路径与组件有着一一对应的关系，当输入指定的地址时，页面中的某个区域的组件会替换成该地址对应的组件。</p>
+</blockquote>
+<p>官网：<a target="_blank" rel="noopener" href="https://router.vuejs.org/zh/installation.html">安装 | Vue Router (vuejs.org)</a></p>
+<ul>
+<li><p>安装路由插件</p>
+<p>在项目根目录中打开cmd，输入🛠<code>npm install vue-router</code></p>
+</li>
+<li><p>在<code>src</code>下创建 <code>router</code> 文件夹，并在<code>router</code>文件夹下创建<code>index.js</code>文件，该问价作为整个项目路由的配置文件</p>
+<p><img src="/posts/78e35d03/image-20220204180700385.png" alt="路由配置文件"></p>
+</li>
+<li><p><code>src/router/index.js</code>文件内容，这里实现的是路径’/‘，’/login’都跳转到 Login.vue 组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 此文件专门负责项目的路由</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> VueRouter <span class="keyword">from</span> <span class="string">&quot;vue-router&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入组件</span></span><br><span class="line"><span class="keyword">import</span> Login <span class="keyword">from</span> <span class="string">&#x27;../views/login/Login&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建并暴露一个路由器</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">    mode: <span class="string">&#x27;history&#x27;</span>,    <span class="comment">// 路由模式，该模式不会在地址中显示井号#</span></span><br><span class="line">    routes: [</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/&#x27;</span>,          <span class="comment">// 路径</span></span><br><span class="line">            redirect: <span class="string">&#x27;/login&#x27;</span>  <span class="comment">// 重定向</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/login&#x27;</span>,     <span class="comment">// 路径</span></span><br><span class="line">            component: Login    <span class="comment">// 跳转到的组件</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>引入路由插件，在<code>src/main.js</code>中添加三行代码（下方中注释为 路由 1、2、3、4 的四行）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> ElementUI <span class="keyword">from</span> <span class="string">&#x27;element-ui&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;element-ui/lib/theme-chalk/index.css&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> VueRouter <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span> <span class="comment">// 路由 1</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;./router&#x27;</span> <span class="comment">// 路由 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 关闭 Vue 的生产提示</span></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用插件</span></span><br><span class="line">Vue.use(ElementUI)</span><br><span class="line">Vue.use(VueRouter) <span class="comment">// 路由 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 Vue 实例对象</span></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  render: <span class="function"><span class="params">h</span> =&gt;</span> h(App),</span><br><span class="line">  router <span class="comment">// 路由 4</span></span><br><span class="line">&#125;).$mount(<span class="string">&#x27;#app&#x27;</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>src/App.vue</code>中将<code>&lt;router-view /&gt;</code>放到路由跳转时，页面需要局部刷新的部分，并把刚刚在<code>App.vue</code>中写死的组件给删了（删除红色，添加绿色框中的内容）</p>
+<p><img src="/posts/78e35d03/image-20220204181348812.png" alt="src/App.vue"></p>
+<p>修改后的<code>App.vue</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id&#x3D;&quot;app&quot;&gt;</span><br><span class="line">    &lt;router-view &#x2F;&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  name: &#39;App&#39;,</span><br><span class="line">  components: &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style&gt;</span><br><span class="line">#app &#123;</span><br><span class="line">  font-family: Avenir, Helvetica, Arial, sans-serif;</span><br><span class="line">  -webkit-font-smoothing: antialiased;</span><br><span class="line">  -moz-osx-font-smoothing: grayscale;</span><br><span class="line">  text-align: center;</span><br><span class="line">  color: #2c3e50;</span><br><span class="line">  margin-top: 60px;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>检查地址栏跳转是否正常</p>
+<p><img src="/posts/78e35d03/image-20220204231001677.png" alt="/login路径正常显示"></p>
+<p><img src="/posts/78e35d03/image-20220204182056530.png" alt="随机填写路径按预期不显示"></p>
+</li>
+</ul>
+<h2 id="编写注册组件"><a href="#编写注册组件" class="headerlink" title="编写注册组件"></a>编写注册组件</h2><ul>
+<li><p>在项目<code>src/views</code>文件夹下创建<code>register</code>文件夹并创建<code>Register.vue</code>组件</p>
+<p><img src="/posts/78e35d03/image-20220204231156617.png" alt="注册页面组件"></p>
+</li>
+<li><p><strong>Register.vue 组件代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;el-card class&#x3D;&quot;box-card&quot;&gt;</span><br><span class="line">      &lt;h2&gt;注册&lt;&#x2F;h2&gt;</span><br><span class="line">      &lt;el-form</span><br><span class="line">        :model&#x3D;&quot;ruleForm&quot;</span><br><span class="line">        status-icon</span><br><span class="line">        :rules&#x3D;&quot;rules&quot;</span><br><span class="line">        ref&#x3D;&quot;ruleForm&quot;</span><br><span class="line">        label-position&#x3D;&quot;left&quot;</span><br><span class="line">        label-width&#x3D;&quot;80px&quot;</span><br><span class="line">        class&#x3D;&quot;demo-ruleForm&quot;</span><br><span class="line">      &gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;用户名&quot; prop&#x3D;&quot;uname&quot;&gt;</span><br><span class="line">          &lt;el-input v-model&#x3D;&quot;ruleForm.uname&quot;&gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;密码&quot; prop&#x3D;&quot;pass&quot;&gt;</span><br><span class="line">          &lt;el-input</span><br><span class="line">            type&#x3D;&quot;password&quot;</span><br><span class="line">            v-model&#x3D;&quot;ruleForm.pass&quot;</span><br><span class="line">            autocomplete&#x3D;&quot;off&quot;</span><br><span class="line">          &gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;确认密码&quot; prop&#x3D;&quot;password&quot;&gt;</span><br><span class="line">          &lt;el-input</span><br><span class="line">            type&#x3D;&quot;password&quot;</span><br><span class="line">            v-model&#x3D;&quot;ruleForm.password&quot;</span><br><span class="line">            autocomplete&#x3D;&quot;off&quot;</span><br><span class="line">          &gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">      &lt;&#x2F;el-form&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;btnGroup&quot;&gt;</span><br><span class="line">        &lt;el-button type&#x3D;&quot;primary&quot; @click&#x3D;&quot;submitForm(&#39;ruleForm&#39;)&quot;</span><br><span class="line">          &gt;提交&lt;&#x2F;el-button</span><br><span class="line">        &gt;</span><br><span class="line">        &lt;el-button @click&#x3D;&quot;resetForm(&#39;ruleForm&#39;)&quot;&gt;重置&lt;&#x2F;el-button&gt;</span><br><span class="line">        &lt;el-button @click&#x3D;&quot;goBack&quot;&gt;返回&lt;&#x2F;el-button&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;el-card&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    var validatePass &#x3D; (rule, value, callback) &#x3D;&gt; &#123;</span><br><span class="line">      if (value &#x3D;&#x3D;&#x3D; &quot;&quot;) &#123;</span><br><span class="line">        callback(new Error(&quot;请输入密码&quot;));</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        if (this.ruleForm.checkPass !&#x3D;&#x3D; &quot;&quot;) &#123;</span><br><span class="line">          this.$refs.ruleForm.validateField(&quot;checkPass&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        callback();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    var validatePass2 &#x3D; (rule, value, callback) &#x3D;&gt; &#123;</span><br><span class="line">      if (value &#x3D;&#x3D;&#x3D; &quot;&quot;) &#123;</span><br><span class="line">        callback(new Error(&quot;请再次输入密码&quot;));</span><br><span class="line">      &#125; else if (value !&#x3D;&#x3D; this.ruleForm.pass) &#123;</span><br><span class="line">        callback(new Error(&quot;两次输入密码不一致!&quot;));</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        callback();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    return &#123;</span><br><span class="line">      ruleForm: &#123;</span><br><span class="line">        uname: &quot;&quot;,</span><br><span class="line">        pass: &quot;&quot;,</span><br><span class="line">        password: &quot;&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      rules: &#123;</span><br><span class="line">        uname: [</span><br><span class="line">          &#123; required: true, message: &quot;用户名不能为空！&quot;, trigger: &quot;blur&quot; &#125;,</span><br><span class="line">        ],</span><br><span class="line">        pass: [&#123; required: true, validator: validatePass, trigger: &quot;blur&quot; &#125;],</span><br><span class="line">        password: [</span><br><span class="line">          &#123; required: true, validator: validatePass2, trigger: &quot;blur&quot; &#125;,</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    submitForm(formName) &#123;</span><br><span class="line">      this.$refs[formName].validate((valid) &#x3D;&gt; &#123;</span><br><span class="line">        if (valid) &#123;</span><br><span class="line">          alert(&quot;submit!&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          console.log(&quot;error submit!!&quot;);</span><br><span class="line">          return false;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    resetForm(formName) &#123;</span><br><span class="line">      this.$refs[formName].resetFields();</span><br><span class="line">    &#125;,</span><br><span class="line">    goBack() &#123;</span><br><span class="line">      this.$router.go(-1);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">.box-card &#123;</span><br><span class="line">  margin: auto auto;</span><br><span class="line">  width: 400px;</span><br><span class="line">&#125;</span><br><span class="line">.login-from &#123;</span><br><span class="line">  margin: auto auto;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>配置注册页面路由。在<code>src/router/index.js</code>中添加红框中的代码</p>
+<p><img src="/posts/78e35d03/image-20220204231614360.png" alt="配置注册页面路由"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 此文件专门负责项目的路由</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> VueRouter <span class="keyword">from</span> <span class="string">&quot;vue-router&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入组件</span></span><br><span class="line"><span class="keyword">import</span> Login <span class="keyword">from</span> <span class="string">&#x27;../views/login/Login&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Register <span class="keyword">from</span> <span class="string">&#x27;../views/register/Register&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建并暴露一个路由器</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">    mode: <span class="string">&#x27;history&#x27;</span>,    <span class="comment">// 路由模式，该模式不会在地址中显示井号#</span></span><br><span class="line">    routes: [</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/&#x27;</span>,          <span class="comment">// 路径</span></span><br><span class="line">            redirect: <span class="string">&#x27;/login&#x27;</span>  <span class="comment">// 重定向</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/login&#x27;</span>,     <span class="comment">// 路径</span></span><br><span class="line">            component: Login    <span class="comment">// 跳转到的组件</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/register&#x27;</span>,     <span class="comment">// 路径</span></span><br><span class="line">            component: Register    <span class="comment">// 跳转到的组件</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>测试页面与路由。在地址栏中输入<code>/register</code>，点击返回按钮正常跳转</p>
+<p><img src="/posts/78e35d03/image-20220204231848142.png" alt="检查注册页面"></p>
+</li>
+</ul>
+<h2 id="编写首页组件"><a href="#编写首页组件" class="headerlink" title="编写首页组件"></a>编写首页组件</h2><blockquote>
+<p>本教程的首页只是为了展示后端返回的数据，因此只实现了将数据显示到页面上，稍微有那么一丝丝简陋，见谅</p>
+</blockquote>
+<ul>
+<li><p>在项目<code>src/views</code>文件夹下创建<code>home</code>文件夹并创建<code>Home.vue</code>组件</p>
+<p><img src="/posts/78e35d03/image-20220204233952220.png" alt="创建首页组件"></p>
+</li>
+<li><p><strong>Home.vue 组件代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;h2&gt;欢迎&#123;&#123; user.uname &#125;&#125;！您的 uid 为&#123;&#123; user.uid &#125;&#125;&lt;&#x2F;h2&gt;</span><br><span class="line">    &lt;router-link to&#x3D;&quot;&#x2F;login&quot;&gt;</span><br><span class="line">      &lt;el-button&gt; 登出 &lt;&#x2F;el-button&gt;</span><br><span class="line">    &lt;&#x2F;router-link&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      user: &#123;</span><br><span class="line">        uname: &quot;&quot;,</span><br><span class="line">        uid: null,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>配置首页路由。在<code>src/router/index.js</code>中添加红框中的代码</p>
+<p><img src="/posts/78e35d03/image-20220204234200544.png" alt="配置首页路由"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 此文件专门负责项目的路由</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> VueRouter <span class="keyword">from</span> <span class="string">&quot;vue-router&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入组件</span></span><br><span class="line"><span class="keyword">import</span> Login <span class="keyword">from</span> <span class="string">&#x27;../views/login/Login&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Register <span class="keyword">from</span> <span class="string">&#x27;../views/register/Register&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">&#x27;../views/home/Home&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建并暴露一个路由器</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">    mode: <span class="string">&#x27;history&#x27;</span>,    <span class="comment">// 路由模式，该模式不会在地址中显示井号#</span></span><br><span class="line">    routes: [</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/&#x27;</span>,          <span class="comment">// 路径</span></span><br><span class="line">            redirect: <span class="string">&#x27;/login&#x27;</span>  <span class="comment">// 重定向</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/login&#x27;</span>,     <span class="comment">// 路径</span></span><br><span class="line">            component: Login    <span class="comment">// 跳转到的组件</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/register&#x27;</span>,     <span class="comment">// 路径</span></span><br><span class="line">            component: Register    <span class="comment">// 跳转到的组件</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/home&#x27;</span>,     <span class="comment">// 路径</span></span><br><span class="line">            component: Home    <span class="comment">// 跳转到的组件</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>测试页面与路由。在地址栏中输入<code>/home</code>，点击登出按钮，正常跳转</p>
+<p><img src="/posts/78e35d03/image-20220204234423069.png" alt="测试效果"></p>
+</li>
+</ul>
+<p><strong>至此所有的本 demo 的所有页面都写完了，一些简单的前端跳转逻辑也已完成，接下来就需要与后端进行交互，实现我们的登录注册功能。</strong></p>
+<h2 id="前后端数据交互"><a href="#前后端数据交互" class="headerlink" title="前后端数据交互"></a>前后端数据交互</h2><blockquote>
+<p>在开始前后端数据交互的功能开发之前，我们应该得先有个后端，并且这个后端已经写好了登录注册的相关功能接口，这样我们就可以直接请求接口数据了。别担心，后端的项目我早已准备好了🎉<br><a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | www.makerhu.com/posts/5b2ca0db/</a><br>这个教程里详细介绍了如何开发一个 SpringBoot 后端的登陆注册小项目，与这个项目是配套的，教程的最后也附上了项目的源代码，可以直接克隆下来配置一下数据库就能运行了，如何配置数据库教程里也有详细的介绍。以下的数据请求功能我都是直接请求这个后端项目的接口，请求地址是 localhost:8081 在此就不赘述如何在本地启动后端项目了，详见上方的教程链接。</p>
+</blockquote>
+<p><strong>注：在写涉及到与后端交互的功能时一定记得要先把后端启动起来，否则是找不到后端的，一般是在前端开发全程都运行着后端的。</strong></p>
+<h3 id="后端接口说明"><a href="#后端接口说明" class="headerlink" title="后端接口说明"></a>后端接口说明</h3><p>由于本项目需要向后端项目请求数据，因此我们需要先知道后端都实现了什么接口。在后端项目中一共就实现了两个接口，分别是登录接口和注册接口，以下是接口说明（可以先跳过，等到实现登录注册功能时再回来看）：</p>
+<ul>
+<li><p><strong>登录接口</strong></p>
+<ul>
+<li><p>请求地址：<a target="_blank" rel="noopener" href="http://localhost:8081/user/login">http://localhost:8081/user/login</a></p>
+</li>
+<li><p>请求方法：post</p>
+</li>
+<li><p>请求参数：</p>
+<ul>
+<li>uname：用户名，字符串类型</li>
+<li>password：密码，字符串类型</li>
+</ul>
+<p>请求示例：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">params: &#123;</span><br><span class="line">	uname: &#x27;makerhu&#x27;,</span><br><span class="line">	password: &#x27;123&#x27;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>成功响应编码</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;code&quot;</span>: <span class="string">&quot;0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;msg&quot;</span>: <span class="string">&quot;登录成功！&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;data&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;uid&quot;</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">&quot;uname&quot;</span>: <span class="string">&quot;makerhu&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>失败响应编码</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;code&quot;</span>: <span class="string">&quot;123&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;msg&quot;</span>: <span class="string">&quot;账号或密码错误！&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;data&quot;</span>: <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>注册接口</strong></p>
+<ul>
+<li><p>请求地址：<a target="_blank" rel="noopener" href="http://localhost:8081/user/register">http://localhost:8081/user/register</a></p>
+</li>
+<li><p>请求方法：post</p>
+</li>
+<li><p>请求参数：</p>
+<ul>
+<li>json 对象，包含用户名 uname 和密码 password</li>
+</ul>
+<p>请求示例：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">    uname: &#x27;makerhu&#x27;,</span><br><span class="line">    password: &#x27;123&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>成功响应编码</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;code&quot;</span>: <span class="string">&quot;0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;msg&quot;</span>: <span class="string">&quot;注册成功！&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;data&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;uid&quot;</span>: <span class="number">7</span>,</span><br><span class="line">        <span class="attr">&quot;uname&quot;</span>: <span class="string">&quot;user6&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>失败响应编码</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;code&quot;</span>: <span class="string">&quot;456&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;msg&quot;</span>: <span class="string">&quot;用户名已存在！&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;data&quot;</span>: <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="安装-axios"><a href="#安装-axios" class="headerlink" title="安装 axios"></a>安装 axios</h3><blockquote>
+<p>axios 简单理解就是用来帮助我们实现网络数据请求的一个插件，我们可以通过它与后端进行数据交互</p>
+</blockquote>
+<p>axios 中文文档：<a target="_blank" rel="noopener" href="http://www.axios-js.com/zh-cn/docs/#axios-API">axios中文文档|axios中文网 | axios (axios-js.com)</a></p>
+<ul>
+<li><p><strong>安装 axios</strong></p>
+<p>在项目根目录中打开 cmd，输入🛠<code>npm install axios</code>，等待结束后没有显示 error 关键字即成功</p>
+</li>
+<li><p><strong>在项目中引入使用 axios</strong>，在<code>src/main.js</code>中添加红色框中的三行代码</p>
+<p><img src="/posts/78e35d03/image-20220205145546498.png" alt="引用axios插件"></p>
+<p>修改后的 <code>main.js</code> 文件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> ElementUI <span class="keyword">from</span> <span class="string">&#x27;element-ui&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;element-ui/lib/theme-chalk/index.css&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> VueRouter <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;./router&#x27;</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span></span><br><span class="line"><span class="keyword">import</span> VueAxios <span class="keyword">from</span> <span class="string">&#x27;vue-axios&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 关闭 Vue 的生产提示</span></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用插件</span></span><br><span class="line">Vue.use(ElementUI) <span class="comment">// element ui 插件</span></span><br><span class="line">Vue.use(VueRouter) <span class="comment">// 路由插件</span></span><br><span class="line">Vue.use(VueAxios, axios) <span class="comment">// 使用 axios 插件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 Vue 实例对象</span></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  render: <span class="function"><span class="params">h</span> =&gt;</span> h(App),  <span class="comment">// render 函数将帮助解析模板，传入的参数 h 为一个函数，该函数可用来解析 App 这个组件</span></span><br><span class="line">  router</span><br><span class="line">&#125;).$mount(<span class="string">&#x27;#app&#x27;</span>) <span class="comment">// 将 App.vue 组件挂载到 index.html 中的 id 为 app 的 div 标签上</span></span><br></pre></td></tr></table></figure>
+
+<p>现在我们就能在 Vue 实例中通过<code>this.axios</code>调用了。</p>
+</li>
+<li><p><strong>如何使用 axios</strong></p>
+<p>在 vue 的方法中我们可以通过下面例子中的方式使用 axios, 配合接口说明就能与后端进行数据交互了，具体用法见官方文档</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.axios.post(&#123;</span><br><span class="line">  method: <span class="string">&#x27;post&#x27;</span>,		<span class="comment">// 请求方法</span></span><br><span class="line">  url: <span class="string">&#x27;http://localhost:8081/user/login&#x27;</span>,	<span class="comment">// 请求地址</span></span><br><span class="line">  data: &#123;	<span class="comment">// 请求参数</span></span><br><span class="line">    cname: <span class="string">&#x27;makerhu&#x27;</span>,</span><br><span class="line">    password: <span class="string">&#x27;123&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;	<span class="comment">// 请求成功回调</span></span><br><span class="line">  <span class="built_in">console</span>.log(response);</span><br><span class="line">&#125;)</span><br><span class="line">.catch(<span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;	<span class="comment">// 请求异常回调</span></span><br><span class="line">  <span class="built_in">console</span>.log(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="配置代理服务器"><a href="#配置代理服务器" class="headerlink" title="配置代理服务器"></a>配置代理服务器</h3><blockquote>
+<p>在正式开始写登录注册与后端的交互之前，我们先在前端处理一下跨域问题。跨域问题可以简单理解成如果你的前端项目的<strong>IP地址</strong>和<strong>端口号</strong>和后端的<strong>IP地址</strong>和<strong>端口号</strong>不一样，就会导致前端无法获取到数据，这是一个规定。而在前后端分离开发的项目中，前后端项目的端口号一般都是不一样的，比如我们这个项目的前端端口号是 8080，后端端口号是 8081，所以一定会造成跨域访问的问题，跨域访问的问题可以在前端解决也可以在后端解决，前端一般采用代理服务器的方式，因此这里我们也通过配置代理服务器的方法来处理跨域问题。</p>
+</blockquote>
+<p><strong>代理服务器是如何解决跨域问题的呢？</strong></p>
+<p>简单来说就是代理服务器代理前端项目访问后端，并且在访问后端的时候把自己的 IP 地址和端口号伪装成和后端一模一样的，这样就能把后端骗过去从而获取到数据啦。</p>
+<p>实现起来其实也很简单，只要在项目根目录（和 src 文件夹平级）中添加一个文件<code>vue.config.js</code>添加几行配置就行了，下面是<code>vue.config.js</code>文件的配置内容</p>
+<p><img src="/posts/78e35d03/image-20220205163502539.png" alt="vue.config.js文件"></p>
+<p><strong>vue.config.js 文件：</strong></p>
+<p><strong>注意修改完 vue.config.js 这个配置文件需要重新启动前端项目才能生效</strong>，在项目根目录中打开cmd，输入 🛠<code>npm run serve</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    lintOnSave: <span class="literal">false</span>, <span class="comment">// 关闭语法检测</span></span><br><span class="line">    <span class="comment">// 开启代理服务器</span></span><br><span class="line">    devServer: &#123;</span><br><span class="line">        <span class="comment">// 代理服务器可以将路由中的指定前缀转发到指定的后端服务器中</span></span><br><span class="line">        proxy: &#123;</span><br><span class="line">            <span class="string">&#x27;/api&#x27;</span>: &#123;</span><br><span class="line">                target: <span class="string">&#x27;http://localhost:8081&#x27;</span>,</span><br><span class="line">                ws: <span class="literal">true</span>, <span class="comment">// 是否启用websockets</span></span><br><span class="line">                changeOrigin: <span class="literal">true</span>,  <span class="comment">// 代理时是否更改host</span></span><br><span class="line">                pathRewrite: &#123;</span><br><span class="line">                    <span class="string">&#x27;^/api&#x27;</span>: <span class="string">&#x27;&#x27;</span> <span class="comment">//这里理解成用&#x27;/api&#x27;代替target里面的地址</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>配置解释</strong></p>
+<p>这里我们主要看一下 proxy 里的这几个配置（我把上面暂时不需要关注或不重要的配置先删了）</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">proxy: &#123;</span><br><span class="line">    &#x27;/api&#x27;: &#123;</span><br><span class="line">        target: &#x27;http://localhost:8081&#x27;,</span><br><span class="line">        pathRewrite: &#123;</span><br><span class="line">            &#x27;^/api&#x27;: &#x27;&#x27; //这里理解成用&#x27;/api&#x27;代替target里面的地址</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>‘/api’：</strong>这个键值对，也就是**’/api’**和它后面跟的一个大括号为一个键值对，这个键值对就是一个代理，它代理的是所有请求地址中以<code>/api</code>开头的请求，</li>
+<li><strong>target：</strong>这个属性是配置这个代理服务器要帮忙代理的后端服务器的地址，本项目的后端地址是<code>http://localhost:8081</code></li>
+<li><strong>pathRewrite：</strong>这个属性的作用是在代理服务器请求后端时，把地址中的<code>/api</code>替换成空字符串，比如代理请求后端的登录接口时，如果没有配置这个属性，请求的地址将是<code>http://localhost:8081/api/user/login</code>，而我们查看本文前面的<strong>后端接口说明</strong>，发现后端的登录接口地址是<code>http://localhost:8081/user/login</code>，因此我们需要配置 <strong>pathRewrite</strong> 这个属性将<code>/api</code>变为空字符串</li>
+</ul>
+<p><strong>使用代理</strong></p>
+<p>其实也没有什么特别的使用方式，只要在使用 axios 时，把请求地址改为代理的前缀就行了，本项目的代理前缀是<code>/api</code></p>
+<p>对比：</p>
+<ul>
+<li><p>未使用代理</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.axios.post(&#123;</span><br><span class="line">  method: <span class="string">&#x27;post&#x27;</span>,		<span class="comment">// 请求方法</span></span><br><span class="line">  url: <span class="string">&#x27;http://localhost:8081/user/login&#x27;</span>,	<span class="comment">// 请求地址</span></span><br><span class="line">  data: &#123;	<span class="comment">// 请求参数</span></span><br><span class="line">    cname: <span class="string">&#x27;makerhu&#x27;</span>,</span><br><span class="line">    password: <span class="string">&#x27;123&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>使用代理</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.axios.post(&#123;</span><br><span class="line">  method: <span class="string">&#x27;post&#x27;</span>,		<span class="comment">// 请求方法</span></span><br><span class="line">  url: <span class="string">&#x27;/api/user/login&#x27;</span>,	<span class="comment">// 请求地址</span></span><br><span class="line">  data: &#123;	<span class="comment">// 请求参数</span></span><br><span class="line">    cname: <span class="string">&#x27;makerhu&#x27;</span>,</span><br><span class="line">    password: <span class="string">&#x27;123&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>这样代理服务器就会自动把<code>&#39;/api/user/login&#39;</code>改成<code>&#39;http://localhost:8081/user/login&#39;</code></p>
+<p>至此，万事俱备，只欠东风了。接下来我们就把前文说到的技术都搬到登录注册组件中，在添加一点点细节就完事啦！</p>
+<h3 id="完善登录功能"><a href="#完善登录功能" class="headerlink" title="完善登录功能"></a>完善登录功能</h3><ul>
+<li><p><strong>完善 submitForm 方法</strong>，这个函数是在点击登录按钮会被调用，因此我们要在这个方法里把登录的用户名和密码发到后端</p>
+<p>这里就直接贴出完善后的登录组件代码了，变化的地方主要就是在 submitForm 函数里，代码里有详细注释，其他的就是加了一个按钮显示加载动画的功能，不是很重要。</p>
+<p><strong>src/views/login/Login.vue：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;el-card class&#x3D;&quot;box-card&quot;&gt;</span><br><span class="line">      &lt;h2&gt;登录&lt;&#x2F;h2&gt;</span><br><span class="line">      &lt;el-form</span><br><span class="line">        :model&#x3D;&quot;ruleForm&quot;</span><br><span class="line">        status-icon</span><br><span class="line">        :rules&#x3D;&quot;rules&quot;</span><br><span class="line">        ref&#x3D;&quot;ruleForm&quot;</span><br><span class="line">        label-position&#x3D;&quot;left&quot;</span><br><span class="line">        label-width&#x3D;&quot;70px&quot;</span><br><span class="line">        class&#x3D;&quot;login-from&quot;</span><br><span class="line">      &gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;用户名&quot; prop&#x3D;&quot;uname&quot;&gt;</span><br><span class="line">          &lt;el-input v-model&#x3D;&quot;ruleForm.uname&quot;&gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;密码&quot; prop&#x3D;&quot;password&quot;&gt;</span><br><span class="line">          &lt;el-input</span><br><span class="line">            type&#x3D;&quot;password&quot;</span><br><span class="line">            v-model&#x3D;&quot;ruleForm.password&quot;</span><br><span class="line">            autocomplete&#x3D;&quot;off&quot;</span><br><span class="line">          &gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">      &lt;&#x2F;el-form&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;btnGroup&quot;&gt;</span><br><span class="line">        &lt;el-button</span><br><span class="line">          type&#x3D;&quot;primary&quot;</span><br><span class="line">          @click&#x3D;&quot;submitForm(&#39;ruleForm&#39;)&quot;</span><br><span class="line">          v-loading&#x3D;&quot;loading&quot;</span><br><span class="line">          &gt;登录&lt;&#x2F;el-button</span><br><span class="line">        &gt;</span><br><span class="line">        &lt;el-button @click&#x3D;&quot;resetForm(&#39;ruleForm&#39;)&quot;&gt;重置&lt;&#x2F;el-button&gt;</span><br><span class="line">        &lt;router-link to&#x3D;&quot;&#x2F;register&quot;&gt;</span><br><span class="line">          &lt;el-button style&#x3D;&quot;margin-left: 10px&quot;&gt;注册&lt;&#x2F;el-button&gt;</span><br><span class="line">        &lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;el-card&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      ruleForm: &#123;</span><br><span class="line">        uname: &quot;&quot;,</span><br><span class="line">        password: &quot;&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      rules: &#123;</span><br><span class="line">        uname: [</span><br><span class="line">          &#123; required: true, message: &quot;用户名不能为空！&quot;, trigger: &quot;blur&quot; &#125;,</span><br><span class="line">        ],</span><br><span class="line">        password: [</span><br><span class="line">          &#123; required: true, message: &quot;密码不能为空！&quot;, trigger: &quot;blur&quot; &#125;,</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">      loading: false, &#x2F;&#x2F; 是否显示加载动画</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    submitForm(formName) &#123;</span><br><span class="line">      &#x2F;&#x2F; 验证表单中的账号密码是否有效，因为在上面rules中定义为了必填 required: true</span><br><span class="line">      this.$refs[formName].validate((valid) &#x3D;&gt; &#123;</span><br><span class="line">        &#x2F;&#x2F; 点击登录后，让登录按钮开始转圈圈（展示加载动画）</span><br><span class="line">        this.loading &#x3D; true;</span><br><span class="line">        &#x2F;&#x2F; 如果经过校验，账号密码都不为空，则发送请求到后端登录接口</span><br><span class="line">        if (valid) &#123;</span><br><span class="line">          let _this &#x3D; this;</span><br><span class="line">          &#x2F;&#x2F; 使用 axios 将登录信息发送到后端</span><br><span class="line">          this.axios(&#123;</span><br><span class="line">            url: &quot;&#x2F;api&#x2F;user&#x2F;login&quot;,               &#x2F;&#x2F; 请求地址</span><br><span class="line">            method: &quot;post&quot;,                       &#x2F;&#x2F; 请求方法</span><br><span class="line">            headers: &#123;                            &#x2F;&#x2F; 请求头</span><br><span class="line">              &quot;Content-Type&quot;: &quot;application&#x2F;json&quot;,</span><br><span class="line">            &#125;,</span><br><span class="line">            params: &#123;                             &#x2F;&#x2F; 请求参数</span><br><span class="line">              uname: _this.ruleForm.uname,</span><br><span class="line">              password: _this.ruleForm.password,</span><br><span class="line">            &#125;,</span><br><span class="line">          &#125;).then((res) &#x3D;&gt; &#123; &#x2F;&#x2F; 当收到后端的响应时执行该括号内的代码，res 为响应信息，也就是后端返回的信息</span><br><span class="line">            if (res.data.code &#x3D;&#x3D;&#x3D; &quot;0&quot;) &#123;  &#x2F;&#x2F; 当响应的编码为 0 时，说明登录成功</span><br><span class="line">              &#x2F;&#x2F; 将用户信息存储到sessionStorage中</span><br><span class="line">              sessionStorage.setItem(&quot;userInfo&quot;, JSON.stringify(res.data.data));</span><br><span class="line">              &#x2F;&#x2F; 跳转页面到首页</span><br><span class="line">              this.$router.push(&#39;&#x2F;home&#39;);</span><br><span class="line">              &#x2F;&#x2F; 显示后端响应的成功信息</span><br><span class="line">              this.$message(&#123;</span><br><span class="line">                message: res.data.msg,</span><br><span class="line">                type: &quot;success&quot;,</span><br><span class="line">              &#125;);</span><br><span class="line">            &#125; else &#123;  &#x2F;&#x2F; 当响应的编码不为 0 时，说明登录失败</span><br><span class="line">              &#x2F;&#x2F; 显示后端响应的失败信息</span><br><span class="line">              this.$message(&#123;</span><br><span class="line">                message: res.data.msg,</span><br><span class="line">                type: &quot;warning&quot;,</span><br><span class="line">              &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">            &#x2F;&#x2F; 不管响应成功还是失败，收到后端响应的消息后就不再让登录按钮显示加载动画了</span><br><span class="line">            _this.loading &#x3D; false;</span><br><span class="line">            console.log(res);</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125; else &#123;  &#x2F;&#x2F; 如果账号或密码有一个没填，就直接提示必填，不向后端请求</span><br><span class="line">          console.log(&quot;error submit!!&quot;);</span><br><span class="line">          this.loading &#x3D; false;</span><br><span class="line">          return false;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    resetForm(formName) &#123;</span><br><span class="line">      this.$refs[formName].resetFields();</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">&#x2F;* 设置登录面板居中，宽度为400px *&#x2F;</span><br><span class="line">.box-card &#123;</span><br><span class="line">  margin: auto auto;</span><br><span class="line">  width: 400px;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;* 设置登录面板中的表单居中 *&#x2F;</span><br><span class="line">.login-from &#123;</span><br><span class="line">  margin: auto auto;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>写完后先测试一下登录功能能否正常使用，由于现在后端没有注册任何账号，正常应该提示“账号或密码错误”。</p>
+<p><img src="/posts/78e35d03/image-20220205172440156.png" alt="测试登录"></p>
+</li>
+</ul>
+<h3 id="完善注册功能"><a href="#完善注册功能" class="headerlink" title="完善注册功能"></a>完善注册功能</h3><p>注册功能与登录功能几乎一致，就是向后端请求参数的方式不太一样，具体看接口说明，这里也贴上代码，有详细注释</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;el-card class&#x3D;&quot;box-card&quot;&gt;</span><br><span class="line">      &lt;h2&gt;注册&lt;&#x2F;h2&gt;</span><br><span class="line">      &lt;el-form</span><br><span class="line">        :model&#x3D;&quot;ruleForm&quot;</span><br><span class="line">        status-icon</span><br><span class="line">        :rules&#x3D;&quot;rules&quot;</span><br><span class="line">        ref&#x3D;&quot;ruleForm&quot;</span><br><span class="line">        label-position&#x3D;&quot;left&quot;</span><br><span class="line">        label-width&#x3D;&quot;80px&quot;</span><br><span class="line">        class&#x3D;&quot;demo-ruleForm&quot;</span><br><span class="line">      &gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;用户名&quot; prop&#x3D;&quot;uname&quot;&gt;</span><br><span class="line">          &lt;el-input v-model&#x3D;&quot;ruleForm.uname&quot;&gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;密码&quot; prop&#x3D;&quot;pass&quot;&gt;</span><br><span class="line">          &lt;el-input</span><br><span class="line">            type&#x3D;&quot;password&quot;</span><br><span class="line">            v-model&#x3D;&quot;ruleForm.pass&quot;</span><br><span class="line">            autocomplete&#x3D;&quot;off&quot;</span><br><span class="line">          &gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">        &lt;el-form-item label&#x3D;&quot;确认密码&quot; prop&#x3D;&quot;password&quot;&gt;</span><br><span class="line">          &lt;el-input</span><br><span class="line">            type&#x3D;&quot;password&quot;</span><br><span class="line">            v-model&#x3D;&quot;ruleForm.password&quot;</span><br><span class="line">            autocomplete&#x3D;&quot;off&quot;</span><br><span class="line">          &gt;&lt;&#x2F;el-input&gt;</span><br><span class="line">        &lt;&#x2F;el-form-item&gt;</span><br><span class="line">      &lt;&#x2F;el-form&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;btnGroup&quot;&gt;</span><br><span class="line">        &lt;el-button type&#x3D;&quot;primary&quot; @click&#x3D;&quot;submitForm(&#39;ruleForm&#39;)&quot;  v-loading&#x3D;&quot;loading&quot;</span><br><span class="line">          &gt;提交&lt;&#x2F;el-button</span><br><span class="line">        &gt;</span><br><span class="line">        &lt;el-button @click&#x3D;&quot;resetForm(&#39;ruleForm&#39;)&quot;&gt;重置&lt;&#x2F;el-button&gt;</span><br><span class="line">        &lt;el-button @click&#x3D;&quot;goBack&quot;&gt;返回&lt;&#x2F;el-button&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;el-card&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    var validatePass &#x3D; (rule, value, callback) &#x3D;&gt; &#123;</span><br><span class="line">      if (value &#x3D;&#x3D;&#x3D; &quot;&quot;) &#123;</span><br><span class="line">        callback(new Error(&quot;请输入密码&quot;));</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        if (this.ruleForm.checkPass !&#x3D;&#x3D; &quot;&quot;) &#123;</span><br><span class="line">          this.$refs.ruleForm.validateField(&quot;checkPass&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        callback();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    var validatePass2 &#x3D; (rule, value, callback) &#x3D;&gt; &#123;</span><br><span class="line">      if (value &#x3D;&#x3D;&#x3D; &quot;&quot;) &#123;</span><br><span class="line">        callback(new Error(&quot;请再次输入密码&quot;));</span><br><span class="line">      &#125; else if (value !&#x3D;&#x3D; this.ruleForm.pass) &#123;</span><br><span class="line">        callback(new Error(&quot;两次输入密码不一致!&quot;));</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        callback();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    return &#123;</span><br><span class="line">      ruleForm: &#123;</span><br><span class="line">        uname: &quot;&quot;,</span><br><span class="line">        pass: &quot;&quot;,</span><br><span class="line">        password: &quot;&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      rules: &#123;</span><br><span class="line">        uname: [</span><br><span class="line">          &#123; required: true, message: &quot;用户名不能为空！&quot;, trigger: &quot;blur&quot; &#125;,</span><br><span class="line">        ],</span><br><span class="line">        pass: [&#123; required: true, validator: validatePass, trigger: &quot;blur&quot; &#125;],</span><br><span class="line">        password: [</span><br><span class="line">          &#123; required: true, validator: validatePass2, trigger: &quot;blur&quot; &#125;,</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">      loading: false</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    submitForm(formName) &#123;</span><br><span class="line">      this.$refs[formName].validate((valid) &#x3D;&gt; &#123;</span><br><span class="line">        this.loading &#x3D; true;  &#x2F;&#x2F; 提交按钮显示加载动画</span><br><span class="line">        if (valid) &#123;</span><br><span class="line">          let _this &#x3D; this;</span><br><span class="line">          this.axios(&#123;     &#x2F;&#x2F; axios 向后端发起请求</span><br><span class="line">            url: &quot;&#x2F;api&#x2F;user&#x2F;register&quot;,  &#x2F;&#x2F; 请求地址</span><br><span class="line">            method: &quot;post&quot;,             &#x2F;&#x2F; 请求方法</span><br><span class="line">            headers: &#123;                  &#x2F;&#x2F; 请求头</span><br><span class="line">              &quot;Content-Type&quot;: &quot;application&#x2F;json&quot;,</span><br><span class="line">            &#125;,</span><br><span class="line">            data: &#123; &#x2F;&#x2F; 请求参数，为 data，与登录的 params 不太一样</span><br><span class="line">              uname: _this.ruleForm.uname,</span><br><span class="line">              password: _this.ruleForm.password,</span><br><span class="line">            &#125;,</span><br><span class="line">          &#125;).then((res) &#x3D;&gt; &#123; &#x2F;&#x2F; 当收到后端的响应时执行该括号内的代码，res 为响应信息，也就是后端返回的信息</span><br><span class="line">            if (res.data.code &#x3D;&#x3D;&#x3D; &#39;0&#39;) &#123;  &#x2F;&#x2F; 当响应的编码为 0 时，说明注册成功</span><br><span class="line">              &#x2F;&#x2F; 显示后端响应的成功信息</span><br><span class="line">              this.$message(&#123;</span><br><span class="line">                message: res.data.msg,</span><br><span class="line">                type: &quot;success&quot;,</span><br><span class="line">              &#125;);</span><br><span class="line">            &#125;else&#123;  &#x2F;&#x2F; 当响应的编码不为 0 时，说明注册失败</span><br><span class="line">              &#x2F;&#x2F; 显示后端响应的失败信息</span><br><span class="line">              this.$message(&#123;</span><br><span class="line">                message: res.data.msg,</span><br><span class="line">                type: &quot;warning&quot;,</span><br><span class="line">              &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">            &#x2F;&#x2F; 不管响应成功还是失败，收到后端响应的消息后就不再让登录按钮显示加载动画了</span><br><span class="line">            _this.loading &#x3D; false;</span><br><span class="line">            console.log(res);</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125; else &#123; &#x2F;&#x2F; 如果账号或密码有一个没填，就直接提示必填，不向后端请求</span><br><span class="line">          console.log(&quot;error submit!!&quot;);</span><br><span class="line">          this.loading &#x3D; false;</span><br><span class="line">          return false;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    resetForm(formName) &#123;</span><br><span class="line">      this.$refs[formName].resetFields();</span><br><span class="line">    &#125;,</span><br><span class="line">    goBack() &#123;</span><br><span class="line">      this.$router.go(-1);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">&#x2F;* 设置登录面板居中，宽度为400px *&#x2F;</span><br><span class="line">.box-card &#123;</span><br><span class="line">  margin: auto auto;</span><br><span class="line">  width: 400px;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;* 设置登录面板中的表单居中 *&#x2F;</span><br><span class="line">.login-from &#123;</span><br><span class="line">  margin: auto auto;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>写完注册也测试一下是否能注册成功</p>
+<p><img src="/posts/78e35d03/image-20220205173334284.png" alt="注册测试"></p>
+<h3 id="完善首页显示用户信息功能"><a href="#完善首页显示用户信息功能" class="headerlink" title="完善首页显示用户信息功能"></a>完善首页显示用户信息功能</h3><p>这个功能主要就是把登录成功时存储到 sessionStorage 中的用户信息取出来，再显示到首页页面上。主要就是图中绿框部分发生了变化。</p>
+<p><img src="/posts/78e35d03/image-20220205173856007.png" alt="首页代码差异"></p>
+<p><strong>完善后的首页<code>src/views/home/Home.vue</code>代码：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;h2&gt;欢迎&#123;&#123; user.uname &#125;&#125;！您的 uid 为&#123;&#123; user.uid &#125;&#125;&lt;&#x2F;h2&gt;</span><br><span class="line">    &lt;el-button @click&#x3D;&quot;logout&quot;&gt; 登出 &lt;&#x2F;el-button&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      user: &#123;</span><br><span class="line">        uname: &quot;&quot;,</span><br><span class="line">        uid: null,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    logout()&#123;</span><br><span class="line">      &#x2F;&#x2F; 移除本地用户登录信息</span><br><span class="line">      sessionStorage.removeItem(&#39;userInfo&#39;);</span><br><span class="line">      &#x2F;&#x2F; 跳转页面到登录页</span><br><span class="line">      this.$router.push(&#39;&#x2F;login&#39;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  mounted() &#123;</span><br><span class="line">    if (sessionStorage.getItem(&#39;userInfo&#39;)) &#123;</span><br><span class="line">      &#x2F;&#x2F; 将用户信息存储到sessionStorage中</span><br><span class="line">      this.user &#x3D; JSON.parse(sessionStorage.getItem(&#39;userInfo&#39;));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>测试首页功能</p>
+<p><img src="/posts/78e35d03/image-20220205174250415.png" alt="测试首页功能"></p>
+<p>到这，整个项目看起来都完工了，可以注册、登录，登录完能跳转到首页，首页也能正常显示用户信息。但其实还有个隐藏的问题，如果我们没有登录，直接在浏览器的地址栏中输入<code>localhost:8080/home</code>，回车后我们会发现我们能直接进入到首页中，而且首页没法正常显示用户的信息。这也正常，没有登录为啥会有用户信息，但按道理没有登录我们不应该让用户可以进入到首页才对，这就涉及到一个新的概念，就是<strong>导航守卫</strong>，具体的我们在下面详细介绍。</p>
+<h3 id="配置导航守卫"><a href="#配置导航守卫" class="headerlink" title="配置导航守卫"></a>配置导航守卫</h3><blockquote>
+<p>导航守卫，正如其名，它是由 <strong>vue-router</strong> 插件提供的一个功能，在路由发生改变时，也就是地址栏中的地址发生变化时，导航守卫会把页面的“跳转”拦截下来，并做一些处理。在我们刚刚说到的没有登录也能进入首页的问题中，我们就能利用这个功能，在用户想直接通过浏览器地址栏进入首页时，进行拦截，判断这个用户是否已经登录了，如果登录的了的话 sessionStorage 中应该会存有用户的信息，如果找不到用户的登录信息，那就把用户强制导航到登录页面，也就守卫住了进入首页的这个导航。</p>
+</blockquote>
+<p>官方介绍：<a target="_blank" rel="noopener" href="https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%85%A8%E5%B1%80%E5%89%8D%E7%BD%AE%E5%AE%88%E5%8D%AB">导航守卫 | Vue Router (vuejs.org)</a></p>
+<p>在本项目中，我们使用的是<strong>全局前置守卫</strong>也就是在页面“跳转”前进行拦截</p>
+<p>实现导航守卫的功能只需要在<code>src/router/index.js</code>路由配置中添加一个全局前置守卫的方法就行了，具体见图红框部分</p>
+<p><img src="/posts/78e35d03/image-20220205180346293.png" alt="添加全局前置守卫"></p>
+<p>修改后的<code>src/router/index.js</code>代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 此文件专门负责项目的路由</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> VueRouter <span class="keyword">from</span> <span class="string">&quot;vue-router&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入组件</span></span><br><span class="line"><span class="keyword">import</span> Login <span class="keyword">from</span> <span class="string">&#x27;../views/login/Login&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Register <span class="keyword">from</span> <span class="string">&#x27;../views/register/Register&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">&#x27;../views/home/Home&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; Message &#125; <span class="keyword">from</span> <span class="string">&quot;element-ui&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建并暴露一个路由器</span></span><br><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">    mode: <span class="string">&#x27;history&#x27;</span>,    <span class="comment">// 路由模式，该模式不会在地址中显示井号#</span></span><br><span class="line">    routes: [</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/&#x27;</span>,          <span class="comment">// 路径</span></span><br><span class="line">            redirect: <span class="string">&#x27;/login&#x27;</span>  <span class="comment">// 重定向</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/login&#x27;</span>,     <span class="comment">// 路径</span></span><br><span class="line">            component: Login    <span class="comment">// 跳转到的组件</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/register&#x27;</span>,     <span class="comment">// 路径</span></span><br><span class="line">            component: Register    <span class="comment">// 跳转到的组件</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            path: <span class="string">&#x27;/home&#x27;</span>,     <span class="comment">// 路径</span></span><br><span class="line">            component: Home    <span class="comment">// 跳转到的组件</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 导航守卫，前置处理</span></span><br><span class="line">router.beforeEach(<span class="function">(<span class="params">to, <span class="keyword">from</span>, next</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> isAuthenticated = !!sessionStorage.getItem(<span class="string">&#x27;userInfo&#x27;</span>)</span><br><span class="line">    <span class="comment">// 如果路由要跳转到除了登录和注册的界面的话就判断是否已经登录，如果没有登录就强制跳到登录界面</span></span><br><span class="line">    <span class="keyword">if</span> (to.path !== <span class="string">&#x27;/login&#x27;</span> &amp;&amp; to.path !== <span class="string">&#x27;/register&#x27;</span> &amp;&amp; !isAuthenticated) &#123;</span><br><span class="line">        next(&#123; <span class="attr">path</span>: <span class="string">&#x27;/login&#x27;</span> &#125;)</span><br><span class="line">        Message(&#123;</span><br><span class="line">            message: <span class="string">&#x27;请先登录！&#x27;</span>,</span><br><span class="line">            type: <span class="string">&quot;warning&quot;</span>,</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> next()</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> router;</span><br></pre></td></tr></table></figure>
+
+<p>写完后可以测试一下不登录直接在地址栏中输入<code>http://localhost:8080/home</code>能不能被拦截再跳回登录页面</p>
+<p>如果所有功能测试都正常的话，那就芜湖~起飞了哈哈哈</p>
+<p>非常感谢你能看到这里，希望本文对你能有所帮助~</p>
+<p>教程中可能有很多不准确的地方，欢迎在下方通过评论，我一定会及时回复的。</p>
+<h2 id="项目源代码"><a href="#项目源代码" class="headerlink" title="项目源代码"></a>项目源代码</h2><ul>
+<li>Vue 前端：<a target="_blank" rel="noopener" href="https://github.com/MakerHu/vue-login-demo">MakerHu/vue-login-demo (github.com)</a></li>
+<li>SpringBoot 后端：<a target="_blank" rel="noopener" href="https://github.com/MakerHu/springboot-login-demo">MakerHu/springboot-login-demo (github.com)</a></li>
+</ul>
+<h2 id="相关推荐"><a href="#相关推荐" class="headerlink" title="相关推荐"></a>相关推荐</h2><ul>
+<li>后端教程：<a href="https://www.makerhu.com/posts/5b2ca0db/">快速上手SpringBoot项目（登录注册保姆级教程） | MakerHu 的博客</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"><i class="fa fa-tag"></i> Vue</a>
+              <a href="/tags/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB/" rel="tag"><i class="fa fa-tag"></i> 前后端分离</a>
+              <a href="/tags/SpringBoot/" rel="tag"><i class="fa fa-tag"></i> SpringBoot</a>
+              <a href="/tags/Vue-SpringBoot/" rel="tag"><i class="fa fa-tag"></i> Vue+SpringBoot</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/39d16fd4/" rel="prev" title="代理模式之动态代理">
+      <i class="fa fa-chevron-left"></i> 代理模式之动态代理
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Vue-%E8%84%9A%E6%89%8B%E6%9E%B6"><span class="nav-number">1.1.</span> <span class="nav-text">安装 Vue 脚手架</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.</span> <span class="nav-text">创建项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">Vue 项目的一些基本命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text">项目文件结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="nav-number">4.1.</span> <span class="nav-text">初始项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="nav-number">4.2.</span> <span class="nav-text">补充项目结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%85%A5-Element-UI"><span class="nav-number">5.</span> <span class="nav-text">引入 Element UI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E7%99%BB%E5%BD%95%E7%BB%84%E4%BB%B6"><span class="nav-number">6.</span> <span class="nav-text">编写登录组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%B7%AF%E7%94%B1"><span class="nav-number">7.</span> <span class="nav-text">配置路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E6%B3%A8%E5%86%8C%E7%BB%84%E4%BB%B6"><span class="nav-number">8.</span> <span class="nav-text">编写注册组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E9%A6%96%E9%A1%B5%E7%BB%84%E4%BB%B6"><span class="nav-number">9.</span> <span class="nav-text">编写首页组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E5%90%8E%E7%AB%AF%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92"><span class="nav-number">10.</span> <span class="nav-text">前后端数据交互</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E"><span class="nav-number">10.1.</span> <span class="nav-text">后端接口说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-axios"><span class="nav-number">10.2.</span> <span class="nav-text">安装 axios</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">10.3.</span> <span class="nav-text">配置代理服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD"><span class="nav-number">10.4.</span> <span class="nav-text">完善登录功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E6%B3%A8%E5%86%8C%E5%8A%9F%E8%83%BD"><span class="nav-number">10.5.</span> <span class="nav-text">完善注册功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%96%84%E9%A6%96%E9%A1%B5%E6%98%BE%E7%A4%BA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E5%8A%9F%E8%83%BD"><span class="nav-number">10.6.</span> <span class="nav-text">完善首页显示用户信息功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%AF%BC%E8%88%AA%E5%AE%88%E5%8D%AB"><span class="nav-number">10.7.</span> <span class="nav-text">配置导航守卫</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">11.</span> <span class="nav-text">项目源代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%8E%A8%E8%8D%90"><span class="nav-number">12.</span> <span class="nav-text">相关推荐</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="MakerHu"
+      src="/images/author.png">
+  <p class="site-author-name" itemprop="name">MakerHu</p>
+  <div class="site-description" itemprop="description">慢慢来，会很快</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MakerHu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MakerHu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/makerhu" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;makerhu" rel="noopener" target="_blank"><i class="fas fa-globe fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.jianshu.com/u/278cd7fff709" title="简书 → https:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;278cd7fff709" rel="noopener" target="_blank"><i class="fas fa-book-open fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_44043758?spm=1010.2135.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_44043758?spm&#x3D;1010.2135.3001.5343" rel="noopener" target="_blank"><i class="fas fa-crosshairs fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MakerHu</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '76wfmteWgCcUQAq7kwLDXz2X-MdYXbMMI',
+      appKey     : 'dPYMOaMhWCh2NlzVwlFD8525',
+      placeholder: "一起讨论吧！填写「邮箱」能够及时收到回复通知哦~",
+      avatar     : 'retro',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : 'https://76wfmtew.api.lncldglobal.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
